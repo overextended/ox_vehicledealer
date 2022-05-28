@@ -68,7 +68,8 @@ exports.ox_property:registerZoneMenu('showroom',
 				args = {
 					property = currentZone.property,
 					zoneId = currentZone.zoneId,
-					vehicles = zoneVehicles
+					vehicles = zoneVehicles,
+					zoneOnly = true
 				}
 			}
 		end
@@ -184,7 +185,7 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 
 		local menu = {
 			id = 'vehicle_list',
-			title = data.zoneOnly and ('%s - %s - Vehicles'):format(currentZone.property, currentZone.name) or 'All Vehicles',
+			title = data.zoneOnly and ('%s - %s - Vehicles'):format(currentZone.property, currentZone.name) or ('%s - Vehicles'):format(currentZone.property),
 			menu = 'zone_menu',
 			options = options
 		}
