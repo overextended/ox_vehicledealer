@@ -40,8 +40,7 @@ exports.ox_property:registerZoneMenu('showroom',
 				args = {
 					property = currentZone.property,
 					zoneId = currentZone.zoneId,
-					vehicles = zoneVehicles,
-					freeze = true
+					vehicles = zoneVehicles
 				}
 			}
 		end
@@ -64,6 +63,49 @@ exports.ox_property:registerZoneMenu('showroom',
 	end
 )
 
+local displayedVehicles = GlobalState['DisplayedVehicles']
+CreateThread(function()
+	while true do
+		Wait(0)
+		local closeDist, closeVehicle = 7.5
+		local pedPos = GetEntityCoords(cache.ped)
+		for k, v in pairs(displayedVehicles) do
+			if NetworkDoesEntityExistWithNetworkId(v.netid) then
+				v.vehPos = GetEntityCoords(NetToVeh(v.netid))
+				local distance = #(pedPos - v.vehPos)
+				if closeDist > distance then
+					closeDist = distance
+					closeVehicle = v
+				end
+			end
+		end
+
+		if closeVehicle then
+			BeginTextCommandDisplayHelp('FloatingNotification')
+			AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(closeVehicle.modelData.name, closeVehicle.modelData.price))
+			EndTextCommandDisplayHelp(2, false, false, -1)
+			SetFloatingHelpTextWorldPosition(1, closeVehicle.vehPos.x, closeVehicle.vehPos.y, closeVehicle.vehPos.z + 1)
+			SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
+		end
+	end
+end)
+
+AddStateBagChangeHandler('DisplayedVehicles', 'global', function(bagName, key, value, reserved, replicated)
+	displayedVehicles = value
+end)
+
+lib.onCache('vehicle', function(vehicle)
+	if vehicle then
+		local netid = VehToNet(vehicle)
+		local veh = displayedVehicles[netid]
+		if veh then
+			lib.showTextUI(('Plate: %s  \nMake: %s  \nBodyType: %s  \n'):format(veh.plate, veh.modelData.make, veh.modelData.bodytype))
+		end
+	else
+		lib.hideTextUI()
+	end
+end)
+
 RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
@@ -79,12 +121,11 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 			local subOptions = {}
 			if vehicle.stored == ('%s:%s'):format(data.property, data.zoneId) then
 				subOptions['Display'] = {
-					event = 'ox_property:retrieveVehicle',
+					event = 'ox_vehicledealer:displayVehicle',
 					args = {
 						property = currentZone.property,
 						zoneId = currentZone.zoneId,
-						plate = vehicle.plate,
-						freeze = true
+						plate = vehicle.plate
 					}
 				}
 				subOptions['Sell Wholesale'] = {}
@@ -305,5 +346,13 @@ RegisterNetEvent('ox_vehicledealer:wholesaleResults', function(data)
 			options = options
 		})
 		lib.showContext('wholesale_results')
+	end
+end)
+
+RegisterNetEvent('ox_vehicledealer:displayVehicle', function(data)
+	local currentZone = exports.ox_property:getCurrentZone()
+	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
+		data.entities = exports.ox_property:getZoneEntities()
+		TriggerServerEvent('ox_vehicledealer:displayVehicle', data)
 	end
 end)
