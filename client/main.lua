@@ -38,6 +38,15 @@ exports.ox_property:registerZoneMenu('showroom',
 						rotate = true
 					}
 				}
+				options[#options + 1] = {
+					title = 'Buy Vehicle',
+					event = 'ox_vehicledealer:buyVehicle',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId
+					}
+				}
+			end
 		end
 
 		options[#options + 1] = {
@@ -392,5 +401,13 @@ RegisterNetEvent('ox_vehicledealer:moveVehicle', function(data)
 			data.entities = exports.ox_property:getZoneEntities()
 			TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
 		end
+	end
+end)
+
+RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
+	local currentZone = exports.ox_property:getCurrentZone()
+	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
+		lib.hideTextUI()
+		TriggerServerEvent('ox_vehicledealer:buyVehicle', data)
 	end
 end)
