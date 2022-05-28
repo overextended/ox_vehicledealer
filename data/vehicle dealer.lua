@@ -17,7 +17,7 @@ return {
 			},
 			{
 				label = 'Office Stash',
-				coords = vec(-29.8, -1107.7, 27.4),
+				coords = vec(-29.8, -1107.7, 26.4),
 			},
 		},
 		zones = {
