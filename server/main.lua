@@ -104,3 +104,28 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to display', type = 'error'})
 	end
 end)
+
+RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
+	local player = exports.ox_core:getPlayer(source)
+	local vehicle = Vehicle(NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(GetPlayerPed(player.source), false)))
+	if data.rotate then
+		local heading = GetEntityHeading(vehicle.entity) + 180
+		SetEntityHeading(vehicle.entity, heading)
+		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle rotated', type = 'success'})
+
+		MySQL.update('UPDATE user_vehicles SET heading = ? WHERE plate = ?', {heading, data.plate})
+	else
+		local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+		local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
+
+		if spawn then
+			SetEntityCoords(vehicle.entity, spawn.x, spawn.y, spawn.z)
+			SetEntityHeading(vehicle.entity, spawn.w)
+			TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle moved', type = 'success'})
+
+			MySQL.update('UPDATE user_vehicles SET x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, data.plate})
+		else
+			TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to move', type = 'error'})
+		end
+	end
+end)

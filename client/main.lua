@@ -19,6 +19,25 @@ exports.ox_property:registerZoneMenu('showroom',
 					zoneId = currentZone.zoneId
 				}
 			}
+			local vehicle = GlobalState['DisplayedVehicles'][VehToNet(cache.vehicle)]
+			if vehicle then
+				options[#options + 1] = {
+					title = 'Move Vehicle',
+					event = 'ox_vehicledealer:moveVehicle',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId
+					}
+				}
+				options[#options + 1] = {
+					title = 'Rotate Vehicle',
+					event = 'ox_vehicledealer:moveVehicle',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId,
+						rotate = true
+					}
+				}
 		end
 
 		options[#options + 1] = {
@@ -361,5 +380,17 @@ RegisterNetEvent('ox_vehicledealer:displayVehicle', function(data)
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
 		data.entities = exports.ox_property:getZoneEntities()
 		TriggerServerEvent('ox_vehicledealer:displayVehicle', data)
+	end
+end)
+
+RegisterNetEvent('ox_vehicledealer:moveVehicle', function(data)
+	local currentZone = exports.ox_property:getCurrentZone()
+	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
+		if data.rotate then
+			TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
+		else
+			data.entities = exports.ox_property:getZoneEntities()
+			TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
+		end
 	end
 end)
