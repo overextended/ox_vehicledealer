@@ -67,6 +67,18 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
 	end
 end)
+
+RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
+	local player = exports.ox_core:getPlayer(source)
+	-- TODO financial integration
+	if true then
+		MySQL.update.await('DELETE FROM user_vehicles WHERE plate = ?', {data.plate})
+		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle sold', type = 'success'})
+	else
+		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
+	end
+end)
+
 RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 	local player = exports.ox_core:getPlayer(source)
 	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]

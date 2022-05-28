@@ -128,8 +128,15 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 						plate = vehicle.plate
 					}
 				}
-				subOptions['Sell Wholesale'] = {}
-			elseif vehicle.stored:find(':') then
+				subOptions['Sell Wholesale'] = {
+					serverEvent = 'ox_vehicledealer:sellWholesale',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId,
+						plate = vehicle.plate
+					}
+				}
+			else
 				subOptions['Move'] = {
 					serverEvent = 'ox_property:moveVehicle',
 					args = {
