@@ -36,14 +36,15 @@ lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, 
 	return MySQL.query.await(query, parameters)
 end)
 
-RegisterServerEvent('ox_vehicledealer:spawnVehicle', function(model)
-	local ped = GetPlayerPed(source)
-	local coords = GetEntityCoords(ped)
-	local veh = Ox.CreateVehicle(false, model, coords, GetEntityHeading(ped))
-	local timeout = 50
-	repeat
-		Wait(0)
-		timeout -= 1
-		SetPedIntoVehicle(ped, veh.entity, -1)
-	until GetVehiclePedIsIn(ped, false) == veh.entity or timeout < 1
+RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
+	local player = exports.ox_core:getPlayer(source)
+	-- TODO financial integration
+	if true then
+		local vehicle = exports.ox_vehicles:generateVehicle(player.charid, {model = joaat(data.model)}, data.type)
+		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})
+		Wait(500)
+		MySQL.update('UPDATE user_vehicles SET stored = ? WHERE plate = ?', {('%s:%s'):format(data.property, data.zoneId), vehicle.plate})
+	else
+		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
+	end
 end)

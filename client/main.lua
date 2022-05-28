@@ -23,7 +23,7 @@ exports.ox_property:registerZoneMenu('showroom',
 
 		options[#options + 1] = {
 			title = 'Buy Wholesale',
-			description = 'Find a vehicle to buy import',
+			description = 'Search for a vehicle to import',
 			event = 'ox_vehicledealer:buyWholesale',
 			args = {
 				property = currentZone.property,
@@ -284,8 +284,13 @@ RegisterNetEvent('ox_vehicledealer:wholesaleResults', function(data)
 			options[#options + 1] = {
 				title = vehicle.name,
 				description = ('$%s'):format(vehicle.price),
-				serverEvent ='ox_vehicledealer:spawnVehicle',
-				args = vehicle.model,
+				serverEvent = 'ox_vehicledealer:buyWholesale',
+				args = {
+					property = currentZone.property,
+					zoneId = currentZone.zoneId,
+					model = vehicle.model,
+					type = vehicle.type
+				},
 				metadata = {
 					Type = vehicle.type,
 					Bodytype = vehicle.bodytype,
