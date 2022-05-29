@@ -275,7 +275,7 @@ RegisterNetEvent('ox_vehicledealer:wholesaleFilter', function(data)
 				}
 			}
 
-			for i = 1, #available do
+			for i = data.filter == 'class' and 0 or 1, #available do
 				local item = available[i]
 
 				local args = table.deepclone(data)
