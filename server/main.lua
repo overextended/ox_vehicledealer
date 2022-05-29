@@ -26,7 +26,7 @@ AddEventHandler('onResourceStart', function(resource)
 end)
 
 lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, data)
-	local player = exports.ox_core:getPlayer(source)
+	local player = lib.getPlayer(source)
 	local query = {'SELECT * FROM vehicle_data', ' WHERE'}
 	local parameters = {}
 
@@ -56,7 +56,7 @@ lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, 
 end)
 
 RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
-	local player = exports.ox_core:getPlayer(source)
+	local player = lib.getPlayer(source)
 	-- TODO financial integration
 	if true then
 		local vehicle = Ox.CreateVehicle(player.charid, {
@@ -72,7 +72,7 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 end)
 
 RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
-	local player = exports.ox_core:getPlayer(source)
+	local player = lib.getPlayer(source)
 	-- TODO financial integration
 	if true then
 		MySQL.update.await('DELETE FROM user_vehicles WHERE plate = ?', {data.plate})
@@ -83,7 +83,7 @@ RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
 end)
 
 RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
-	local player = exports.ox_core:getPlayer(source)
+	local player = lib.getPlayer(source)
 	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 	local vehicle = MySQL.single.await('SELECT charid, data FROM user_vehicles WHERE plate = ? AND charid = ?', {data.plate, player.charid})
 
@@ -109,7 +109,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 end)
 
 RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
-	local player = exports.ox_core:getPlayer(source)
+	local player = lib.getPlayer(source)
 	local vehicle = Vehicle(NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(GetPlayerPed(player.source), false)))
 	if data.rotate then
 		local heading = GetEntityHeading(vehicle.entity) + 180
@@ -134,7 +134,7 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 end)
 
 RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
-	local player = exports.ox_core:getPlayer(source)
+	local player = lib.getPlayer(source)
 	local plyPed = GetPlayerPed(player.source)
 	local vehicle = Vehicle(NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(plyPed, false)))
 	-- TODO financial integration
