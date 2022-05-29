@@ -11,7 +11,7 @@ AddEventHandler('onResourceStart', function(resource)
 			local vehicle = displayedVehicles[i]
 			vehicle.data = json.decode(vehicle.data)
 
-			local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data.model, vec(vehicle.x, vehicle.y, vehicle.z, vehicle.heading), vehicle.data)
+			local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data, vec(vehicle.x, vehicle.y, vehicle.z, vehicle.heading))
 			veh.modelData = exports.ox_property:getModelData(veh.data.model)
 			vehicles[veh.netid] = veh
 		end
@@ -59,7 +59,10 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 	local player = exports.ox_core:getPlayer(source)
 	-- TODO financial integration
 	if true then
-		local vehicle = exports.ox_vehicles:generateVehicle(player.charid, {model = joaat(data.model)}, data.type)
+		local vehicle = Ox.CreateVehicle(player.charid, {
+			model = data.model,
+			type = data.type,
+		})
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})
 		Wait(500)
 		MySQL.update('UPDATE user_vehicles SET stored = ? WHERE plate = ?', {('%s:%s'):format(data.property, data.zoneId), vehicle.plate})
@@ -90,7 +93,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 		vehicle.data = json.decode(vehicle.data)
 		MySQL.update('UPDATE user_vehicles SET stored = "displayed", x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, vehicle.data.plate})
 
-		local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data.model, spawn, vehicle.data)
+		local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data, spawn)
 		veh.modelData = exports.ox_property:getModelData(veh.data.model)
 		local vehicles = GlobalState['DisplayedVehicles']
 		vehicles[veh.netid] = veh
@@ -154,7 +157,7 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
 
 		vehicle.despawn()
 
-		local vehicle = Ox.CreateVehicle(player.charid, vehicle.data.model, vec(vehPos.xyz, vehHeading), vehicle.data)
+		vehicle = Ox.CreateVehicle(player.charid, vehicle.data, vec(vehPos.xyz, vehHeading))
 		for k, v in pairs(passengers) do
 			SetPedIntoVehicle(v, vehicle.entity, k)
 		end
