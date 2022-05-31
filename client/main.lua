@@ -158,6 +158,14 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 						plate = vehicle.plate
 					}
 				}
+				subOptions['Retrieve'] = {
+					event = 'ox_property:retrieveVehicle',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId,
+						plate = vehicle.plate
+					}
+				}
 				subOptions['Sell Wholesale'] = {
 					serverEvent = 'ox_vehicledealer:sellWholesale',
 					args = {
