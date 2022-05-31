@@ -283,10 +283,9 @@ RegisterNetEvent('ox_vehicledealer:wholesaleFilter', function(data)
 			end
 
 			local str = data.filter == 'price' and '$%s - $%s' or '%s - %s'
+			local label = str:format(range[1], range[2])
 			if range[3] and range[4] then
 				label = str:format(range[1], range[3]) .. ', ' .. str:format(range[4], range[2])
-			else
-				label = str:format(range[1], range[2])
 			end
 
 			local input = lib.inputDialog(data.filter:gsub('^%l', string.upper) .. ' range ' .. label, {'Low', 'High'})
