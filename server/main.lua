@@ -140,7 +140,7 @@ lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, 
 					parameters[#parameters + 1] = v.data[2]
 				end
 			end
-		elseif type(v) == 'table' then
+		elseif type(v.data) == 'table' then
 			if v.allow then
 				if filter ~= nil then
 					if table.contains(v.data, filter) then
@@ -176,12 +176,12 @@ lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, 
 					parameters[#parameters + 1] = v.data[1]
 				end
 			end
-		elseif (filter == nil or v == filter) and not v.allow then
+		elseif (filter == nil or v.data == filter) and not v.allow then
 			query[#query + 1] = (' %s != ?'):format(k)
-			parameters[#parameters + 1] = v
+			parameters[#parameters + 1] = v.data
 		elseif v.allow then
 			query[#query + 1] = (' %s = ?'):format(k)
-			parameters[#parameters + 1] = v
+			parameters[#parameters + 1] = v.data
 		else
 			query[#query + 1] = (' %s = ?'):format(k)
 			parameters[#parameters + 1] = filter
