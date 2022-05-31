@@ -6,8 +6,8 @@ game         'gta5'
 
 --[[ Resource Information ]]--
 name         'ox_vehicledealer'
-version      '0.2.0'
-description  'Property'
+version      '0.2.1'
+description  'Vehicle Dealer'
 license      'GPL-3.0-or-later'
 author       'overextended'
 repository   'https://github.com/overextended/ox_vehicledealer'
