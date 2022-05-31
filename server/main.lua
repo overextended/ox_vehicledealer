@@ -249,11 +249,11 @@ end)
 RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 	local player = lib.getPlayer(source)
 	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
-	local vehicle = MySQL.single.await('SELECT charid, data FROM user_vehicles WHERE plate = ? AND charid = ?', {data.plate, player.charid})
+	local vehicle = MySQL.single.await('SELECT charid, type, data FROM user_vehicles WHERE plate = ? AND charid = ?', {data.plate, player.charid})
 
 	local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
 
-	if vehicle and spawn then
+	if vehicle and spawn and zone.vehicles[vehicle.type] then
 		vehicle.data = json.decode(vehicle.data)
 		MySQL.update('UPDATE user_vehicles SET stored = "displayed", x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, vehicle.data.plate})
 
