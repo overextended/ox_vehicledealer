@@ -1,5 +1,6 @@
 local table = lib.table
 local filterCount = {}
+local showroomRestrictions = {}
 
 local function registerRestrictions(zone)
 	zone.restrictions.allow.type = {}
@@ -83,7 +84,6 @@ AddEventHandler('onResourceStart', function(resource)
 			end
 		end
 
-		local showroomRestrictions = {}
 		local properties = GlobalState['Properties']
 		for k, v in pairs(properties) do
 			if v.zones then
