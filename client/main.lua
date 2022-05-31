@@ -55,7 +55,8 @@ exports.ox_property:registerZoneMenu('showroom',
 			event = 'ox_vehicledealer:buyWholesale',
 			args = {
 				property = currentZone.property,
-				zoneId = currentZone.zoneId
+				zoneId = currentZone.zoneId,
+				restrictions = GlobalState['ShowroomRestrictions'][('%s:%s'):format(currentZone.property, currentZone.zoneId)]
 			}
 		}
 
@@ -207,17 +208,20 @@ RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 		local options = {}
 		for i = 1, #filters do
 			local filter = filters[i]
-			options[#options + 1] = {
-				title =  ('%s: %s'):format(filter:gsub('^%l', string.upper), data.filters?[filter]?.label or 'any'),
-				arrow = true,
-				event = 'ox_vehicledealer:wholesaleFilter',
-				args = {
-					property = currentZone.property,
-					zoneId = currentZone.zoneId,
-					filters = data.filters,
-					filter = filter
+			if not data.restrictions?[filter]?.hide then
+				options[#options + 1] = {
+					title =  ('%s: %s'):format(filter:gsub('^%l', string.upper), data.filters?[filter]?.label or 'any'),
+					arrow = true,
+					event = 'ox_vehicledealer:wholesaleFilter',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId,
+						restrictions = data.restrictions,
+						filters = data.filters,
+						filter = filter
+					}
 				}
-			}
+			end
 		end
 
 		options[#options + 1] = {
@@ -243,6 +247,7 @@ end)
 RegisterNetEvent('ox_vehicledealer:wholesaleFilter', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
+		local restriction = data.restrictions[data.filter]
 		if data.filter == 'model' or data.filter == 'name' then
 			local input = lib.inputDialog('Search Term', {data.filter:gsub('^%l', string.upper)})
 			if input then
@@ -252,62 +257,39 @@ RegisterNetEvent('ox_vehicledealer:wholesaleFilter', function(data)
 			end
 			Wait(100)
 			TriggerEvent('ox_vehicledealer:buyWholesale', data)
-		elseif table.contains({'make', 'type', 'bodytype', 'class', 'weapons'}, data.filter) then
-			local available
-			if data.filter == 'weapons' then
-				available = {'yes', 'no'}
-			else
-				available = GlobalState['VehicleFilters'][data.filter]
-			end
-
-			local filters = table.deepclone(data.filters)
-			filters[data.filter] = nil
-
-			local options = {
-				{
-					title = 'Any',
-					event = 'ox_vehicledealer:buyWholesale',
-					args = {
-						property = currentZone.property,
-						zoneId = currentZone.zoneId,
-						filters = filters
-					}
-				}
-			}
-
-			for i = data.filter == 'class' and 0 or 1, #available do
-				local item = available[i]
-
-				local args = table.deepclone(data)
-				args.property = currentZone.property
-				args.zoneId = currentZone.zoneId
-
-				if data.filter == 'class' then
-					args.filters[data.filter] = {label = item, value = i}
-				elseif data.filter == 'weapons' then
-					args.filters[data.filter] = {label = item, value = item == 'yes'}
-				else
-					args.filters[data.filter] = {label = item, value = item}
-				end
-
-				options[#options + 1] = {
-					title = item:gsub('^%l', string.upper),
-					event = 'ox_vehicledealer:buyWholesale',
-					args = args
-				}
-			end
-
-			lib.registerContext({
-				id = 'filter_menu',
-				title = data.filter:gsub('^%l', string.upper),
-				menu = 'buy_wholesale',
-				options = options
-			})
-			lib.showContext('filter_menu')
 		elseif data.filter == 'price' or data.filter == 'doors' or data.filter == 'seats' then
 			local range = GlobalState['VehicleFilters'][data.filter]
+			if restriction then
+				if restriction.allow then
+					range = {
+						restriction.data[1] > range[1] and restriction.data[1] or range[1],
+						restriction.data[2] < range[2] and restriction.data[2] or range[2]
+					}
+				else
+					if (restriction.data[1] - range[1]) > 0 and (range[2] - restriction.data[2]) > 0 then
+						range = {
+							range[1],
+							range[2],
+							restriction.data[1],
+							restriction.data[2],
+						}
+					else
+						range = {
+							restriction.data[1] == range[1] and restriction.data[2] or range[1],
+							restriction.data[2] == range[2] and restriction.data[1] or range[2]
+						}
+					end
+				end
+			end
+
 			local str = data.filter == 'price' and '$%s - $%s' or '%s - %s'
-			local input = lib.inputDialog(data.filter:gsub('^%l', string.upper) .. ' range ' .. str:format(range[1], range[2]), {'Low', 'High'})
+			if range[3] and range[4] then
+				label = str:format(range[1], range[3]) .. ', ' .. str:format(range[4], range[2])
+			else
+				label = str:format(range[1], range[2])
+			end
+
+			local input = lib.inputDialog(data.filter:gsub('^%l', string.upper) .. ' range ' .. label, {'Low', 'High'})
 			if input then
 				input[1] = tonumber(input[1])
 				input[2] = tonumber(input[2])
@@ -343,6 +325,68 @@ RegisterNetEvent('ox_vehicledealer:wholesaleFilter', function(data)
 			end
 			Wait(100)
 			TriggerEvent('ox_vehicledealer:buyWholesale', data)
+		else
+			local available = data.filter == 'weapons' and {'yes', 'no'} or GlobalState['VehicleFilters'][data.filter]
+
+			local filters = table.deepclone(data.filters)
+			filters[data.filter] = nil
+
+			local options = {
+				{
+					title = 'Any',
+					event = 'ox_vehicledealer:buyWholesale',
+					args = {
+						property = currentZone.property,
+						zoneId = currentZone.zoneId,
+						restrictions = data.restrictions,
+						filters = filters
+					}
+				}
+			}
+
+			for i = data.filter == 'class' and 0 or 1, #available do
+				local item = data.filter == 'class' and i or available[i]
+				if restriction then
+					if restriction.allow then
+						if (type(restriction.data) == 'table' and not table.contains(restriction.data, item)) or (type(restriction.data) ~= 'table' and restriction.data ~= item) then
+							item = nil
+						end
+					else
+						if (type(restriction.data) == 'table' and table.contains(restriction.data, item)) or (type(restriction.data) ~= 'table' and restriction.data == item) then
+							item = nil
+						end
+					end
+				end
+
+				if item then
+					local args = table.deepclone(data)
+					args.property = currentZone.property
+					args.zoneId = currentZone.zoneId
+
+					item = data.filter == 'class' and available[i] or item
+					if data.filter == 'class' then
+						args.filters[data.filter] = {label = item, value = i}
+					elseif data.filter == 'weapons' then
+						args.filters[data.filter] = {label = item, value = item == 'yes'}
+					else
+						args.filters[data.filter] = {label = item, value = item}
+					end
+
+					options[#options + 1] = {
+						title = item:gsub('^%l', string.upper),
+						event = 'ox_vehicledealer:buyWholesale',
+						args = args
+					}
+				end
+			end
+
+			lib.registerContext({
+				id = 'filter_menu',
+				title = data.filter:gsub('^%l', string.upper),
+				menu = 'buy_wholesale',
+				options = options
+			})
+			lib.showContext('filter_menu')
 		end
 	end
 end)

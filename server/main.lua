@@ -1,4 +1,52 @@
 local table = lib.table
+local filterCount = {}
+
+local function registerRestrictions(zone)
+	zone.restrictions.allow.type = {}
+	for k, v in pairs(zone.vehicles) do
+		zone.restrictions.allow.type[#zone.restrictions.allow.type + 1] = k
+	end
+
+	local restrictions = {}
+	for k, v in pairs(zone.restrictions.allow) do
+		local hide = false
+		if k == 'price' or k == 'doors' or k == 'seats' then
+			hide = (v[2] - v[1]) < 2
+		elseif k == 'weapons' then
+			hide = true
+		elseif k ~= 'model' and k ~= 'name' then
+			hide = #v < 2
+		end
+
+		restrictions[k] = {
+			allow = true,
+			hide = hide,
+			data = v
+		}
+		if zone.restrictions.deny[k] then
+			zone.restrictions.deny[k] = nil
+		end
+	end
+
+	for k, v in pairs(zone.restrictions.deny) do
+		local hide = false
+		if k == 'price' or k == 'doors' or k == 'seats' then
+			hide = (filterCount[k] - (v[2] - v[1])) < 2
+		elseif k == 'weapons' then
+			hide = true
+		elseif k ~= 'model' and k ~= 'name' then
+			hide = (filterCount[k] - #v) < 2
+		end
+
+		restrictions[k] = {
+			allow = false,
+			hide = hide,
+			data = v
+		}
+	end
+
+	return restrictions
+end
 
 AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -22,6 +70,33 @@ AddEventHandler('onResourceStart', function(resource)
 		for k, v in pairs(vehicles) do
 			FreezeEntityPosition(v.entity, true)
 		end
+
+		local vehicleFilters = GlobalState['VehicleFilters']
+
+		for k, v in pairs(vehicleFilters) do
+			if k == 'price' or k == 'doors' or k == 'seats' then
+				filterCount[k] = v[2] - v[1]
+			elseif k == 'class' then
+				filterCount[k] = #v + 1
+			else
+				filterCount[k] = #v
+			end
+		end
+
+		local showroomRestrictions = {}
+		local properties = GlobalState['Properties']
+		for k, v in pairs(properties) do
+			if v.zones then
+				for i = 1, #v.zones do
+					local zone = v.zones[i]
+					if zone.type == 'showroom' and zone.restrictions then
+						showroomRestrictions[('%s:%s'):format(k, i)] = registerRestrictions(zone)
+					end
+				end
+			end
+		end
+
+		GlobalState['ShowroomRestrictions'] = showroomRestrictions
 	end
 end)
 
@@ -30,20 +105,109 @@ lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, 
 	local query = {'SELECT * FROM vehicle_data', ' WHERE'}
 	local parameters = {}
 
+	local restrictions = showroomRestrictions[('%s:%s'):format(data.property, data.zoneId)]
+	for k, v in pairs(restrictions) do
+		local filter = data.filters[k]
+		if k == 'price' or k == 'doors' or k == 'seats' then
+			if v.allow then
+				query[#query + 1] = (' %s BETWEEN ? AND ?'):format(k)
+				parameters[#parameters + 1] = filter?[1] > v.data[1] and filter[1] or v.data[1]
+				parameters[#parameters + 1] = filter?[2] < v.data[2] and filter[2] or v.data[2]
+			else
+				if filter then
+					if filter[2] <= v.data[1] or filter[1] >= v.data[2] then
+						query[#query + 1] = (' %s BETWEEN ? AND ?'):format(k)
+						v.data = filter
+					elseif filter[1] < v.data[1] and filter[2] < v.data[2] then
+						query[#query + 1] = (' %s BETWEEN ? AND ?'):format(k)
+						v.data = {filter[1], v.data[1]}
+					elseif filter[1] > v.data[1] and filter[2] > v.data[2] then
+						query[#query + 1] = (' %s BETWEEN ? AND ?'):format(k)
+						v.data = {v.data[2], filter[2]}
+					elseif filter[1] < v.data[1] and filter[2] > v.data[2] then
+						query[#query + 1] = (' (%s BETWEEN ? AND ? OR %s BETWEEN ? AND ?)'):format(k, k)
+						v.data = {filter[1], v.data[1], v.data[2], filter[2]}
+					else
+						query[#query + 1] = (' %s NOT BETWEEN ? AND ?'):format(k)
+					end
+
+					for i = 1, #v.data do
+						parameters[#parameters + 1] = v.data[i]
+					end
+				else
+					query[#query + 1] = (' %s NOT BETWEEN ? AND ?'):format(k)
+					parameters[#parameters + 1] = v.data[1]
+					parameters[#parameters + 1] = v.data[2]
+				end
+			end
+		elseif type(v) == 'table' then
+			if v.allow then
+				if filter ~= nil then
+					if table.contains(v.data, filter) then
+						v.data = {filter}
+					end
+				end
+
+				if #v.data > 1 then
+					query[#query + 1] = (' %s IN (?)'):format(k)
+					parameters[#parameters + 1] = v.data
+				elseif #v.data > 0 then
+					query[#query + 1] = (' %s = ?'):format(k)
+					parameters[#parameters + 1] = v.data[1]
+				end
+			else
+				local allow
+				if filter ~= nil then
+					if not table.contains(v.data, filter) then
+						v.data = {filter}
+						allow = true
+					end
+				end
+
+				if #v > 1 then
+					query[#query + 1] = (' %s NOT IN (?)'):format(k)
+					parameters[#parameters + 1] = v.data
+				elseif #v.data > 0 then
+					if allow then
+						query[#query + 1] = (' %s = ?'):format(k)
+					else
+						query[#query + 1] = (' %s != ?'):format(k)
+					end
+					parameters[#parameters + 1] = v.data[1]
+				end
+			end
+		elseif (filter == nil or v == filter) and not v.allow then
+			query[#query + 1] = (' %s != ?'):format(k)
+			parameters[#parameters + 1] = v
+		elseif v.allow then
+			query[#query + 1] = (' %s = ?'):format(k)
+			parameters[#parameters + 1] = v
+		else
+			query[#query + 1] = (' %s = ?'):format(k)
+			parameters[#parameters + 1] = filter
+		end
+
+		if #query > 3 then
+			query[#query] = ' AND' .. query[#query]
+		end
+		data.filters[k] = nil
+	end
+
 	for k, v in pairs(data.filters) do
 		if k == 'model' or k == 'name' then
 			query[#query + 1] = (' %s LIKE ?'):format(k)
 			parameters[#parameters + 1] = ('%%%s%%'):format(v)
-		elseif table.contains({'make', 'type', 'bodytype', 'class', 'weapons'}, k) then
-			query[#query + 1] = (' %s = ?'):format(k)
-			parameters[#parameters + 1] = v
 		elseif k == 'price' or k == 'doors' or k == 'seats' then
 			query[#query + 1] = (' %s BETWEEN ? AND ?'):format(k)
 			parameters[#parameters + 1] = v[1]
 			parameters[#parameters + 1] = v[2]
+		else
+			query[#query + 1] = (' %s = ?'):format(k)
+			parameters[#parameters + 1] = v
 		end
+
 		if #query > 3 then
-			query[#query] = ',' .. query[#query]
+			query[#query] = ' AND' .. query[#query]
 		end
 	end
 

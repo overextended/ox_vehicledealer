@@ -31,6 +31,14 @@ return {
 				name = 'Showroom',
 				type = 'showroom',
 				vehicles = { .automobile, .bike },
+				restrictions = {
+					allow = {
+						weapons = false,
+					},
+					deny = {
+						class = {18, 19, 21},
+					},
+				},
 				disableGenerators = true,
 				points = {
 					vec(-37.8, -1094.4, 26.5),
