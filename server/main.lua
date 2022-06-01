@@ -212,7 +212,9 @@ lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, 
 	end
 
 	if not next(parameters) then
-		query[2] = nil
+		query[2] = ' ORDER BY name'
+	else
+		query[#query + 1] = ' ORDER BY name'
 	end
 
 	query = table.concat(query)
