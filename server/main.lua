@@ -62,7 +62,7 @@ AddEventHandler('onResourceStart', function(resource)
 
 			local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data, vec(vehicle.x, vehicle.y, vehicle.z, vehicle.heading))
 			veh.modelData = exports.ox_property:getModelData(veh.data.model)
-			vehicles[veh.netid] = veh
+			vehicles[veh.plate] = veh
 		end
 
 		GlobalState['DisplayedVehicles'] = vehicles
@@ -255,12 +255,12 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
 	if vehicle and spawn and zone.vehicles[vehicle.type] then
 		vehicle.data = json.decode(vehicle.data)
-		MySQL.update('UPDATE user_vehicles SET stored = "displayed", x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, vehicle.data.plate})
+		MySQL.update('UPDATE user_vehicles SET stored = "displayed", x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, data.plate})
 
 		local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data, spawn)
 		veh.modelData = exports.ox_property:getModelData(veh.data.model)
 		local vehicles = GlobalState['DisplayedVehicles']
-		vehicles[veh.netid] = veh
+		vehicles[veh.plate] = veh
 		GlobalState['DisplayedVehicles'] = vehicles
 
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle displayed', type = 'success'})
@@ -303,9 +303,9 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
 	local vehicle = Vehicle(NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(plyPed, false)))
 	-- TODO financial integration
 	if true then
-		MySQL.update.await('UPDATE user_vehicles SET charid = ?, stored = "false" WHERE plate = ?', {player.charid, vehicle.data.plate})
+		MySQL.update.await('UPDATE user_vehicles SET charid = ?, stored = "false" WHERE plate = ?', {player.charid, vehicle.plate})
 		local vehicles = GlobalState['DisplayedVehicles']
-		vehicles[vehicle.netid] = nil
+		vehicles[vehicle.plate] = nil
 		GlobalState['DisplayedVehicles'] = vehicles
 
 		local vehPos = GetEntityCoords(vehicle.entity)

@@ -19,7 +19,7 @@ exports.ox_property:registerZoneMenu('showroom',
 					zoneId = currentZone.zoneId
 				}
 			}
-			local vehicle = GlobalState['DisplayedVehicles'][VehToNet(cache.vehicle)]
+			local vehicle = GlobalState['DisplayedVehicles'][GetVehicleNumberPlateText(cache.vehicle)]
 			if vehicle then
 				options[#options + 1] = {
 					title = 'Move Vehicle',
@@ -126,10 +126,9 @@ end)
 
 lib.onCache('vehicle', function(vehicle)
 	if vehicle then
-		local netid = VehToNet(vehicle)
-		local veh = displayedVehicles[netid]
+		local veh = displayedVehicles[GetVehicleNumberPlateText(vehicle)]
 		if veh then
-			lib.showTextUI(('Plate: %s  \nMake: %s  \nBodyType: %s  \n'):format(veh.plate, veh.modelData.make, veh.modelData.bodytype))
+			lib.showTextUI(('Plate: %s  \nMake: %s  \nBodyType: %s'):format(veh.plate, veh.modelData.make, veh.modelData.bodytype))
 		end
 	else
 		lib.hideTextUI()
