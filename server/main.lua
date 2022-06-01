@@ -333,3 +333,9 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
 	end
 end)
+
+AddEventHandler('ox_property:vehicleStateChange', function(plate, action)
+	local vehicles = GlobalState['DisplayedVehicles']
+	vehicles[plate] = nil
+	GlobalState['DisplayedVehicles'] = vehicles
+end)
