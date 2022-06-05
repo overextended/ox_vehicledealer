@@ -102,6 +102,10 @@ end)
 
 lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, data)
 	local player = lib.getPlayer(source)
+	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+	if not exports.ox_property:isPermitted(player, zone) then return end
+
 	local query = {'SELECT * FROM vehicle_data', ' WHERE'}
 	local parameters = {}
 
@@ -223,6 +227,10 @@ end)
 
 RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 	local player = lib.getPlayer(source)
+	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+	if not exports.ox_property:isPermitted(player, zone) then return end
+
 	-- TODO financial integration
 	if true then
 		local vehicle = Ox.CreateVehicle(player.charid, {
@@ -239,6 +247,10 @@ end)
 
 RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
 	local player = lib.getPlayer(source)
+	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+	if not exports.ox_property:isPermitted(player, zone) then return end
+
 	-- TODO financial integration
 	if true then
 		MySQL.update.await('DELETE FROM user_vehicles WHERE plate = ?', {data.plate})
@@ -251,6 +263,9 @@ end)
 RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 	local player = lib.getPlayer(source)
 	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+	if not exports.ox_property:isPermitted(player, zone) then return end
+
 	local vehicle = MySQL.single.await('SELECT charid, type, data FROM user_vehicles WHERE plate = ? AND charid = ?', {data.plate, player.charid})
 
 	local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
@@ -276,6 +291,10 @@ end)
 
 RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 	local player = lib.getPlayer(source)
+	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+	if not exports.ox_property:isPermitted(player, zone) then return end
+
 	local vehicle = Vehicle(NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(GetPlayerPed(player.source), false)))
 	if data.rotate then
 		local heading = GetEntityHeading(vehicle.entity) + 180
@@ -284,7 +303,6 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 
 		MySQL.update('UPDATE user_vehicles SET heading = ? WHERE plate = ?', {heading, data.plate})
 	else
-		local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 		local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
 
 		if spawn then
