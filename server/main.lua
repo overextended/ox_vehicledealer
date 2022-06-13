@@ -53,14 +53,14 @@ AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
 		exports.ox_property:loadDataFiles()
 
-		local displayedVehicles = MySQL.query.await('SELECT charid, data, x, y, z, heading FROM user_vehicles WHERE stored = "displayed"')
+		local displayedVehicles = MySQL.query.await('SELECT owner, data, x, y, z, heading FROM vehicles WHERE stored = "displayed"')
 
 		local vehicles = {}
 		for i = 1, #displayedVehicles do
 			local vehicle = displayedVehicles[i]
 			vehicle.data = json.decode(vehicle.data)
 
-			local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data, vec(vehicle.x, vehicle.y, vehicle.z, vehicle.heading))
+			local veh = Ox.CreateVehicle(vehicle.owner, vehicle.data, vec(vehicle.x, vehicle.y, vehicle.z, vehicle.heading))
 			veh.modelData = exports.ox_property:getModelData(veh.data.model)
 			vehicles[veh.plate] = veh
 		end
@@ -239,7 +239,7 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 		})
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})
 		Wait(500)
-		MySQL.update('UPDATE user_vehicles SET stored = ? WHERE plate = ?', {('%s:%s'):format(data.property, data.zoneId), vehicle.plate})
+		MySQL.update('UPDATE vehicles SET stored = ? WHERE plate = ?', {('%s:%s'):format(data.property, data.zoneId), vehicle.plate})
 	else
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
 	end
@@ -253,7 +253,7 @@ RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
 
 	-- TODO financial integration
 	if true then
-		MySQL.update.await('DELETE FROM user_vehicles WHERE plate = ?', {data.plate})
+		MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {data.plate})
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle sold', type = 'success'})
 	else
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
@@ -266,15 +266,15 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
 	if not exports.ox_property:isPermitted(player, zone) then return end
 
-	local vehicle = MySQL.single.await('SELECT charid, type, data FROM user_vehicles WHERE plate = ? AND charid = ?', {data.plate, player.charid})
+	local vehicle = MySQL.single.await('SELECT owner, type, data FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
 
 	local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
 
 	if vehicle and spawn and zone.vehicles[vehicle.type] then
 		vehicle.data = json.decode(vehicle.data)
-		MySQL.update('UPDATE user_vehicles SET stored = "displayed", x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, data.plate})
+		MySQL.update('UPDATE vehicles SET stored = "displayed", x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, data.plate})
 
-		local veh = Ox.CreateVehicle(vehicle.charid, vehicle.data, spawn)
+		local veh = Ox.CreateVehicle(vehicle.owner, vehicle.data, spawn)
 		veh.modelData = exports.ox_property:getModelData(veh.data.model)
 		local vehicles = GlobalState['DisplayedVehicles']
 		vehicles[veh.plate] = veh
@@ -301,7 +301,7 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 		SetEntityHeading(vehicle.entity, heading)
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle rotated', type = 'success'})
 
-		MySQL.update('UPDATE user_vehicles SET heading = ? WHERE plate = ?', {heading, data.plate})
+		MySQL.update('UPDATE vehicles SET heading = ? WHERE plate = ?', {heading, data.plate})
 	else
 		local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
 
@@ -310,7 +310,7 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 			SetEntityHeading(vehicle.entity, spawn.w)
 			TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle moved', type = 'success'})
 
-			MySQL.update('UPDATE user_vehicles SET x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, data.plate})
+			MySQL.update('UPDATE vehicles SET x = ?, y = ?, z = ?, heading = ? WHERE plate = ?', {spawn.x, spawn.y, spawn.z, spawn.w, data.plate})
 		else
 			TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to move', type = 'error'})
 		end
@@ -323,7 +323,7 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
 	local vehicle = Vehicle(NetworkGetNetworkIdFromEntity(GetVehiclePedIsIn(plyPed, false)))
 	-- TODO financial integration
 	if true then
-		MySQL.update.await('UPDATE user_vehicles SET charid = ?, stored = "false" WHERE plate = ?', {player.charid, vehicle.plate})
+		MySQL.update.await('UPDATE vehicles SET owner = ?, stored = "false" WHERE plate = ?', {player.charid, vehicle.plate})
 		local vehicles = GlobalState['DisplayedVehicles']
 		vehicles[vehicle.plate] = nil
 		GlobalState['DisplayedVehicles'] = vehicles
