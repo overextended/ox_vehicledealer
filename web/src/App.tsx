@@ -34,8 +34,8 @@ export default function App() {
             padding="sm"
             sx={(theme) => ({
               backgroundColor: theme.colors.dark[8],
-              width: 1125,
-              height: 700,
+              width: theme.breakpoints.lg,
+              height: theme.breakpoints.sm,
             })}
             navbar={<Nav />}
           >

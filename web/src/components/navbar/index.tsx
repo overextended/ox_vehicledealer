@@ -25,14 +25,15 @@ const useStyles = createStyles((theme) => {
 const data = ["Compacts", "Sedans", "SUVs", "Coupes", "Muscle", "Sports", "Super", "Motorcycles"];
 
 const Nav: React.FC = () => {
+  const theme = useMantineTheme();
   const { classes } = useStyles();
 
   return (
-    <Navbar height={700} width={{ sm: 200 }} p="md">
+    <Navbar height={theme.breakpoints.sm} width={{ sm: 200 }} p="md">
       <Navbar.Section sx={{ fontWeight: 500, paddingBottom: 10 }}>
         <Group noWrap>
           <ActionIcon variant="outline" color="blue" size="lg">
-            <TbFilter fontSize={24} />
+            <TbFilter fontSize={20} />
           </ActionIcon>
           <Input icon={<TbSearch />} />
         </Group>
