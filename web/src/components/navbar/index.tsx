@@ -1,5 +1,6 @@
-import { createStyles, Navbar, Group, Input, ActionIcon, Divider, Box } from "@mantine/core";
+import { createStyles, Navbar, Group, Input, ActionIcon, Divider, Box, Collapse, useMantineTheme } from "@mantine/core";
 import { TbCar, TbMotorbike, TbFilter, TbSearch } from "react-icons/tb";
+import { useToggle } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => {
   return {
@@ -27,16 +28,20 @@ const data = ["Compacts", "Sedans", "SUVs", "Coupes", "Muscle", "Sports", "Super
 const Nav: React.FC = () => {
   const theme = useMantineTheme();
   const { classes } = useStyles();
+  const [collapse, toggleCollapse] = useToggle(false, [false, true]);
 
   return (
     <Navbar height={theme.breakpoints.sm} width={{ sm: 200 }} p="md">
       <Navbar.Section sx={{ fontWeight: 500, paddingBottom: 10 }}>
         <Group noWrap>
-          <ActionIcon variant="outline" color="blue" size="lg">
+          <ActionIcon variant="outline" color="blue" size="lg" onClick={() => toggleCollapse()}>
             <TbFilter fontSize={20} />
           </ActionIcon>
           <Input icon={<TbSearch />} />
         </Group>
+        <Collapse in={collapse}>
+          <Box mt={15}>Additional settings go here</Box>
+        </Collapse>
         <Divider mt={15} />
       </Navbar.Section>
 
