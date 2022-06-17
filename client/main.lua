@@ -475,3 +475,11 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 		TriggerServerEvent('ox_vehicledealer:buyVehicle', data)
 	end
 end)
+
+RegisterCommand('testui', function()
+	SendNUIMessage({
+		action = 'setVisible',
+		data = true
+	})
+	SetNuiFocus(true, true)
+end)
