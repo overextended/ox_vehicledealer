@@ -13,8 +13,8 @@ const Content: React.FC = () => {
   return (
     <>
       <SimpleGrid cols={4} spacing={1}>
-        {data.map((vehicle) => (
-          <VehicleCard vehicle={vehicle} />
+        {data.map((vehicle, index) => (
+          <VehicleCard key={`vehicle-${index}`} vehicle={vehicle} />
         ))}
       </SimpleGrid>
     </>

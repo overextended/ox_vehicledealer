@@ -58,8 +58,10 @@ const Nav: React.FC = () => {
       </Navbar.Section>
 
       <Navbar.Section grow mt={5} component={ScrollArea}>
-        {data.map((vehicleClass) => (
-          <Box className={classes.category}>{vehicleClass}</Box>
+        {data.map((vehicleClass, index) => (
+          <Box key={`category-${index}`} className={classes.category}>
+            {vehicleClass}
+          </Box>
         ))}
       </Navbar.Section>
     </Navbar>
