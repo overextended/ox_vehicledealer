@@ -43,7 +43,12 @@ const Nav: React.FC = () => {
   const [collapse, toggleCollapse] = useToggle(false, [false, true]);
 
   return (
-    <Navbar height={theme.breakpoints.sm} width={{ sm: 200 }} p="md">
+    <Navbar
+      height={theme.breakpoints.sm}
+      width={{ sm: 200 }}
+      p="md"
+      sx={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
+    >
       <Navbar.Section sx={{ fontWeight: 500, paddingBottom: 10 }}>
         <Group noWrap>
           <ActionIcon variant="outline" color="blue" size="lg" onClick={() => toggleCollapse()}>

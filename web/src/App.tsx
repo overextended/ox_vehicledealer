@@ -26,6 +26,7 @@ export default function App() {
           <AppShell
             padding="sm"
             sx={(theme) => ({
+              borderRadius: 5,
               backgroundColor: theme.colors.dark[8],
               width: theme.breakpoints.lg,
               height: theme.breakpoints.sm,
