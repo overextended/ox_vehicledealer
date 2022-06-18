@@ -8,13 +8,11 @@ import {
   Box,
   Collapse,
   useMantineTheme,
-  Slider,
-  Text,
-  Stack,
   ScrollArea,
 } from "@mantine/core";
 import { TbCar, TbMotorbike, TbFilter, TbSearch } from "react-icons/tb";
 import { useToggle } from "@mantine/hooks";
+import Filters from "./components/Filters";
 
 const useStyles = createStyles((theme) => {
   return {
@@ -54,22 +52,7 @@ const Nav: React.FC = () => {
           <Input icon={<TbSearch />} />
         </Group>
         <Collapse in={collapse}>
-          <Box mt={15} sx={{ fontWeight: 400, fontFamily: "Nunito" }}>
-            <Stack>
-              <Stack spacing="xs">
-                <Text>Price</Text>
-                <Slider />
-              </Stack>
-              <Stack spacing="xs">
-                <Text>Seats</Text>
-                <Slider min={1} max={16} />
-              </Stack>
-              <Stack spacing="xs">
-                <Text>Doors</Text>
-                <Slider min={1} max={8} />
-              </Stack>
-            </Stack>
-          </Box>
+          <Filters />
         </Collapse>
         <Divider mt={15} />
       </Navbar.Section>
