@@ -1,4 +1,18 @@
-import { createStyles, Navbar, Group, Input, ActionIcon, Divider, Box, Collapse, useMantineTheme } from "@mantine/core";
+import {
+  createStyles,
+  Navbar,
+  Group,
+  Input,
+  ActionIcon,
+  Divider,
+  Box,
+  Collapse,
+  useMantineTheme,
+  Slider,
+  Text,
+  Stack,
+  ScrollArea,
+} from "@mantine/core";
 import { TbCar, TbMotorbike, TbFilter, TbSearch } from "react-icons/tb";
 import { useToggle } from "@mantine/hooks";
 
@@ -9,7 +23,7 @@ const useStyles = createStyles((theme) => {
       display: "flex",
       alignItems: "center",
       textDecoration: "none",
-      fontSize: theme.fontSizes.sm,
+      fontSize: theme.fontSizes.md,
       color: theme.colors.dark[1],
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
       borderRadius: theme.radius.sm,
@@ -40,12 +54,27 @@ const Nav: React.FC = () => {
           <Input icon={<TbSearch />} />
         </Group>
         <Collapse in={collapse}>
-          <Box mt={15}>Additional settings go here</Box>
+          <Box mt={15} sx={{ fontWeight: 400, fontFamily: "Nunito" }}>
+            <Stack>
+              <Stack spacing="xs">
+                <Text>Price</Text>
+                <Slider />
+              </Stack>
+              <Stack spacing="xs">
+                <Text>Seats</Text>
+                <Slider min={1} max={16} />
+              </Stack>
+              <Stack spacing="xs">
+                <Text>Doors</Text>
+                <Slider min={1} max={8} />
+              </Stack>
+            </Stack>
+          </Box>
         </Collapse>
         <Divider mt={15} />
       </Navbar.Section>
 
-      <Navbar.Section grow mt={5}>
+      <Navbar.Section grow mt={5} component={ScrollArea}>
         {data.map((vehicleClass) => (
           <Box className={classes.category}>{vehicleClass}</Box>
         ))}
