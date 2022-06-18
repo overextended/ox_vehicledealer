@@ -6,7 +6,7 @@ const Filters: React.FC = () => {
     <>
       <Box mt={15} sx={{ fontWeight: 400 }}>
         <Stack>
-          <FilterSlider label="Price" />
+          <FilterSlider label="Price" max={7900000} />
           <FilterSlider label="Seats" min={1} max={16} />
           <FilterSlider label="Doors" max={8} min={1} />
         </Stack>
