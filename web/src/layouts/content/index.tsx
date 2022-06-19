@@ -1,4 +1,4 @@
-import { SimpleGrid } from "@mantine/core";
+import { SimpleGrid, ScrollArea } from "@mantine/core";
 import VehicleCard from "../../components/VehicleCard";
 
 const data = [
@@ -11,13 +11,13 @@ const data = [
 
 const Content: React.FC = () => {
   return (
-    <>
+    <ScrollArea scrollbarSize={6} offsetScrollbars style={{ height: "100%" }}>
       <SimpleGrid cols={4} spacing={1}>
         {data.map((vehicle, index) => (
           <VehicleCard key={`vehicle-${index}`} vehicle={vehicle} />
         ))}
       </SimpleGrid>
-    </>
+    </ScrollArea>
   );
 };
 

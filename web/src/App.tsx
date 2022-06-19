@@ -31,6 +31,12 @@ export default function App() {
               width: theme.breakpoints.lg,
               height: theme.breakpoints.sm,
             })}
+            styles={(theme) => ({
+              main: {
+                height: theme.breakpoints.sm,
+                overflow: "hidden",
+              },
+            })}
             navbar={<Nav />}
           >
             <Content />
