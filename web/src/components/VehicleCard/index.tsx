@@ -1,7 +1,8 @@
-import { Box, Card, Group, Button, Text, Stack, Title } from "@mantine/core";
+import { Box, Card, Group, Button, Grid, Stack, Title, SimpleGrid } from "@mantine/core";
 import { TbReceipt2 } from "react-icons/tb";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
+import IconGroup from "./IconGroup";
 
 interface VehicleProps {
   make: string;
@@ -25,27 +26,15 @@ const VehicleCard: React.FC<{ vehicle: VehicleProps }> = ({ vehicle }) => {
               order={4}
             >{`${vehicle.make} ${vehicle.name}`}</Title>
           </Card.Section>
-          <Card.Section p={10}>
+          <Card.Section p={10} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Group position="center" spacing="xl">
               <Stack spacing="sm">
-                <Group spacing={5}>
-                  <TbReceipt2 fontSize={20} />
-                  <Text>{vehicle.price}</Text>
-                </Group>
-                <Group spacing={5}>
-                  <MdAirlineSeatReclineNormal fontSize={20} />
-                  <Text>{vehicle.seats}</Text>
-                </Group>
+                <IconGroup label={vehicle.price} Icon={TbReceipt2} />
+                <IconGroup label={vehicle.seats} Icon={MdAirlineSeatReclineNormal} />
               </Stack>
               <Stack spacing="sm">
-                <Group spacing={5}>
-                  <GiCarDoor fontSize={20} />
-                  <Text>{vehicle.doors}</Text>
-                </Group>
-                <Group spacing={5}>
-                  <GiHeavyBullets fontSize={20} />
-                  <Text>{vehicle.weapons ? "Yes" : "No"}</Text>
-                </Group>
+                <IconGroup label={vehicle.doors} Icon={GiCarDoor} />
+                <IconGroup label={vehicle.weapons ? "Yes" : "No"} Icon={GiHeavyBullets} />
               </Stack>
             </Group>
           </Card.Section>
