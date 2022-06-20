@@ -57,7 +57,7 @@ const Nav: React.FC = () => {
           <Input icon={<TbSearch />} />
         </Group>
         <Collapse in={collapse}>
-          <Filters />
+          <Filters opened={collapse} />
         </Collapse>
         <Divider mt={15} />
       </Navbar.Section>

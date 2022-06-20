@@ -1,11 +1,20 @@
 import { Box, Stack, NumberInput } from "@mantine/core";
+import React from "react";
 import FilterSlider from "../../../components/FilterSlider";
 import { TbReceipt2 } from "react-icons/tb";
 import { useAppDispatch, useAppSelector } from "../../../state";
+import { useDebounce } from "../../../hooks/useDebounce";
 
-const Filters: React.FC = () => {
+const Filters: React.FC<{ opened: boolean }> = ({ opened }) => {
   const dispatch = useAppDispatch();
   const filterState = useAppSelector((state) => state.filters);
+  const debouncedState = useDebounce(filterState);
+
+  React.useEffect(() => {
+    if (!opened) return;
+    console.log(debouncedState);
+    // TODO: handle filter callback here later
+  }, [debouncedState]);
 
   return (
     <>
