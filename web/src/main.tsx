@@ -6,6 +6,8 @@ import { VisibilityProvider } from "./providers/VisibilityProvider";
 import App from "./App";
 import "./index.css";
 import { isEnvBrowser } from "./utils/misc";
+import { Provider } from "react-redux";
+import { store } from "./state";
 
 if (isEnvBrowser()) {
   const root = document.getElementById("root");
@@ -21,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
       <VisibilityProvider>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </VisibilityProvider>
     </MantineProvider>
   </StrictMode>

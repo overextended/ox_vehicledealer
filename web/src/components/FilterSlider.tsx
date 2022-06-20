@@ -1,10 +1,13 @@
 import { Stack, Slider, Text } from "@mantine/core";
+import { Action } from "@rematch/core";
 
 interface Props {
   label: string;
   min?: number;
   max?: number;
   step?: number;
+  value: number;
+  onChange: (value: number) => void;
 }
 
 const FilterSlider: React.FC<Props> = (props) => {
@@ -12,7 +15,13 @@ const FilterSlider: React.FC<Props> = (props) => {
     <>
       <Stack spacing="xs">
         <Text>{props.label}</Text>
-        <Slider min={props.min} max={props.max} step={props.step} />
+        <Slider
+          min={props.min}
+          max={props.max}
+          step={props.step}
+          value={props.value}
+          onChange={(value) => props.onChange(value)}
+        />
       </Stack>
     </>
   );
