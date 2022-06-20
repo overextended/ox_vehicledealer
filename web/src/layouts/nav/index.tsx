@@ -10,8 +10,9 @@ import {
   useMantineTheme,
   ScrollArea,
 } from "@mantine/core";
-import { TbCar, TbMotorbike, TbFilter, TbSearch } from "react-icons/tb";
+import { TbFilter } from "react-icons/tb";
 import { useToggle } from "@mantine/hooks";
+import Search from "./components/Search";
 import Filters from "./components/Filters";
 
 const useStyles = createStyles((theme) => {
@@ -54,7 +55,7 @@ const Nav: React.FC = () => {
           <ActionIcon variant="outline" color="blue" size="lg" onClick={() => toggleCollapse()}>
             <TbFilter fontSize={20} />
           </ActionIcon>
-          <Input icon={<TbSearch />} />
+          <Search />
         </Group>
         <Collapse in={collapse}>
           <Filters opened={collapse} />
