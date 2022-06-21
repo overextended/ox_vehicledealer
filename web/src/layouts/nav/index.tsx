@@ -48,7 +48,7 @@ const Nav: React.FC = () => {
       height={theme.breakpoints.sm}
       width={{ sm: 200 }}
       p="md"
-      sx={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
+      sx={(theme) => ({ borderTopLeftRadius: theme.radius.sm, borderBottomLeftRadius: theme.radius.sm })}
     >
       <Navbar.Section sx={{ fontWeight: 500, paddingBottom: 10 }}>
         <Group noWrap>

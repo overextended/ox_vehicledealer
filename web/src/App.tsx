@@ -33,7 +33,7 @@ export default function App() {
                 style={style}
                 padding="sm"
                 sx={(theme) => ({
-                  borderRadius: 5,
+                  borderRadius: theme.radius.sm,
                   backgroundColor: theme.colors.dark[8],
                   width: theme.breakpoints.lg,
                   height: theme.breakpoints.sm,
