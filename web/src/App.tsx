@@ -37,11 +37,22 @@ export default function App() {
                   backgroundColor: theme.colors.dark[8],
                   width: theme.breakpoints.lg,
                   height: theme.breakpoints.sm,
+
+                  "@media (max-width: 1280px)": {
+                    width: theme.breakpoints.sm,
+                  },
+
+                  "@media (max-height: 768px)": {
+                    height: theme.breakpoints.xs,
+                  },
                 })}
                 styles={(theme) => ({
                   main: {
                     height: theme.breakpoints.sm,
                     overflow: "hidden",
+                    "@media (max-height: 768px)": {
+                      height: theme.breakpoints.xs,
+                    },
                   },
                 })}
                 navbar={<Nav />}
