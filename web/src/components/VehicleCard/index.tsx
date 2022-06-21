@@ -3,17 +3,9 @@ import { TbReceipt2 } from "react-icons/tb";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
 import IconGroup from "./IconGroup";
+import { VehicleState } from "../../state/models/vehicles";
 
-interface VehicleProps {
-  make: string;
-  name: string;
-  price: number;
-  seats: number;
-  doors: number;
-  weapons: boolean;
-}
-
-const VehicleCard: React.FC<{ vehicle: VehicleProps }> = ({ vehicle }) => {
+const VehicleCard: React.FC<{ vehicle: VehicleState }> = ({ vehicle }) => {
   return (
     <>
       <Box sx={{ padding: 5 }}>
