@@ -15,6 +15,7 @@ import { useToggle } from "@mantine/hooks";
 import Search from "./components/Search";
 import Filters from "./components/Filters";
 import { useAppDispatch } from "../../state";
+import { useState } from "react";
 
 const useStyles = createStyles((theme) => {
   return {
@@ -28,11 +29,6 @@ const useStyles = createStyles((theme) => {
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
       borderRadius: theme.radius.sm,
       fontWeight: 500,
-
-      "&:hover": {
-        backgroundColor: theme.colors.dark[6],
-        color: theme.white,
-      },
     },
   };
 });
@@ -43,6 +39,7 @@ const Nav: React.FC = () => {
   const theme = useMantineTheme();
   const { classes } = useStyles();
   const [collapse, toggleCollapse] = useToggle(false, [false, true]);
+  const [active, setActive] = useState("");
   const dispatch = useAppDispatch();
 
   return (
@@ -60,7 +57,15 @@ const Nav: React.FC = () => {
     >
       <Navbar.Section sx={{ fontWeight: 500, paddingBottom: 10 }}>
         <Group noWrap>
-          <ActionIcon variant="outline" color="blue" size="lg" onClick={() => toggleCollapse()}>
+          <ActionIcon
+            variant="outline"
+            color="blue"
+            size="lg"
+            onClick={() => {
+              toggleCollapse();
+              setActive("");
+            }}
+          >
             <TbFilter fontSize={20} />
           </ActionIcon>
           <Search />
@@ -72,13 +77,29 @@ const Nav: React.FC = () => {
       </Navbar.Section>
 
       <Navbar.Section grow mt={5} component={ScrollArea}>
-        {data.map((vehicleClass, index) => (
+        {data.map((vehicleCategory, index) => (
           <Box
             key={`category-${index}`}
             className={classes.category}
-            onClick={() => dispatch.vehicles.fetchVehiclesByCategory(vehicleClass)}
+            sx={(theme) => ({
+              backgroundColor:
+                active === vehicleCategory
+                  ? theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.25)
+                  : theme.colors.dark[7],
+              color: active === vehicleCategory ? theme.colors[theme.primaryColor][4] : undefined,
+
+              "&:hover": {
+                backgroundColor: active !== vehicleCategory ? theme.colors.dark[6] : undefined,
+                color: active !== vehicleCategory ? theme.white : undefined,
+                cursor: "pointer",
+              },
+            })}
+            onClick={() => {
+              setActive(vehicleCategory);
+              dispatch.vehicles.fetchVehiclesByCategory(vehicleCategory);
+            }}
           >
-            {vehicleClass}
+            {vehicleCategory}
           </Box>
         ))}
       </Navbar.Section>
