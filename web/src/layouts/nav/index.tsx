@@ -14,6 +14,7 @@ import { TbFilter } from "react-icons/tb";
 import { useToggle } from "@mantine/hooks";
 import Search from "./components/Search";
 import Filters from "./components/Filters";
+import { useAppDispatch } from "../../state";
 
 const useStyles = createStyles((theme) => {
   return {
@@ -42,6 +43,7 @@ const Nav: React.FC = () => {
   const theme = useMantineTheme();
   const { classes } = useStyles();
   const [collapse, toggleCollapse] = useToggle(false, [false, true]);
+  const dispatch = useAppDispatch();
 
   return (
     <Navbar
@@ -71,7 +73,11 @@ const Nav: React.FC = () => {
 
       <Navbar.Section grow mt={5} component={ScrollArea}>
         {data.map((vehicleClass, index) => (
-          <Box key={`category-${index}`} className={classes.category}>
+          <Box
+            key={`category-${index}`}
+            className={classes.category}
+            onClick={() => dispatch.vehicles.fetchVehiclesByCategory(vehicleClass)}
+          >
             {vehicleClass}
           </Box>
         ))}

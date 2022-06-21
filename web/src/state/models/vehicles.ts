@@ -14,17 +14,33 @@ export interface VehicleState {
 export const vehicles = createModel<RootModel>()({
   state: [] as VehicleState[],
   reducers: {
-    setState(state, payload: number) {
-      return {
-        ...state,
-        payload,
-      };
+    setState(state, payload: VehicleState[]) {
+      return (state = payload);
     },
   },
   effects: (dispatch) => ({
-    async fetchVehicles(payload: VehicleState) {
+    // payload: filters?
+    async fetchVehiclesByFilter(payload: VehicleState) {
       const vehicles = await fetchNui("fetchVehicles", payload);
       dispatch.vehicles.setState(vehicles);
+    },
+    async fetchVehiclesByCategory(payload: string) {
+      try {
+        const vehicles = await fetchNui("fetchCategory", payload);
+        dispatch.vehicles.setState(vehicles);
+      } catch (e) {
+        const vehicles = [
+          {
+            make: "Dinka",
+            name: "Blista",
+            price: 9500,
+            seats: 4,
+            doors: 4,
+            weapons: false,
+          },
+        ];
+        dispatch.vehicles.setState(vehicles);
+      }
     },
   }),
 });

@@ -11,7 +11,7 @@ const Filters: React.FC<{ opened: boolean }> = ({ opened }) => {
   const debouncedState = useDebounce(filterState);
 
   React.useEffect(() => {
-    console.log(debouncedState);
+    // console.log(debouncedState);
     // TODO: handle filter callback here later
   }, [debouncedState]);
 
