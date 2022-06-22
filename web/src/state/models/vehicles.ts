@@ -1,4 +1,4 @@
-import { createModel, Model, RematchDispatch } from "@rematch/core";
+import { createModel } from "@rematch/core";
 import { RootModel } from ".";
 import { fetchNui } from "../../utils/fetchNui";
 
@@ -21,13 +21,17 @@ export const vehicles = createModel<RootModel>()({
   effects: (dispatch) => ({
     // payload: filters?
     async fetchVehiclesByFilter(payload: VehicleState) {
+      dispatch.isLoading.setState(true);
       const vehicles = await fetchNui("fetchVehicles", payload);
       dispatch.vehicles.setState(vehicles);
+      dispatch.isLoading.setState(false);
     },
     async fetchVehiclesByCategory(payload: string) {
+      dispatch.isLoading.setState(true);
       try {
         const vehicles = await fetchNui("fetchCategory", payload);
         dispatch.vehicles.setState(vehicles);
+        dispatch.isLoading.setState(false);
       } catch (e) {
         const vehicles = [
           {
@@ -40,6 +44,7 @@ export const vehicles = createModel<RootModel>()({
           },
         ];
         dispatch.vehicles.setState(vehicles);
+        dispatch.isLoading.setState(false);
       }
     },
   }),
