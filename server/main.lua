@@ -100,6 +100,11 @@ AddEventHandler('onResourceStart', function(resource)
 	end
 end)
 
+lib.callback.register('ox_vehicledealer:fetchCategory', function(_, data)
+	local vehicles = MySQL.query.await('SELECT * FROM `vehicle_data` WHERE class = ?', {data})
+	return vehicles
+end)
+
 lib.callback.register('ox_vehicledealer:getWholesaleVehicles', function(source, data)
 	local player = lib.getPlayer(source)
 	local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
