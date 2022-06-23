@@ -3,6 +3,8 @@ import { debugData } from "./utils/debugData";
 import Nav from "./layouts/nav";
 import Content from "./layouts/content";
 import { useVisibility } from "./providers/VisibilityProvider";
+import { useNuiEvent } from "./hooks/useNuiEvent";
+import { useState } from "react";
 
 debugData([
   {
@@ -13,6 +15,9 @@ debugData([
 
 export default function App() {
   const visibility = useVisibility();
+  const [categories, setCategories] = useState<string[]>([""]);
+
+  useNuiEvent("setVisible", (data) => setCategories(data.categories));
 
   return (
     <>
@@ -55,7 +60,7 @@ export default function App() {
                     },
                   },
                 })}
-                navbar={<Nav />}
+                navbar={<Nav categories={categories} />}
               >
                 <Content />
               </AppShell>

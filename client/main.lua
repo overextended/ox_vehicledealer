@@ -1,6 +1,31 @@
 
 local table = lib.table
 
+local vehicleCategories = {
+	"Compacts",
+	"Sedans",
+	"SUVs",
+	"Coupes",
+	"Muscle",
+	"Sports Classics",
+	"Sports",
+	"Super",
+	"Motorcycles",
+	"Off-road",
+	"Industrial",
+	"Utility",
+	"Vans",
+	"Cycles",
+	"Boats",
+	"Helicopters",
+	"Planes",
+	"Service",
+	"Emergency",
+	"Military",
+	"Commercial",
+	"Trains",
+}
+
 exports.ox_property:registerZoneMenu('showroom',
 	function(currentZone)
 		local options = {}
@@ -477,9 +502,24 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 end)
 
 RegisterCommand('testui', function()
+	local currentZone = exports.ox_property:getCurrentZone()
+	local deniedClasses = GlobalState['ShowroomRestrictions'][('%s:%s'):format(currentZone.property, currentZone.zoneId)].class.data
+	local categories = {}
+
+	for i = 1, #vehicleCategories do
+		for j = 1, #deniedClasses do
+			if vehicleCategories[i] == deniedClasses[j] then return end
+		end
+
+		categories[#categories+1] = vehicleCategories[i]
+	end
+
 	SendNUIMessage({
 		action = 'setVisible',
-		data = true
+		data = {
+			visible = true,
+			categories = vehicleCategories
+		}
 	})
 	SetNuiFocus(true, true)
 end)

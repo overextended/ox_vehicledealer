@@ -2,7 +2,6 @@ import {
   createStyles,
   Navbar,
   Group,
-  Input,
   ActionIcon,
   Divider,
   Box,
@@ -10,6 +9,7 @@ import {
   useMantineTheme,
   ScrollArea,
 } from "@mantine/core";
+import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { TbFilter } from "react-icons/tb";
 import { useToggle } from "@mantine/hooks";
 import Search from "./components/Search";
@@ -35,12 +35,16 @@ const useStyles = createStyles((theme) => {
 
 const data = ["Compacts", "Sedans", "SUVs", "Coupes", "Muscle", "Sports", "Super", "Motorcycles"];
 
-const Nav: React.FC = () => {
+const Nav: React.FC<{ categories: string[] }> = ({ categories }) => {
   const theme = useMantineTheme();
   const { classes } = useStyles();
   const [collapse, toggleCollapse] = useToggle(false, [false, true]);
   const [active, setActive] = useState("");
   const dispatch = useAppDispatch();
+
+  useNuiEvent("setVisible", (data) => {
+    console.log(data);
+  });
 
   return (
     <Navbar
@@ -77,7 +81,7 @@ const Nav: React.FC = () => {
       </Navbar.Section>
 
       <Navbar.Section grow mt={5} component={ScrollArea}>
-        {data.map((vehicleCategory, index) => (
+        {categories.map((vehicleCategory, index) => (
           <Box
             key={`category-${index}`}
             className={classes.category}
