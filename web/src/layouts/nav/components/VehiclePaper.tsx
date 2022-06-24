@@ -1,5 +1,5 @@
 import { Paper, Group, Stack, Text, Title, Box } from "@mantine/core";
-import IconGroup from "../../../components/VehicleCard/IconGroup";
+import IconGroup from "../../../components/IconGroup";
 import { TbReceipt2 } from "react-icons/tb";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
@@ -9,7 +9,16 @@ const VehiclePaper: React.FC<{
 }> = ({ vehicle }) => {
   return (
     <>
-      <Paper shadow="xs" p="md" withBorder sx={(theme) => ({ width: "100%", backgroundColor: theme.colors.dark[6] })}>
+      <Paper
+        shadow="xs"
+        p="md"
+        withBorder
+        sx={(theme) => ({
+          width: "100%",
+          backgroundColor: theme.colors.dark[6],
+          "&:hover": { backgroundColor: theme.colors.dark[5], cursor: "pointer" },
+        })}
+      >
         <Stack sx={{ width: "100%" }}>
           <Group position="apart" noWrap>
             <Title order={4}>{`${vehicle.make} ${vehicle.name}`}</Title>
