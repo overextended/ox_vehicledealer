@@ -1,113 +1,79 @@
-import {
-  createStyles,
-  Navbar,
-  Group,
-  ActionIcon,
-  Divider,
-  Box,
-  Collapse,
-  useMantineTheme,
-  ScrollArea,
-} from "@mantine/core";
+import { Group, ActionIcon, Divider, Box, useMantineTheme, ScrollArea, Stack, Select, Modal } from "@mantine/core";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { TbFilter } from "react-icons/tb";
-import { useToggle } from "@mantine/hooks";
+import { TbCar, TbFilter } from "react-icons/tb";
 import Search from "./components/Search";
+import VehiclePaper from "./components/VehiclePaper";
 import Filters from "./components/Filters";
-import { useAppDispatch } from "../../state";
+import { useAppDispatch, useAppSelector } from "../../state";
 import { useState } from "react";
 
-const useStyles = createStyles((theme) => {
-  return {
-    category: {
-      ...theme.fn.focusStyles(),
-      display: "flex",
-      alignItems: "center",
-      textDecoration: "none",
-      fontSize: theme.fontSizes.md,
-      color: theme.colors.dark[1],
-      padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
-      borderRadius: theme.radius.sm,
-      fontWeight: 500,
-    },
-  };
-});
+const vehicleData = [
+  { make: "Dinka", name: "Blista", price: 3000, seats: 4, doors: 4, weapons: false },
+  { make: "Vapid", name: "Domintaor", price: 15000, seats: 6, doors: 3, weapons: true },
+  { make: "Ocelot", name: "Jugular", price: 185000, seats: 4, doors: 4, weapons: false },
+  { make: "Pfister", name: "Neon", price: 7500000, seats: 4, doors: 4, weapons: false },
+  { make: "Karin", name: "Kuruma", price: 9000, seats: 4, doors: 4, weapons: false },
+  { make: "Dinka", name: "Blista", price: 3000, seats: 4, doors: 4, weapons: false },
+  { make: "Vapid", name: "Domintaor", price: 15000, seats: 6, doors: 3, weapons: true },
+  { make: "Ocelot", name: "Jugular", price: 185000, seats: 4, doors: 4, weapons: false },
+  { make: "Pfister", name: "Neon", price: 7500000, seats: 4, doors: 4, weapons: false },
+  { make: "Karin", name: "Kuruma", price: 9000, seats: 4, doors: 4, weapons: false },
+  { make: "Dinka", name: "Blista", price: 3000, seats: 4, doors: 4, weapons: false },
+  { make: "Vapid", name: "Domintaor", price: 15000, seats: 6, doors: 3, weapons: true },
+  { make: "Ocelot", name: "Jugular", price: 185000, seats: 4, doors: 4, weapons: false },
+  { make: "Pfister", name: "Neon", price: 7500000, seats: 4, doors: 4, weapons: false },
+  { make: "Karin", name: "Kuruma", price: 9000, seats: 4, doors: 4, weapons: false },
+];
 
-const data = ["Compacts", "Sedans", "SUVs", "Coupes", "Muscle", "Sports", "Super", "Motorcycles"];
-
-const Nav: React.FC<{ categories: string[] }> = ({ categories }) => {
+const Nav: React.FC<{ categories: string[]; style: React.CSSProperties }> = ({ categories, style }) => {
   const theme = useMantineTheme();
-  const { classes } = useStyles();
-  const [collapse, toggleCollapse] = useToggle(false, [false, true]);
+  const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
   const dispatch = useAppDispatch();
-
-  useNuiEvent("setVisible", (data) => {
-    console.log(data);
-  });
+  const vehicles = useAppSelector((state) => state.vehicles);
 
   return (
-    <Navbar
-      height={theme.breakpoints.sm}
-      width={{ sm: 200 }}
-      p="md"
+    <Box
+      style={style}
       sx={(theme) => ({
-        borderTopLeftRadius: theme.radius.sm,
-        borderBottomLeftRadius: theme.radius.sm,
-        "@media (max-height: 768px)": {
-          height: theme.breakpoints.xs,
-        },
+        position: "fixed",
+        left: 0,
+        top: 0,
+        backgroundColor: theme.colors.dark[7],
+        height: "100%",
+        width: 300,
       })}
     >
-      <Navbar.Section sx={{ fontWeight: 500, paddingBottom: 10 }}>
-        <Group noWrap>
-          <ActionIcon
-            variant="outline"
-            color="blue"
-            size="lg"
-            onClick={() => {
-              toggleCollapse();
-              setActive("");
-            }}
-          >
+      <Stack align="center" p={10} sx={{ width: "100%" }}>
+        <Group noWrap sx={{ width: "100%" }} position="apart" grow>
+          <ActionIcon variant="outline" color="blue" size="lg" onClick={() => setOpen(true)}>
             <TbFilter fontSize={20} />
           </ActionIcon>
           <Search />
         </Group>
-        <Collapse in={collapse}>
-          <Filters opened={collapse} />
-        </Collapse>
-        <Divider mt={15} />
-      </Navbar.Section>
-
-      <Navbar.Section grow mt={5} component={ScrollArea}>
-        {categories.map((vehicleCategory, index) => (
-          <Box
-            key={`category-${index}`}
-            className={classes.category}
-            sx={(theme) => ({
-              backgroundColor:
-                active === vehicleCategory
-                  ? theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.25)
-                  : theme.colors.dark[7],
-              color: active === vehicleCategory ? theme.colors[theme.primaryColor][4] : undefined,
-
-              "&:hover": {
-                backgroundColor: active !== vehicleCategory ? theme.colors.dark[6] : undefined,
-                color: active !== vehicleCategory ? theme.white : undefined,
-                cursor: "pointer",
-              },
-            })}
-            onClick={() => {
-              setActive(vehicleCategory);
-              dispatch.vehicles.fetchVehiclesByCategory(vehicleCategory);
-            }}
-          >
-            {vehicleCategory}
-          </Box>
+        <Modal opened={open} onClose={() => setOpen(false)} size="xs" title="Advanced filters" closeOnEscape={false}>
+          <Filters />
+        </Modal>
+        <Select
+          label="Vehicle category"
+          icon={<TbCar fontSize={20} />}
+          searchable
+          clearable
+          nothingFound="No such vehicle category"
+          data={categories}
+          width="100%"
+          styles={{
+            root: {
+              width: "100%",
+            },
+          }}
+        />
+        <Divider sx={{ width: "100%" }} label="Vehicles" my="xs" labelPosition="center" />
+        {vehicleData.map((vehicle, index) => (
+          <VehiclePaper key={`vehicle-${index}`} vehicle={vehicle} />
         ))}
-      </Navbar.Section>
-    </Navbar>
+      </Stack>
+    </Box>
   );
 };
 
