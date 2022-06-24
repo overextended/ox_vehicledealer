@@ -1,5 +1,6 @@
 import { Group, ActionIcon, Divider, Box, useMantineTheme, ScrollArea, Stack, Select, Modal } from "@mantine/core";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
+import { Navbar } from "@mantine/core";
 import { TbCar, TbFilter } from "react-icons/tb";
 import Search from "./components/Search";
 import VehiclePaper from "./components/VehiclePaper";
@@ -26,54 +27,58 @@ const vehicleData = [
 ];
 
 const Nav: React.FC<{ categories: string[]; style: React.CSSProperties }> = ({ categories, style }) => {
-  const theme = useMantineTheme();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
   const dispatch = useAppDispatch();
   const vehicles = useAppSelector((state) => state.vehicles);
 
   return (
-    <Box
+    <Navbar
+      height="100%"
+      width={{ base: 300 }}
+      fixed
       style={style}
       sx={(theme) => ({
-        position: "fixed",
-        left: 0,
-        top: 0,
         backgroundColor: theme.colors.dark[7],
-        height: "100%",
-        width: 300,
       })}
     >
-      <Stack align="center" p={10} sx={{ width: "100%" }}>
-        <Group noWrap sx={{ width: "100%" }} position="apart" grow>
-          <ActionIcon variant="outline" color="blue" size="lg" onClick={() => setOpen(true)}>
-            <TbFilter fontSize={20} />
-          </ActionIcon>
-          <Search />
-        </Group>
-        <Modal opened={open} onClose={() => setOpen(false)} size="xs" title="Advanced filters" closeOnEscape={false}>
-          <Filters />
-        </Modal>
-        <Select
-          label="Vehicle category"
-          icon={<TbCar fontSize={20} />}
-          searchable
-          clearable
-          nothingFound="No such vehicle category"
-          data={categories}
-          width="100%"
-          styles={{
-            root: {
-              width: "100%",
-            },
-          }}
-        />
-        <Divider sx={{ width: "100%" }} label="Vehicles" my="xs" labelPosition="center" />
-        {vehicleData.map((vehicle, index) => (
-          <VehiclePaper key={`vehicle-${index}`} vehicle={vehicle} />
-        ))}
-      </Stack>
-    </Box>
+      <Navbar.Section>
+        <Stack align="center" p={10} sx={{ width: "100%" }}>
+          <Group noWrap sx={{ width: "100%" }} position="apart" grow>
+            <ActionIcon variant="outline" color="blue" size="lg" onClick={() => setOpen(true)}>
+              <TbFilter fontSize={20} />
+            </ActionIcon>
+            <Search />
+          </Group>
+          <Modal opened={open} onClose={() => setOpen(false)} size="xs" title="Advanced filters" closeOnEscape={false}>
+            <Filters />
+          </Modal>
+          <Select
+            label="Vehicle category"
+            icon={<TbCar fontSize={20} />}
+            searchable
+            clearable
+            nothingFound="No such vehicle category"
+            data={categories}
+            width="100%"
+            styles={{
+              root: {
+                width: "100%",
+              },
+            }}
+          />
+          <Divider sx={{ width: "100%" }} label="Vehicles" my="xs" labelPosition="center" />
+        </Stack>
+      </Navbar.Section>
+
+      <Navbar.Section grow component={ScrollArea} p={10} offsetScrollbars scrollbarSize={6}>
+        <Stack spacing="sm">
+          {vehicleData.map((vehicle, index) => (
+            <VehiclePaper key={`vehicle-${index}`} vehicle={vehicle} />
+          ))}
+        </Stack>
+      </Navbar.Section>
+    </Navbar>
   );
 };
 
