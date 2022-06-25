@@ -1,30 +1,25 @@
-import { Group, ActionIcon, Modal, Select } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { TbCar, TbFilter } from "react-icons/tb";
+import { Select } from "@mantine/core";
+import { useEffect } from "react";
+import { TbCar } from "react-icons/tb";
+import { useDebounce } from "../../../hooks/useDebounce";
+import { useIsFirstRender } from "../../../hooks/useIsFirstRender";
 import { useAppDispatch, useAppSelector } from "../../../state";
 import Filters from "./Filters";
-import Search from "./Search";
 
 const TopNav: React.FC<{ categories: string[] }> = ({ categories }) => {
-  const [open, setOpen] = useState(false);
+  const isFirst = useIsFirstRender();
   const filters = useAppSelector((state) => state.filters);
   const dispatch = useAppDispatch();
+  const debouncedFilters = useDebounce(filters);
 
   useEffect(() => {
+    if (isFirst) return;
     dispatch.vehicles.fetchVehicles(filters);
-  }, [filters.category]);
+  }, [debouncedFilters]);
 
   return (
     <>
-      <Group noWrap sx={{ width: "100%" }} position="apart" grow>
-        <ActionIcon variant="outline" color="blue" size="lg" onClick={() => setOpen(true)}>
-          <TbFilter fontSize={20} />
-        </ActionIcon>
-        <Search />
-      </Group>
-      <Modal opened={open} onClose={() => setOpen(false)} size="xs" title="Advanced filters" closeOnEscape={false}>
-        <Filters />
-      </Modal>
+      <Filters />
       <Select
         label="Vehicle category"
         icon={<TbCar fontSize={20} />}
