@@ -3,13 +3,16 @@ import IconGroup from "../../../components/IconGroup";
 import { TbReceipt2 } from "react-icons/tb";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
+import { fetchNui } from "../../../utils/fetchNui";
 
 const VehiclePaper: React.FC<{
   vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons: boolean };
-}> = ({ vehicle }) => {
+  index: number;
+}> = ({ vehicle, index }) => {
   return (
     <>
       <Paper
+        onClick={() => fetchNui("clickVehicle", index)}
         shadow="xs"
         p="md"
         withBorder

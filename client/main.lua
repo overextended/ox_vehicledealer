@@ -501,11 +501,17 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 	end
 end)
 
+RegisterNUICallback('clickVehicle', function(data, cb)
+	-- data is clicked index
+	cb(1)
+	print(data)
+end)
+
 RegisterNUICallback('fetchVehicles', function(data, cb)
 	local class = nil
 	for i = 1, #vehicleCategories do
 		if vehicleCategories[i] == data.category then
-			class = i
+			class = i - 1 -- classes start from 0, like arrays should
 			break
 		end
 	end
