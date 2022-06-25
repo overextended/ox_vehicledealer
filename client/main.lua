@@ -513,6 +513,11 @@ RegisterNUICallback('fetchCategory', function(data, cb)
 	cb(vehicles)
 end)
 
+RegisterNUICallback('exit', function(_, cb)
+	cb(1)
+	SetNuiFocus(false, false)
+end)
+
 RegisterCommand('testui', function()
 	local currentZone = exports.ox_property:getCurrentZone()
 	local deniedClasses = GlobalState['ShowroomRestrictions'][('%s:%s'):format(currentZone.property, currentZone.zoneId)].class.data

@@ -1,11 +1,10 @@
-import { Box, ScrollArea, Transition, Group, ActionIcon, Stack, Select, Divider, Paper, Text } from "@mantine/core";
+import { Transition } from "@mantine/core";
 import { debugData } from "./utils/debugData";
 import Nav from "./layouts/nav";
-import { useVisibility } from "./providers/VisibilityProvider";
 import { useNuiEvent } from "./hooks/useNuiEvent";
 import { useState } from "react";
-import { TbFilter, TbCar, TbReceipt2 } from "react-icons/tb";
-import Search from "./layouts/nav/components/Search";
+import { useAppDispatch, useAppSelector } from "./state";
+import { useExitListener } from "./hooks/useExitListener";
 
 debugData([
   {
@@ -18,13 +17,19 @@ debugData([
 ]);
 
 export default function App() {
-  const visibility = useVisibility();
+  const browserVisibility = useAppSelector((state) => state.visibility.browser);
   const [categories, setCategories] = useState<string[]>([""]);
+  const dispatch = useAppDispatch();
 
-  useNuiEvent("setVisible", (data) => setCategories(data.categories));
+  useExitListener(dispatch.visibility.setBrowserVisible);
+
+  useNuiEvent("setVisible", (data) => {
+    setCategories(data.categories);
+    dispatch.visibility.setBrowserVisible(data.visible);
+  });
 
   return (
-    <Transition mounted={visibility.visible} transition="slide-right">
+    <Transition mounted={browserVisibility} transition="slide-right">
       {(style) => <Nav style={style} categories={categories} />}
     </Transition>
   );
