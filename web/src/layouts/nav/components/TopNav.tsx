@@ -1,11 +1,18 @@
-import { Group, ActionIcon, Modal } from "@mantine/core";
-import { useState } from "react";
-import { TbFilter } from "react-icons/tb";
+import { Group, ActionIcon, Modal, Select } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { TbCar, TbFilter } from "react-icons/tb";
+import { useAppDispatch, useAppSelector } from "../../../state";
 import Filters from "./Filters";
 import Search from "./Search";
 
-const TopNav: React.FC = () => {
+const TopNav: React.FC<{ categories: string[] }> = ({ categories }) => {
   const [open, setOpen] = useState(false);
+  const filters = useAppSelector((state) => state.filters);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch.vehicles.fetchVehicles(filters);
+  }, [filters.category]);
 
   return (
     <>
@@ -18,6 +25,22 @@ const TopNav: React.FC = () => {
       <Modal opened={open} onClose={() => setOpen(false)} size="xs" title="Advanced filters" closeOnEscape={false}>
         <Filters />
       </Modal>
+      <Select
+        label="Vehicle category"
+        icon={<TbCar fontSize={20} />}
+        searchable
+        clearable
+        nothingFound="No such vehicle category"
+        onChange={(value) => dispatch.filters.setState({ key: "category", value })}
+        value={filters.category}
+        data={categories}
+        width="100%"
+        styles={{
+          root: {
+            width: "100%",
+          },
+        }}
+      />
     </>
   );
 };

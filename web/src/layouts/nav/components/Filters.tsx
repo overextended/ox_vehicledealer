@@ -13,6 +13,7 @@ const Filters: React.FC = () => {
   React.useEffect(() => {
     // console.log(debouncedState);
     // TODO: handle filter callback here later
+    dispatch.vehicles.fetchVehicles(filterState);
   }, [debouncedState]);
 
   return (

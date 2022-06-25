@@ -100,7 +100,7 @@ AddEventHandler('onResourceStart', function(resource)
 	end
 end)
 
-lib.callback.register('ox_vehicledealer:fetchCategory', function(_, data)
+lib.callback.register('ox_vehicledealer:fetchVehicles', function(_, data)
 	local vehicles = MySQL.query.await('SELECT * FROM `vehicle_data` WHERE class = ?', {data})
 	return vehicles
 end)

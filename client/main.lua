@@ -501,15 +501,15 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 	end
 end)
 
-RegisterNUICallback('fetchCategory', function(data, cb)
+RegisterNUICallback('fetchVehicles', function(data, cb)
 	local class = nil
 	for i = 1, #vehicleCategories do
-		if vehicleCategories[i] == data then
+		if vehicleCategories[i] == data.category then
 			class = i
 			break
 		end
 	end
-	local vehicles = lib.callback.await('ox_vehicledealer:fetchCategory', false, class)
+	local vehicles = lib.callback.await('ox_vehicledealer:fetchVehicles', false, class)
 	cb(vehicles)
 end)
 

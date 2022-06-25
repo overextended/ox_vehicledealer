@@ -1,6 +1,7 @@
 import { createModel } from "@rematch/core";
 import { RootModel } from ".";
 import { fetchNui } from "../../utils/fetchNui";
+import { FilterState } from "./filters";
 
 export interface VehicleState {
   make: string;
@@ -19,20 +20,12 @@ export const vehicles = createModel<RootModel>()({
     },
   },
   effects: (dispatch) => ({
-    // payload: filters?
-    async fetchVehiclesByFilter(payload: VehicleState) {
-      dispatch.isLoading.setState(true);
-      const vehicles = await fetchNui("fetchVehicles", payload);
-      dispatch.vehicles.setState(vehicles);
-      dispatch.isLoading.setState(false);
-    },
-    async fetchVehiclesByCategory(payload: string) {
+    async fetchVehicles(payload: FilterState) {
       dispatch.isLoading.setState(true);
       try {
-        const vehicles = await fetchNui("fetchCategory", payload);
+        const vehicles = await fetchNui("fetchVehicles", payload);
         dispatch.vehicles.setState(vehicles);
-        dispatch.isLoading.setState(false);
-      } catch (e) {
+      } catch {
         const vehicles = [
           {
             make: "Dinka",
@@ -44,8 +37,8 @@ export const vehicles = createModel<RootModel>()({
           },
         ];
         dispatch.vehicles.setState(vehicles);
-        dispatch.isLoading.setState(false);
       }
+      dispatch.isLoading.setState(false);
     },
   }),
 });
