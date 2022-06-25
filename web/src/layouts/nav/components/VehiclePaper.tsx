@@ -1,4 +1,5 @@
 import { Paper, Group, Stack, Text, Title, Box } from "@mantine/core";
+import React from "react";
 import IconGroup from "../../../components/IconGroup";
 import { TbReceipt2 } from "react-icons/tb";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
@@ -8,18 +9,24 @@ import { fetchNui } from "../../../utils/fetchNui";
 const VehiclePaper: React.FC<{
   vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons: boolean };
   index: number;
-}> = ({ vehicle, index }) => {
+  vehicleIndex: number | null;
+  setVehicleIndex: React.Dispatch<React.SetStateAction<number | null>>;
+}> = ({ vehicle, index, vehicleIndex, setVehicleIndex }) => {
   return (
     <>
       <Paper
-        onClick={() => fetchNui("clickVehicle", index)}
+        onClick={() => {
+          fetchNui("clickVehicle", index);
+          setVehicleIndex(index);
+        }}
         shadow="xs"
         p="md"
         withBorder
         sx={(theme) => ({
           width: "100%",
-          backgroundColor: theme.colors.dark[6],
-          "&:hover": { backgroundColor: theme.colors.dark[5], cursor: "pointer" },
+          backgroundColor: vehicleIndex == index ? theme.colors[theme.primaryColor][8] : theme.colors.dark[6],
+          color: vehicleIndex === index ? theme.white : undefined,
+          "&:hover": { backgroundColor: vehicleIndex !== index ? theme.colors.dark[5] : undefined, cursor: "pointer" },
         })}
       >
         <Stack sx={{ width: "100%" }}>
