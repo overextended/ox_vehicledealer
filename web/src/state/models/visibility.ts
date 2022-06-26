@@ -3,6 +3,7 @@ import { RootModel } from ".";
 
 interface VisibilityState {
   browser: boolean;
+  vehicle: boolean;
 }
 
 export const visibility = createModel<RootModel>()({
@@ -14,6 +15,12 @@ export const visibility = createModel<RootModel>()({
       return {
         ...state,
         browser: payload,
+      };
+    },
+    setVehicleVisible(state, payload: boolean) {
+      return {
+        ...state,
+        vehicle: payload,
       };
     },
   },

@@ -5,6 +5,7 @@ import { TbReceipt2 } from "react-icons/tb";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
 import { fetchNui } from "../../../utils/fetchNui";
+import { useAppDispatch } from "../../../state";
 
 const VehiclePaper: React.FC<{
   vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons: boolean };
@@ -12,12 +13,15 @@ const VehiclePaper: React.FC<{
   vehicleIndex: number | null;
   setVehicleIndex: React.Dispatch<React.SetStateAction<number | null>>;
 }> = ({ vehicle, index, vehicleIndex, setVehicleIndex }) => {
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <Paper
         onClick={() => {
           fetchNui("clickVehicle", index);
           setVehicleIndex(index);
+          dispatch.visibility.setVehicleVisible(true);
         }}
         shadow="xs"
         p="md"

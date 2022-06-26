@@ -5,6 +5,7 @@ import { useNuiEvent } from "./hooks/useNuiEvent";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "./state";
 import { useExitListener } from "./hooks/useExitListener";
+import Vehicle from "./layouts/vehicle";
 
 debugData([
   {
@@ -17,7 +18,6 @@ debugData([
 ]);
 
 export default function App() {
-  const browserVisibility = useAppSelector((state) => state.visibility.browser);
   const [categories, setCategories] = useState<string[]>([""]);
   const dispatch = useAppDispatch();
 
@@ -29,8 +29,9 @@ export default function App() {
   });
 
   return (
-    <Transition mounted={browserVisibility} transition="slide-right">
-      {(style) => <Nav style={style} categories={categories} />}
-    </Transition>
+    <>
+      <Nav categories={categories} />
+      <Vehicle />
+    </>
   );
 }
