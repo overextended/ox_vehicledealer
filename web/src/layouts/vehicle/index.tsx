@@ -4,6 +4,8 @@ import { useExitListener } from "../../hooks/useExitListener";
 import { useAppDispatch, useAppSelector } from "../../state";
 import StatBar from "./components/StatBar";
 import Color from "./components/Color";
+import PurchaseModal from "./components/PurchaseModal";
+import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -30,6 +32,7 @@ const Vehicle: React.FC = () => {
   const dispatch = useAppDispatch();
   const vehicleVisibility = useAppSelector((state) => state.visibility.vehicle);
   const vehicleData = useAppSelector((state) => state.vehicleData);
+  const [opened, setOpened] = useState(false);
 
   useExitListener(dispatch.visibility.setVehicleVisible);
 
@@ -49,13 +52,14 @@ const Vehicle: React.FC = () => {
                 <ActionIcon variant="outline" color="blue" size="lg">
                   <TbRotate fontSize={20} />
                 </ActionIcon>
-                <Button>Purchase</Button>
+                <Button onClick={() => setOpened(true)}>Purchase</Button>
                 <ActionIcon variant="outline" color="blue" size="lg">
                   <TbRotateClockwise fontSize={20} />
                 </ActionIcon>
               </Group>
             </Stack>
           </Box>
+          <PurchaseModal opened={opened} setOpened={setOpened} price={30000} vehicle={vehicleData} />
         </Box>
       )}
     </Transition>

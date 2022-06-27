@@ -503,6 +503,12 @@ end)
 
 local vehicles = {}
 
+RegisterNUICallback('purchaseVehicle', function(data, cb)
+	cb(1)
+	-- Probably shouldn't use data.price instead get the price from the model?
+	print(json.encode(data, {indent=true}))
+end)
+
 RegisterNUICallback('clickVehicle', function(data, cb)
 	-- data is clicked index
 	if #vehicles < 1 then return end
@@ -511,8 +517,8 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	vehicle.acceleration = 64
 	vehicle.braking = 53.7
 	vehicle.handling = 42.3
+	print(json.encode(vehicle, {indent=true}))
 	cb(vehicle)
-	-- print(json.encode(vehicle, {indent=true}))
 end)
 
 RegisterNUICallback('fetchVehicles', function(data, cb)

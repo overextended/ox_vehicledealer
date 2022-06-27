@@ -1,15 +1,13 @@
 import { createModel } from "@rematch/core";
 import { RootModel } from ".";
 import { fetchNui } from "../../utils/fetchNui";
+import { VehicleState } from "./vehicles";
 
-interface VehicleDataState {
+export interface VehicleDataState extends VehicleState {
   acceleration: number;
   braking: number;
   speed: number;
   handling: number;
-  name: string;
-  make: string;
-  price: number;
 }
 
 export const vehicleData = createModel<RootModel>()({
@@ -41,6 +39,9 @@ export const vehicleData = createModel<RootModel>()({
           make: "Dinka",
           name: "Blista",
           price: 9500,
+          seats: 4,
+          doors: 4,
+          weapons: false,
         };
         dispatch.vehicleData.setState(vehicleData);
       }
