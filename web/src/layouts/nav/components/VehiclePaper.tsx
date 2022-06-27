@@ -1,10 +1,9 @@
-import { Paper, Group, Stack, Text, Title, Box } from "@mantine/core";
+import { Paper, Group, Stack, Title } from "@mantine/core";
 import React from "react";
 import IconGroup from "../../../components/IconGroup";
 import { TbReceipt2 } from "react-icons/tb";
 import { GiCarDoor, GiHeavyBullets } from "react-icons/gi";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
-import { fetchNui } from "../../../utils/fetchNui";
 import { useAppDispatch } from "../../../state";
 
 const VehiclePaper: React.FC<{
@@ -19,9 +18,9 @@ const VehiclePaper: React.FC<{
     <>
       <Paper
         onClick={() => {
-          fetchNui("clickVehicle", index);
           setVehicleIndex(index);
           dispatch.visibility.setVehicleVisible(true);
+          dispatch.vehicleData.getVehicleData(index);
         }}
         shadow="xs"
         p="md"

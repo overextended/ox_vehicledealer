@@ -501,10 +501,18 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 	end
 end)
 
+local vehicles = {}
+
 RegisterNUICallback('clickVehicle', function(data, cb)
 	-- data is clicked index
-	cb(1)
-	print(data)
+	if #vehicles < 1 then return end
+	local vehicle = vehicles[data + 1]
+	vehicle.speed = 37
+	vehicle.acceleration = 64
+	vehicle.braking = 53.7
+	vehicle.handling = 42.3
+	cb(vehicle)
+	-- print(json.encode(vehicle, {indent=true}))
 end)
 
 RegisterNUICallback('fetchVehicles', function(data, cb)
@@ -515,7 +523,7 @@ RegisterNUICallback('fetchVehicles', function(data, cb)
 			break
 		end
 	end
-	local vehicles = lib.callback.await('ox_vehicledealer:fetchVehicles', false, class)
+	vehicles = lib.callback.await('ox_vehicledealer:fetchVehicles', false, class)
 	cb(vehicles)
 end)
 
