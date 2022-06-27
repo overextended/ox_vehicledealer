@@ -1,20 +1,9 @@
-import {
-  Box,
-  createStyles,
-  Transition,
-  Title,
-  Stack,
-  Text,
-  Progress,
-  Group,
-  ActionIcon,
-  Button,
-  ColorInput,
-} from "@mantine/core";
-import { useState } from "react";
+import { Box, createStyles, Transition, Title, Stack, Group, ActionIcon, Button } from "@mantine/core";
 import { TbRotate, TbRotateClockwise } from "react-icons/tb";
 import { useExitListener } from "../../hooks/useExitListener";
 import { useAppDispatch, useAppSelector } from "../../state";
+import StatBar from "./components/StatBar";
+import Color from "./components/Color";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -41,7 +30,6 @@ const Vehicle: React.FC = () => {
   const dispatch = useAppDispatch();
   const vehicleVisibility = useAppSelector((state) => state.visibility.vehicle);
   const vehicleData = useAppSelector((state) => state.vehicleData);
-  const [color, setColor] = useState("");
 
   useExitListener(dispatch.visibility.setVehicleVisible);
 
@@ -52,28 +40,11 @@ const Vehicle: React.FC = () => {
           <Box className={classes.box}>
             <Stack align="center">
               <Title order={4}>{`${vehicleData.make} ${vehicleData.name}`}</Title>
-              <ColorInput
-                label="Vehicle color"
-                value={color}
-                onChange={(value) => setColor(value)}
-                sx={{ width: "100%" }}
-              />
-              <Stack sx={{ width: "100%" }} spacing={1}>
-                <Text>Speed</Text>
-                <Progress value={vehicleData.speed} />
-              </Stack>
-              <Stack sx={{ width: "100%" }} spacing={1}>
-                <Text>Acceleration</Text>
-                <Progress value={vehicleData.acceleration} />
-              </Stack>
-              <Stack sx={{ width: "100%" }} spacing={1}>
-                <Text>Braking</Text>
-                <Progress value={vehicleData.braking} />
-              </Stack>
-              <Stack sx={{ width: "100%" }} spacing={1}>
-                <Text>Handling</Text>
-                <Progress value={vehicleData.handling} />
-              </Stack>
+              <Color />
+              <StatBar label="Speed" value={vehicleData.speed} />
+              <StatBar label="Acceleration" value={vehicleData.acceleration} />
+              <StatBar label="Braking" value={vehicleData.braking} />
+              <StatBar label="Handling" value={vehicleData.handling} />
               <Group>
                 <ActionIcon variant="outline" color="blue" size="lg">
                   <TbRotate fontSize={20} />

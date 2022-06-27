@@ -29,7 +29,6 @@ export const vehicleData = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     async getVehicleData(payload: number) {
-      console.log("nice");
       try {
         const vehicleData = await fetchNui("clickVehicle", payload);
         dispatch.vehicleData.setState(vehicleData);
