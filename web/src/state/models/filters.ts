@@ -10,6 +10,7 @@ export interface FilterState {
 }
 
 type PayloadKey = "search" | "category" | "price" | "seats" | "doors";
+type PayloadValue = string | number | undefined | null;
 
 export const filters = createModel<RootModel>()({
   state: {
@@ -20,7 +21,7 @@ export const filters = createModel<RootModel>()({
     category: null,
   } as FilterState,
   reducers: {
-    setState(state, payload: { key: PayloadKey; value: string | number | undefined | null }) {
+    setState(state, payload: { key: PayloadKey; value: PayloadValue }) {
       return {
         ...state,
         [payload.key]: payload.value,
