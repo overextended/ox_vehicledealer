@@ -17,7 +17,13 @@ const Color: React.FC = () => {
 
   return (
     <>
-      <ColorInput label="Vehicle color" value={color} onChange={(value) => setColor(value)} sx={{ width: "100%" }} />
+      <ColorInput
+        label="Vehicle color"
+        format="rgb"
+        value={color}
+        onChange={(value) => setColor(value)}
+        sx={{ width: "100%" }}
+      />
     </>
   );
 };
