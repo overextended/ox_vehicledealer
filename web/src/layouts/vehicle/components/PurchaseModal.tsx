@@ -26,7 +26,7 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
 
       <Group position="right" mt={10}>
         <Button color="red" variant="light" onClick={() => setOpened(false)}>
-          Return
+          Cancel
         </Button>
         <Button
           color="green"
