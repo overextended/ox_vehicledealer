@@ -1,5 +1,4 @@
 import { Stack, Slider, Text } from "@mantine/core";
-import { Action } from "@rematch/core";
 
 interface Props {
   label: string;

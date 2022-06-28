@@ -3,11 +3,18 @@ import { RootModel } from ".";
 import { fetchNui } from "../../utils/fetchNui";
 import { VehicleState } from "./vehicles";
 
-export interface VehicleDataState extends VehicleState {
+export interface VehicleDataState {
   acceleration: number;
   braking: number;
   speed: number;
   handling: number;
+  make: string;
+  name: string;
+  price: number;
+  seats: number;
+  doors: number;
+  class: number;
+  weapons: boolean;
 }
 
 export const vehicleData = createModel<RootModel>()({
@@ -19,6 +26,10 @@ export const vehicleData = createModel<RootModel>()({
     name: "",
     make: "",
     price: 0,
+    seats: 0,
+    doors: 0,
+    class: 0,
+    weapons: false,
   } as VehicleDataState,
   reducers: {
     setState(state, payload: VehicleDataState) {
@@ -26,7 +37,7 @@ export const vehicleData = createModel<RootModel>()({
     },
   },
   effects: (dispatch) => ({
-    async getVehicleData(payload: number) {
+    async getVehicleData(payload: string) {
       try {
         const vehicleData = await fetchNui("clickVehicle", payload);
         dispatch.vehicleData.setState(vehicleData);
@@ -42,6 +53,7 @@ export const vehicleData = createModel<RootModel>()({
           seats: 4,
           doors: 4,
           weapons: false,
+          class: 0,
         };
         dispatch.vehicleData.setState(vehicleData);
       }

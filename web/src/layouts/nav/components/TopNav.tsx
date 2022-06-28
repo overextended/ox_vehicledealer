@@ -1,5 +1,5 @@
 import { Select } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TbCar } from "react-icons/tb";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { useIsFirstRender } from "../../../hooks/useIsFirstRender";
@@ -14,7 +14,7 @@ const TopNav: React.FC<{ categories: string[] }> = ({ categories }) => {
 
   useEffect(() => {
     if (isFirst) return;
-    dispatch.vehicles.fetchVehicles(filters);
+    dispatch.filters.filterVehicles(filters);
   }, [debouncedFilters]);
 
   return (

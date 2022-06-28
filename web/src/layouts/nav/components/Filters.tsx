@@ -30,7 +30,7 @@ const Filters: React.FC = () => {
             />
             <FilterSlider
               label="Seats"
-              min={1}
+              min={0}
               max={16}
               value={filterState.seats}
               onChange={(value) => dispatch.filters.setState({ key: "seats", value })}
@@ -38,7 +38,7 @@ const Filters: React.FC = () => {
             <FilterSlider
               label="Doors"
               max={8}
-              min={1}
+              min={0}
               value={filterState.doors}
               onChange={(value) => dispatch.filters.setState({ key: "doors", value })}
             />

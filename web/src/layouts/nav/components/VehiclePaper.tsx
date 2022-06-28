@@ -8,17 +8,14 @@ import { useAppDispatch } from "../../../state";
 
 const VehiclePaper: React.FC<{
   vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons: boolean };
-  index: number;
-  vehicleIndex: number | null;
-  setVehicleIndex: React.Dispatch<React.SetStateAction<number | null>>;
-}> = ({ vehicle, index, vehicleIndex, setVehicleIndex }) => {
+  index: string;
+}> = ({ vehicle, index }) => {
   const dispatch = useAppDispatch();
 
   return (
     <>
       <Paper
         onClick={() => {
-          setVehicleIndex(index);
           dispatch.visibility.setVehicleVisible(true);
           dispatch.vehicleData.getVehicleData(index);
         }}
@@ -27,9 +24,8 @@ const VehiclePaper: React.FC<{
         withBorder
         sx={(theme) => ({
           width: "100%",
-          backgroundColor: vehicleIndex == index ? theme.colors[theme.primaryColor][8] : theme.colors.dark[6],
-          color: vehicleIndex === index ? theme.white : undefined,
-          "&:hover": { backgroundColor: vehicleIndex !== index ? theme.colors.dark[5] : undefined, cursor: "pointer" },
+          backgroundColor: theme.colors.dark[6],
+          "&:hover": { backgroundColor: theme.colors.dark[5], cursor: "pointer" },
         })}
       >
         <Stack sx={{ width: "100%" }}>

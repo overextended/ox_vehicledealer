@@ -501,7 +501,8 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 	end
 end)
 
-local vehicles = {}
+-- Probably do this some other way lol
+local vehicles = json.decode(LoadResourceFile('ox_core', 'files/vehicles.json'))
 
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
@@ -509,10 +510,11 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
 	print(json.encode(data, {indent=true}))
 end)
 
+
 RegisterNUICallback('clickVehicle', function(data, cb)
-	-- data is clicked index
-	if #vehicles < 1 then return end
-	local vehicle = vehicles[data + 1]
+	-- data is clicked key
+	print(data)
+	local vehicle = vehicles[data]
 	vehicle.speed = 37
 	vehicle.acceleration = 64
 	vehicle.braking = 53.7

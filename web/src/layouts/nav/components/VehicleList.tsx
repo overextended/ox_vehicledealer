@@ -17,16 +17,10 @@ const VehicleList: React.FC = () => {
         </Center>
       ) : (
         <>
-          {vehicles.length > 0 ? (
+          {Object.keys(vehicles).length > 0 ? (
             <Stack spacing="sm">
-              {vehicles.map((vehicle, index) => (
-                <VehiclePaper
-                  key={`vehicle-${index}`}
-                  vehicle={vehicle}
-                  index={index}
-                  vehicleIndex={vehicleIndex}
-                  setVehicleIndex={setVehicleIndex}
-                />
+              {Object.entries(vehicles).map((vehicle, index) => (
+                <VehiclePaper key={`vehicle-${index}`} vehicle={vehicle[1]} index={vehicle[0]} />
               ))}
             </Stack>
           ) : (
