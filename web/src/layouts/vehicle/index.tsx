@@ -6,6 +6,7 @@ import StatBar from "./components/StatBar";
 import Color from "./components/Color";
 import PurchaseModal from "./components/PurchaseModal";
 import { useState } from "react";
+import { useLocales } from "../../providers/LocaleProvider";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -29,6 +30,7 @@ const useStyles = createStyles((theme) => ({
 
 const Vehicle: React.FC = () => {
   const { classes } = useStyles();
+  const { locale } = useLocales();
   const dispatch = useAppDispatch();
   const vehicleVisibility = useAppSelector((state) => state.visibility.vehicle);
   const vehicleData = useAppSelector((state) => state.vehicleData);
@@ -44,15 +46,15 @@ const Vehicle: React.FC = () => {
             <Stack align="center">
               <Title order={4}>{`${vehicleData.make} ${vehicleData.name}`}</Title>
               <Color />
-              <StatBar label="Speed" value={vehicleData.speed} />
-              <StatBar label="Acceleration" value={vehicleData.acceleration} />
-              <StatBar label="Braking" value={vehicleData.braking} />
-              <StatBar label="Handling" value={vehicleData.handling} />
+              <StatBar label={locale.ui.vehicle_info.speed} value={vehicleData.speed} />
+              <StatBar label={locale.ui.vehicle_info.acceleration} value={vehicleData.acceleration} />
+              <StatBar label={locale.ui.vehicle_info.braking} value={vehicleData.braking} />
+              <StatBar label={locale.ui.vehicle_info.handling} value={vehicleData.handling} />
               <Group>
                 <ActionIcon variant="outline" color="blue" size="lg">
                   <TbRotate fontSize={20} />
                 </ActionIcon>
-                <Button onClick={() => setOpened(true)}>Purchase</Button>
+                <Button onClick={() => setOpened(true)}>{locale.ui.vehicle_info.purchase}</Button>
                 <ActionIcon variant="outline" color="blue" size="lg">
                   <TbRotateClockwise fontSize={20} />
                 </ActionIcon>

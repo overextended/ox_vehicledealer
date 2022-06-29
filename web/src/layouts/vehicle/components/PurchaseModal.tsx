@@ -1,4 +1,5 @@
 import { Button, Group, Modal, Text } from "@mantine/core";
+import { useLocales } from "../../../providers/LocaleProvider";
 import { VehicleDataState } from "../../../state/models/vehicleData";
 import { fetchNui } from "../../../utils/fetchNui";
 
@@ -10,9 +11,11 @@ interface Props {
 }
 
 const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) => {
+  const { locale } = useLocales();
+
   return (
     <Modal title="Purchase vehicle" opened={opened} onClose={() => setOpened(false)}>
-      <Text>
+      {/* <Text>
         Confirm purchase of{" "}
         <Text component="span" weight={700} transform="uppercase">
           {`${vehicle.make} ${vehicle.name}`}{" "}
@@ -22,11 +25,16 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
           ${price}
         </Text>
         ?
+      </Text> */}
+      <Text>
+        {locale.ui.purchase_modal.purchase_confirm
+          .replace("%s", `${vehicle.make} ${vehicle.name}`)
+          .replace("%d", price.toString())}
       </Text>
 
       <Group position="right" mt={10}>
         <Button color="red" variant="light" onClick={() => setOpened(false)}>
-          Cancel
+          {locale.ui.purchase_modal.cancel}
         </Button>
         <Button
           color="green"
@@ -36,7 +44,7 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
             fetchNui("purchaseVehicle", vehicle);
           }}
         >
-          Confirm
+          {locale.ui.purchase_modal.confirm}
         </Button>
       </Group>
     </Modal>

@@ -7,6 +7,7 @@ import "./index.css";
 import { isEnvBrowser } from "./utils/misc";
 import { Provider } from "react-redux";
 import { store } from "./state";
+import LocaleProvider from "./providers/LocaleProvider";
 
 if (isEnvBrowser()) {
   const root = document.getElementById("root");
@@ -22,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
       <Provider store={store}>
-        <App />
+        <LocaleProvider>
+          <App />
+        </LocaleProvider>
       </Provider>
     </MantineProvider>
   </StrictMode>

@@ -1,6 +1,8 @@
 
 local table = lib.table
 
+lib.locale()
+
 local vehicleCategories = {
 	"Compacts",
 	"Sedans",
@@ -499,6 +501,28 @@ RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
 		lib.hideTextUI()
 		TriggerServerEvent('ox_vehicledealer:buyVehicle', data)
 	end
+end)
+
+-- Changes the locales in UI on locale change
+RegisterNetEvent('ox_lib:setLocale', function(locale)
+	local resource = GetCurrentResourceName()
+	local JSON = LoadResourceFile(resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(resource, ('locales/en.json'):format(locale))
+	SendNUIMessage({
+		action = 'setLocale',
+		data = json.decode(JSON)
+	})
+end)
+
+-- Loads the locales into UI on startup
+RegisterNUICallback('loadLocale', function(_, cb)
+	cb(1)
+	local resource = GetCurrentResourceName()
+	local locale = GetExternalKvpString('ox_lib', 'locale') or 'en'
+	local JSON = LoadResourceFile(resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(resource, ('locales/en.json'):format(locale))
+	SendNUIMessage({
+		action = 'setLocale',
+		data = json.decode(JSON)
+	})
 end)
 
 -- Probably do this some other way lol

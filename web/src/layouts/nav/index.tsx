@@ -3,9 +3,11 @@ import { Navbar } from "@mantine/core";
 import VehicleList from "./components/VehicleList";
 import TopNav from "./components/TopNav";
 import { useAppSelector } from "../../state";
+import { useLocales } from "../../providers/LocaleProvider";
 
 const Nav: React.FC<{ categories: string[] }> = ({ categories }) => {
   const browserVisibility = useAppSelector((state) => state.visibility.browser);
+  const { locale } = useLocales();
 
   return (
     <Transition mounted={browserVisibility} transition="slide-right">
@@ -22,7 +24,7 @@ const Nav: React.FC<{ categories: string[] }> = ({ categories }) => {
           <Navbar.Section>
             <Stack align="center" p={10} sx={{ width: "100%" }}>
               <TopNav categories={categories} />
-              <Divider sx={{ width: "100%" }} label="Vehicles" my="xs" labelPosition="center" />
+              <Divider sx={{ width: "100%" }} label={locale.ui.vehicles} my="xs" labelPosition="center" />
             </Stack>
           </Navbar.Section>
 

@@ -1,0 +1,28 @@
+{
+	"ui": {
+		"vehicle_category": "Vehicle category",
+		"no_vehicle_category": "No such vehicle category",
+		"vehicles": "Vehicles",
+		"no_vehicles_found": "No vehicles found",
+		"filters": {
+			"advanced_filters": "Advanced filters",
+			"max_price": "Max price",
+			"seats": "Seats",
+			"doors": "Doors"
+		},
+		"vehicle_info": {
+			"vehicle_color": "Vehicle color",
+			"speed": "Speed",
+			"acceleration": "Acceleration",
+			"braking": "Braking",
+			"handling": "Handling",
+			"purchase": "Purchase"
+		},
+		"purchase_modal": {
+			"purchase_vehicle": "Purchase vehicle",
+			"purchase_confirm": "Confirm purchase of %s for $%d?",
+			"confirm": "Confirm",
+			"cancel": "Cancel"
+		}
+	}
+}
