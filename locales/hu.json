@@ -1,0 +1,28 @@
+{
+	"ui": {
+		"vehicle_category": "Jármű kategória",
+		"no_vehicle_category": "Nincsenek kategóriák",
+		"vehicles": "Járművek",
+		"no_vehicles_found": "Nincsenek járművek",
+		"filters": {
+			"advanced_filters": "Szűrők",
+			"max_price": "Max Ár",
+			"seats": "Ülés",
+			"doors": "Ajtó"
+		},
+		"vehicle_info": {
+			"vehicle_color": "Jármű színe",
+			"speed": "Sebessége",
+			"acceleration": "Gyorsulása",
+			"braking": "Fékezése",
+			"handling": "Kezelése",
+			"purchase": "Vásárlás"
+		},
+		"purchase_modal": {
+			"purchase_vehicle": "Jármű megvásárlása",
+			"purchase_confirm": "Tényleg meg szeretnéd venni %s ennyiért $%d?",
+			"confirm": "Megerősítés",
+			"cancel": "Mégse"
+		}
+	}
+}
