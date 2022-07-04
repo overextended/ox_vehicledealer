@@ -9,6 +9,7 @@ export interface FilterState {
   seats: number;
   doors: number;
   category: string | null;
+  categories: string[];
 }
 
 interface Vehicles {
@@ -25,8 +26,8 @@ interface Vehicles {
   };
 }
 
-type PayloadKey = "search" | "category" | "price" | "seats" | "doors";
-type PayloadValue = string | number | undefined | null;
+type PayloadKey = "search" | "category" | "price" | "seats" | "doors" | "categories";
+type PayloadValue = string | string[] | number | undefined | null;
 
 const vehicleClasses = [
   "Compacts",
@@ -98,6 +99,7 @@ export const filters = createModel<RootModel>()({
     seats: 0,
     doors: 0,
     category: null,
+    categories: [],
   } as FilterState,
   reducers: {
     setState(state, payload: { key: PayloadKey; value: PayloadValue }) {
@@ -120,6 +122,7 @@ export const filters = createModel<RootModel>()({
         if (payload.seats !== 0 && vehicle.seats !== payload.seats) return false;
         if (payload.price && vehicle.price > payload.price) return false;
         if (payload.category && vehicleClasses[vehicle.class] !== payload.category) return false;
+        if (payload.categories[vehicle.class] === null) return false; // doesn't allow filtering through not allowed classes
 
         const regEx = new RegExp(payload.search, "gi");
         const vehicleModel = `${vehicle.make} ${vehicle.name}`;

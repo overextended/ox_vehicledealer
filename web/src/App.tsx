@@ -22,8 +22,10 @@ export default function App() {
 
   useExitListener(dispatch.visibility.setBrowserVisible);
 
-  useNuiEvent("setVisible", (data) => {
-    setCategories(data.categories);
+  useNuiEvent("setVisible", (data: { categories: string[]; visible: boolean }) => {
+    const categories = data.categories.filter((category) => category !== null);
+    setCategories(categories);
+    dispatch.filters.setState({ key: "categories", value: data.categories });
     dispatch.visibility.setBrowserVisible(data.visible);
   });
 

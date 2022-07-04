@@ -4,28 +4,28 @@ local table = lib.table
 lib.locale()
 
 local vehicleCategories = {
-	"Compacts",
-	"Sedans",
-	"SUVs",
-	"Coupes",
-	"Muscle",
-	"Sports Classics",
-	"Sports",
-	"Super",
-	"Motorcycles",
-	"Off-road",
-	"Industrial",
-	"Utility",
-	"Vans",
-	"Cycles",
-	"Boats",
-	"Helicopters",
-	"Planes",
-	"Service",
-	"Emergency",
-	"Military",
-	"Commercial",
-	"Trains",
+	[1] =  "Compacts",
+	[2] =  "Sedans",
+	[3] =  "SUVs",
+	[4] =  "Coupes",
+	[5] =  "Muscle",
+	[6] =  "Sports Classics",
+	[7] =  "Sports",
+	[8] =  "Super",
+	[9] =  "Motorcycles",
+	[10] =  "Off-road",
+	[11] =  "Industrial",
+	[12] =  "Utility",
+	[13] =  "Vans",
+	[14] =  "Cycles",
+	[15] =  "Boats",
+	[16] =  "Helicopters",
+	[17] =  "Planes",
+	[18] =  "Service",
+	[19] =  "Emergency",
+	[20] =  "Military",
+	[21] =  "Commercial",
+	[22] =  "Trains",
 }
 
 exports.ox_property:registerZoneMenu('showroom',
@@ -567,21 +567,17 @@ end)
 RegisterCommand('testui', function()
 	local currentZone = exports.ox_property:getCurrentZone()
 	local deniedClasses = GlobalState['ShowroomRestrictions'][('%s:%s'):format(currentZone.property, currentZone.zoneId)].class.data
-	local categories = {}
+	local categories = vehicleCategories
 
-	for i = 1, #vehicleCategories do
-		for j = 1, #deniedClasses do
-			if vehicleCategories[i] == deniedClasses[j] then return end
-		end
-
-		categories[#categories+1] = vehicleCategories[i]
+	for i = 1, #deniedClasses do
+		categories[deniedClasses[i] + 1] = nil
 	end
 
 	SendNUIMessage({
 		action = 'setVisible',
 		data = {
 			visible = true,
-			categories = vehicleCategories
+			categories = categories
 		}
 	})
 	SetNuiFocus(true, true)
