@@ -525,9 +525,6 @@ RegisterNUICallback('loadLocale', function(_, cb)
 	})
 end)
 
--- Probably do this some other way lol
-local vehicles = json.decode(LoadResourceFile('ox_core', 'files/vehicles.json'))
-
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	-- Probably shouldn't use data.price instead get the price from the model?
@@ -536,14 +533,13 @@ end)
 
 
 RegisterNUICallback('clickVehicle', function(data, cb)
-	-- data is clicked key
-	print(data)
-	local vehicle = vehicles[data]
+	-- data is clicked vehicle key (model)
+	local vehicle = Ox.GetVehicleData(data)
+	print(json.encode(vehicle, {indent=true}))
 	vehicle.speed = 37
 	vehicle.acceleration = 64
 	vehicle.braking = 53.7
 	vehicle.handling = 42.3
-	print(json.encode(vehicle, {indent=true}))
 	cb(vehicle)
 end)
 
