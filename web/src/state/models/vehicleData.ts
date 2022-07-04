@@ -1,7 +1,7 @@
 import { createModel } from "@rematch/core";
 import { RootModel } from ".";
+import { store } from "..";
 import { fetchNui } from "../../utils/fetchNui";
-import { VehicleState } from "./vehicles";
 
 export interface VehicleDataState {
   acceleration: number;
@@ -39,7 +39,8 @@ export const vehicleData = createModel<RootModel>()({
   effects: (dispatch) => ({
     async getVehicleData(payload: string) {
       try {
-        const vehicleData = await fetchNui("clickVehicle", payload);
+        const vehicle = store.getState().vehicleList[payload];
+        const vehicleData = await fetchNui("clickVehicle", vehicle);
         dispatch.vehicleData.setState(vehicleData);
       } catch {
         const vehicleData: VehicleDataState = {

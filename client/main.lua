@@ -533,14 +533,13 @@ end)
 
 
 RegisterNUICallback('clickVehicle', function(data, cb)
-	-- data is clicked vehicle key (model)
-	local vehicle = Ox.GetVehicleData(data)
-	print(json.encode(vehicle, {indent=true}))
-	vehicle.speed = 37
-	vehicle.acceleration = 64
-	vehicle.braking = 53.7
-	vehicle.handling = 42.3
-	cb(vehicle)
+	-- data is vehicle table
+	print(json.encode(data, {indent=true}))
+	data.speed = 37
+	data.acceleration = 64
+	data.braking = 53.7
+	data.handling = 42.3
+	cb(data)
 end)
 
 RegisterNUICallback('fetchVehicles', function(data, cb)
