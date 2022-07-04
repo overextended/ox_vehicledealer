@@ -60,8 +60,7 @@ export const filters = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     filterVehicles(payload: FilterState) {
-      const vehicles = store.getState().vehicleList;
-      const vehiclesArray = Object.entries(vehicles);
+      const vehiclesArray = Object.entries(store.getState().vehicleList);
       const filteredVehicles = vehiclesArray.filter((value) => {
         const vehicle = value[1];
 
