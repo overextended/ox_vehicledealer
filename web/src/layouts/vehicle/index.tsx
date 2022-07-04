@@ -61,7 +61,7 @@ const Vehicle: React.FC = () => {
               </Group>
             </Stack>
           </Box>
-          <PurchaseModal opened={opened} setOpened={setOpened} price={30000} vehicle={vehicleData} />
+          <PurchaseModal opened={opened} setOpened={setOpened} price={vehicleData.price} vehicle={vehicleData} />
         </Box>
       )}
     </Transition>
