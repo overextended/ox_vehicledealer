@@ -1,11 +1,11 @@
-import { Divider, ScrollArea, Stack, Loader, Center, Transition } from "@mantine/core";
+import { Divider, ScrollArea, Stack, Transition } from "@mantine/core";
 import { Navbar } from "@mantine/core";
 import VehicleList from "./components/VehicleList";
 import TopNav from "./components/TopNav";
 import { useAppSelector } from "../../state";
 import { useLocales } from "../../providers/LocaleProvider";
 
-const Nav: React.FC<{ categories: string[] }> = ({ categories }) => {
+const VehicleBrowser: React.FC<{ categories: string[] }> = ({ categories }) => {
   const browserVisibility = useAppSelector((state) => state.visibility.browser);
   const { locale } = useLocales();
 
@@ -37,4 +37,4 @@ const Nav: React.FC<{ categories: string[] }> = ({ categories }) => {
   );
 };
 
-export default Nav;
+export default VehicleBrowser;
