@@ -1,6 +1,7 @@
 import { Tooltip, ActionIcon } from "@mantine/core";
 import { IconBaseProps } from "react-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import React from "react";
 
 interface Props {
   tooltip: string;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const NavIcon: React.FC<Props> = ({ tooltip, to, Icon, iconSize }) => {
+  const location = useLocation();
+
   return (
     <>
       <Tooltip label={tooltip} withArrow position="right">
@@ -23,6 +26,7 @@ const NavIcon: React.FC<Props> = ({ tooltip, to, Icon, iconSize }) => {
             height: 50,
             transition: "300ms",
             ":hover": { color: theme.colors.blue[5] },
+            color: location.pathname === to ? theme.colors.blue[5] : undefined,
           })}
         >
           <Icon fontSize={iconSize || 24} />

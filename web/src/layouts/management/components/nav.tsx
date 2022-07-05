@@ -18,7 +18,7 @@ const Nav: React.FC = () => {
               <NavIcon tooltip="Purchase vehicles" Icon={TbCar} to="/purchase_vehicles" />
               <NavIcon tooltip="Stock" Icon={TbDatabase} to="/stock" />
               <NavIcon tooltip="Gallery" Icon={RiGalleryLine} to="/gallery" />
-              <NavIcon tooltip="Employees" Icon={TbUsers} to="employees" />
+              <NavIcon tooltip="Employees" Icon={TbUsers} to="/employees" />
             </Stack>
           </Center>
         </Navbar.Section>
