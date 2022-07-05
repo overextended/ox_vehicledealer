@@ -1,6 +1,8 @@
 import { AppShell, Center } from "@mantine/core";
 import { Routes, Route } from "react-router-dom";
 import Nav from "./components/nav";
+import Home from "./views";
+import PurchaseVehicles from "./views/purchase";
 
 const Management: React.FC = () => {
   return (
@@ -18,8 +20,8 @@ const Management: React.FC = () => {
         navbar={<Nav />}
       >
         <Routes>
-          <Route path="/" element={<>Hello there</>} />
-          <Route path="/purchase_vehicles" element={<>General Kenobi</>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/purchase_vehicles" element={<PurchaseVehicles />} />
           <Route path="/stock" element={<>Stock</>} />
           <Route path="/gallery" element={<>Gallery</>} />
           <Route path="/employees" element={<>Employees</>} />
