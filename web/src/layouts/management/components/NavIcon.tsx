@@ -1,18 +1,21 @@
 import { Tooltip, ActionIcon } from "@mantine/core";
 import { IconBaseProps } from "react-icons";
-import { TbDatabase } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 interface Props {
   tooltip: string;
+  to: string;
   Icon: React.ComponentType<IconBaseProps>;
   iconSize?: number;
 }
 
-const NavIcon: React.FC<Props> = ({ tooltip, Icon, iconSize }) => {
+const NavIcon: React.FC<Props> = ({ tooltip, to, Icon, iconSize }) => {
   return (
     <>
       <Tooltip label={tooltip} withArrow position="right">
         <ActionIcon
+          component={Link}
+          to={to}
           variant="transparent"
           size="xl"
           sx={(theme) => ({

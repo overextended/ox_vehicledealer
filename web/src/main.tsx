@@ -8,6 +8,7 @@ import { isEnvBrowser } from "./utils/misc";
 import { Provider } from "react-redux";
 import { store } from "./state";
 import LocaleProvider from "./providers/LocaleProvider";
+import { HashRouter } from "react-router-dom";
 
 if (isEnvBrowser()) {
   const root = document.getElementById("root");
@@ -21,12 +22,14 @@ if (isEnvBrowser()) {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-      <Provider store={store}>
-        <LocaleProvider>
-          <App />
-        </LocaleProvider>
-      </Provider>
-    </MantineProvider>
+    <HashRouter>
+      <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+        <Provider store={store}>
+          <LocaleProvider>
+            <App />
+          </LocaleProvider>
+        </Provider>
+      </MantineProvider>
+    </HashRouter>
   </StrictMode>
 );
