@@ -19,14 +19,14 @@ const NavIcon: React.FC<Props> = ({ tooltip, to, Icon, iconSize }) => {
         <ActionIcon
           component={Link}
           to={to}
-          variant="transparent"
+          variant={location.pathname === to ? "light" : "transparent"}
           size="xl"
+          color="blue"
           sx={(theme) => ({
             width: 50,
             height: 50,
             transition: "300ms",
-            ":hover": { color: theme.colors.blue[5] },
-            color: location.pathname === to ? theme.colors.blue[5] : undefined,
+            ":hover": { color: theme.colors.blue[3] },
           })}
         >
           <Icon fontSize={iconSize || 24} />
