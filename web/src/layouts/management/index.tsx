@@ -8,6 +8,7 @@ import Nav from "./components/nav";
 import Home from "./views";
 import PurchaseVehicles from "./views/purchase";
 import Stock from "./views/stock";
+import Gallery from "./views/gallery";
 
 debugData([
   {
@@ -46,7 +47,7 @@ const Management: React.FC = () => {
               <Route path="/" element={<Home />} />
               <Route path="/purchase_vehicles" element={<PurchaseVehicles />} />
               <Route path="/stock" element={<Stock />} />
-              <Route path="/gallery" element={<div>Gallery</div>} />
+              <Route path="/gallery" element={<Gallery />} />
               <Route path="/employees" element={<>Employees</>} />
             </Routes>
           </AppShell>
