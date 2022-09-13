@@ -15,21 +15,10 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
 
   return (
     <Modal title="Purchase vehicle" opened={opened} onClose={() => setOpened(false)}>
-      {/* <Text>
-        Confirm purchase of{" "}
-        <Text component="span" weight={700} transform="uppercase">
-          {`${vehicle.make} ${vehicle.name}`}{" "}
-        </Text>
-        for{" "}
-        <Text component="span" weight={700}>
-          ${price}
-        </Text>
-        ?
-      </Text> */}
       <Text>
         {locale.ui.purchase_modal.purchase_confirm
           .replace("%s", `${vehicle.make} ${vehicle.name}`)
-          .replace("%d", price.toString())}
+          .replace("%d", 'UNDEFINED')}
       </Text>
 
       <Group position="right" mt={10}>
