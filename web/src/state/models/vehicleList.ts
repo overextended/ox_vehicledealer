@@ -18,7 +18,7 @@ interface Vehicles {
 
 const vehicles: Vehicles = await (async () => {
   if (!isEnvBrowser()) {
-    const resp = await fetch(`nui://ox_core/files/vehicles.json`, {
+    const resp = await fetch(`nui://ox_core/shared/files/vehicles.json`, {
       method: "post",
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
