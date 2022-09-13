@@ -1,7 +1,7 @@
-import { Navbar, Center, Stack } from "@mantine/core";
-import { RiGalleryLine } from "react-icons/ri";
-import { TbCar, TbDatabase, TbUsers, TbHome2 } from "react-icons/tb";
-import NavIcon from "./NavIcon";
+import { Navbar, Center, Stack } from '@mantine/core';
+import { RiGalleryLine } from 'react-icons/ri';
+import { TbCar, TbDatabase, TbUsers, TbHome2 } from 'react-icons/tb';
+import NavIcon from './NavIcon';
 
 const Nav: React.FC = () => {
   return (

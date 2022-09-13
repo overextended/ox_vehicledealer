@@ -1,6 +1,6 @@
-import { Table, ScrollArea } from "@mantine/core";
-import TableHeadings from "./components/TableHeadings";
-import TableRows from "./components/TableRows";
+import { Table, ScrollArea } from '@mantine/core';
+import TableHeadings from './components/TableHeadings';
+import TableRows from './components/TableRows';
 
 const vehicles: {
   [key: string]: {
@@ -12,15 +12,15 @@ const vehicles: {
   };
 } = {
   blista: {
-    make: "Dinka",
-    name: "Blista",
+    make: 'Dinka',
+    name: 'Blista',
     price: 9500,
     gallery: true,
     stock: 3,
   },
   dominator: {
-    make: "Vapid",
-    name: "Dominator",
+    make: 'Vapid',
+    name: 'Dominator',
     price: 135000,
     gallery: false,
     stock: 1,

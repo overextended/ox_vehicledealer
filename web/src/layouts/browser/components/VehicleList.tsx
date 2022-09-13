@@ -1,9 +1,9 @@
-import { Stack, Text, Center, Loader } from "@mantine/core";
-import { useState } from "react";
-import { TbSearch } from "react-icons/tb";
-import { useLocales } from "../../../providers/LocaleProvider";
-import { useAppSelector } from "../../../state";
-import VehiclePaper from "./VehiclePaper";
+import { Stack, Text, Center, Loader } from '@mantine/core';
+import { useState } from 'react';
+import { TbSearch } from 'react-icons/tb';
+import { useLocales } from '../../../providers/LocaleProvider';
+import { useAppSelector } from '../../../state';
+import VehiclePaper from './VehiclePaper';
 
 const VehicleList: React.FC = () => {
   const vehicles = useAppSelector((state) => state.vehicles);
@@ -13,7 +13,7 @@ const VehicleList: React.FC = () => {
   return (
     <>
       {isLoading ? (
-        <Center style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+        <Center style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <Loader />
         </Center>
       ) : (

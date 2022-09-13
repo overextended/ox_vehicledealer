@@ -1,10 +1,10 @@
-import { Box, Stack, NumberInput, ActionIcon, Group, Modal } from "@mantine/core";
-import FilterSlider from "../../../components/FilterSlider";
-import { TbFilter, TbReceipt2 } from "react-icons/tb";
-import { useAppDispatch, useAppSelector } from "../../../state";
-import Search from "./Search";
-import { useState } from "react";
-import { useLocales } from "../../../providers/LocaleProvider";
+import { Box, Stack, NumberInput, ActionIcon, Group, Modal } from '@mantine/core';
+import FilterSlider from '../../../components/FilterSlider';
+import { TbFilter, TbReceipt2 } from 'react-icons/tb';
+import { useAppDispatch, useAppSelector } from '../../../state';
+import Search from './Search';
+import { useState } from 'react';
+import { useLocales } from '../../../providers/LocaleProvider';
 
 const Filters: React.FC = () => {
   const { locale } = useLocales();
@@ -14,7 +14,7 @@ const Filters: React.FC = () => {
 
   return (
     <>
-      <Group noWrap sx={{ width: "100%" }} position="apart" grow>
+      <Group noWrap sx={{ width: '100%' }} position="apart" grow>
         <ActionIcon variant="outline" color="blue" size="lg" onClick={() => setOpen(true)}>
           <TbFilter fontSize={20} />
         </ActionIcon>
@@ -33,7 +33,7 @@ const Filters: React.FC = () => {
               label={locale.ui.filters.max_price}
               hideControls
               value={filterState.price}
-              onChange={(value) => dispatch.filters.setState({ key: "price", value })}
+              onChange={(value) => dispatch.filters.setState({ key: 'price', value })}
               icon={<TbReceipt2 fontSize={20} />}
             />
             <FilterSlider
@@ -41,14 +41,14 @@ const Filters: React.FC = () => {
               min={0}
               max={16}
               value={filterState.seats}
-              onChange={(value) => dispatch.filters.setState({ key: "seats", value })}
+              onChange={(value) => dispatch.filters.setState({ key: 'seats', value })}
             />
             <FilterSlider
               label={locale.ui.filters.doors}
               max={8}
               min={0}
               value={filterState.doors}
-              onChange={(value) => dispatch.filters.setState({ key: "doors", value })}
+              onChange={(value) => dispatch.filters.setState({ key: 'doors', value })}
             />
           </Stack>
         </Box>

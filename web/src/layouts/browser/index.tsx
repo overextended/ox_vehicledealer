@@ -1,9 +1,9 @@
-import { Divider, ScrollArea, Stack, Transition } from "@mantine/core";
-import { Navbar } from "@mantine/core";
-import VehicleList from "./components/VehicleList";
-import TopNav from "./components/TopNav";
-import { useAppSelector } from "../../state";
-import { useLocales } from "../../providers/LocaleProvider";
+import { Divider, ScrollArea, Stack, Transition } from '@mantine/core';
+import { Navbar } from '@mantine/core';
+import VehicleList from './components/VehicleList';
+import TopNav from './components/TopNav';
+import { useAppSelector } from '../../state';
+import { useLocales } from '../../providers/LocaleProvider';
 
 const VehicleBrowser: React.FC<{ categories: string[] }> = ({ categories }) => {
   const browserVisibility = useAppSelector((state) => state.visibility.browser);
@@ -22,9 +22,9 @@ const VehicleBrowser: React.FC<{ categories: string[] }> = ({ categories }) => {
           })}
         >
           <Navbar.Section>
-            <Stack align="center" p={10} sx={{ width: "100%" }}>
+            <Stack align="center" p={10} sx={{ width: '100%' }}>
               <TopNav categories={categories} />
-              <Divider sx={{ width: "100%" }} label={locale.ui.vehicles} my="xs" labelPosition="center" />
+              <Divider sx={{ width: '100%' }} label={locale.ui.vehicles} my="xs" labelPosition="center" />
             </Stack>
           </Navbar.Section>
 

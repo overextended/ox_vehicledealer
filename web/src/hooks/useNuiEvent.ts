@@ -1,5 +1,5 @@
-import { MutableRefObject, useEffect, useRef } from "react";
-import { noop } from "../utils/misc";
+import { MutableRefObject, useEffect, useRef } from 'react';
+import { noop } from '../utils/misc';
 
 interface NuiMessageData<T = unknown> {
   action: string;
@@ -39,8 +39,8 @@ export const useNuiEvent = <T = any>(action: string, handler: (data: T) => void)
       }
     };
 
-    window.addEventListener("message", eventListener);
+    window.addEventListener('message', eventListener);
     // Remove Event Listener on component cleanup
-    return () => window.removeEventListener("message", eventListener);
+    return () => window.removeEventListener('message', eventListener);
   }, [action]);
 };

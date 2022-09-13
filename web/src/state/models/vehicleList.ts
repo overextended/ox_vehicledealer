@@ -1,6 +1,6 @@
-import { createModel } from "@rematch/core";
-import { RootModel } from ".";
-import { isEnvBrowser } from "../../utils/misc";
+import { createModel } from '@rematch/core';
+import { RootModel } from '.';
+import { isEnvBrowser } from '../../utils/misc';
 
 interface Vehicles {
   [key: string]: {
@@ -19,9 +19,9 @@ interface Vehicles {
 const vehicles: Vehicles = await (async () => {
   if (!isEnvBrowser()) {
     const resp = await fetch(`nui://ox_core/shared/files/vehicles.json`, {
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json; charset=UTF-8",
+        'Content-Type': 'application/json; charset=UTF-8',
       },
     });
 
@@ -29,25 +29,25 @@ const vehicles: Vehicles = await (async () => {
   } else {
     return {
       dinka: {
-        bodytype: "automobile",
+        bodytype: 'automobile',
         class: 0,
         doors: 4,
-        make: "Dinka",
-        name: "Blista",
+        make: 'Dinka',
+        name: 'Blista',
         price: 9500,
         seats: 4,
-        type: "",
+        type: '',
         weapons: false,
       },
       dominator: {
-        bodytype: "automobile",
+        bodytype: 'automobile',
         class: 1,
         doors: 2,
-        make: "Vapid",
-        name: "Dominator",
+        make: 'Vapid',
+        name: 'Dominator',
         price: 13500,
         seats: 2,
-        type: "",
+        type: '',
         weapons: false,
       },
     };

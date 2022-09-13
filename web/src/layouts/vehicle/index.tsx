@@ -1,25 +1,25 @@
-import { Box, createStyles, Transition, Title, Stack, Group, ActionIcon, Button } from "@mantine/core";
-import { TbRotate, TbRotateClockwise } from "react-icons/tb";
-import { useExitListener } from "../../hooks/useExitListener";
-import { useAppDispatch, useAppSelector } from "../../state";
-import StatBar from "./components/StatBar";
-import Color from "./components/Color";
-import PurchaseModal from "./components/PurchaseModal";
-import { useState } from "react";
-import { useLocales } from "../../providers/LocaleProvider";
+import { Box, createStyles, Transition, Title, Stack, Group, ActionIcon, Button } from '@mantine/core';
+import { TbRotate, TbRotateClockwise } from 'react-icons/tb';
+import { useExitListener } from '../../hooks/useExitListener';
+import { useAppDispatch, useAppSelector } from '../../state';
+import StatBar from './components/StatBar';
+import Color from './components/Color';
+import PurchaseModal from './components/PurchaseModal';
+import { useState } from 'react';
+import { useLocales } from '../../providers/LocaleProvider';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "flex-end",
-    height: "100%",
-    width: "100%",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    height: '100%',
+    width: '100%',
   },
 
   box: {
-    height: "fit-content",
+    height: 'fit-content',
     width: 300,
     backgroundColor: theme.colors.dark[7],
     padding: 10,

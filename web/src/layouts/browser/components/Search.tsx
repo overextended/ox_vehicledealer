@@ -1,6 +1,6 @@
-import { Input } from "@mantine/core";
-import { TbSearch } from "react-icons/tb";
-import { useAppDispatch, useAppSelector } from "../../../state";
+import { Input } from '@mantine/core';
+import { TbSearch } from 'react-icons/tb';
+import { useAppDispatch, useAppSelector } from '../../../state';
 
 const Search: React.FC = () => {
   const filterState = useAppSelector((state) => state.filters);
@@ -12,7 +12,7 @@ const Search: React.FC = () => {
         icon={<TbSearch />}
         value={filterState.search}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          dispatch.filters.setState({ key: "search", value: e.target.value })
+          dispatch.filters.setState({ key: 'search', value: e.target.value })
         }
       />
     </>

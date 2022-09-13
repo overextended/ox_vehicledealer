@@ -1,18 +1,18 @@
-import { AppShell, Center, Transition } from "@mantine/core";
-import { Routes, Route } from "react-router-dom";
-import { useExitListener } from "../../hooks/useExitListener";
-import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { useAppDispatch, useAppSelector } from "../../state";
-import { debugData } from "../../utils/debugData";
-import Nav from "./components/nav";
-import Home from "./views";
-import PurchaseVehicles from "./views/purchase";
-import Stock from "./views/stock";
-import Gallery from "./views/gallery";
+import { AppShell, Center, Transition } from '@mantine/core';
+import { Routes, Route } from 'react-router-dom';
+import { useExitListener } from '../../hooks/useExitListener';
+import { useNuiEvent } from '../../hooks/useNuiEvent';
+import { useAppDispatch, useAppSelector } from '../../state';
+import { debugData } from '../../utils/debugData';
+import Nav from './components/nav';
+import Home from './views';
+import PurchaseVehicles from './views/purchase';
+import Stock from './views/stock';
+import Gallery from './views/gallery';
 
 debugData([
   {
-    action: "setManagementVisible",
+    action: 'setManagementVisible',
     data: true,
   },
 ]);
@@ -21,12 +21,12 @@ const Management: React.FC = () => {
   const dispatch = useAppDispatch();
   const visible = useAppSelector((state) => state.visibility.management);
 
-  useNuiEvent("setManagementVisible", (data) => dispatch.visibility.setManagementVisible(true));
+  useNuiEvent('setManagementVisible', (data) => dispatch.visibility.setManagementVisible(true));
 
   useExitListener(dispatch.visibility.setManagementVisible);
 
   return (
-    <Center sx={{ height: "100%" }}>
+    <Center sx={{ height: '100%' }}>
       <Transition transition="slide-up" mounted={visible}>
         {(style) => (
           <AppShell

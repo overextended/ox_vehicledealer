@@ -1,5 +1,5 @@
-import { createModel } from "@rematch/core";
-import { RootModel } from ".";
+import { createModel } from '@rematch/core';
+import { RootModel } from '.';
 
 interface VisibilityState {
   browser: boolean;

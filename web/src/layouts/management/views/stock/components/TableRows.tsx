@@ -1,5 +1,5 @@
-import { Tooltip, Badge, ActionIcon } from "@mantine/core";
-import { TbEdit } from "react-icons/tb";
+import { Tooltip, Badge, ActionIcon } from '@mantine/core';
+import { TbEdit } from 'react-icons/tb';
 
 interface VehicleStock {
   make: string;
@@ -15,7 +15,7 @@ interface Props {
 
 const TableRows: React.FC<Props> = ({ vehicle }) => {
   return (
-    <tr style={{ textAlign: "center" }}>
+    <tr style={{ textAlign: 'center' }}>
       <td>{vehicle.make}</td>
       <td>{vehicle.name}</td>
       <td>${vehicle.price}</td>

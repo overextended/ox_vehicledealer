@@ -1,6 +1,6 @@
-import { init, RematchDispatch, RematchRootState } from "@rematch/core";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { models, RootModel } from "./models";
+import { init, RematchDispatch, RematchRootState } from '@rematch/core';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { models, RootModel } from './models';
 
 export const store = init({ models });
 

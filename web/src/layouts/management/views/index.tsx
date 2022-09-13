@@ -1,4 +1,4 @@
-import { Box } from "@mantine/core";
+import { Box } from '@mantine/core';
 
 const Home: React.FC = () => {
   return (

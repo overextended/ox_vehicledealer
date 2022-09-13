@@ -1,4 +1,4 @@
-import { Center } from "@mantine/core";
+import { Center } from '@mantine/core';
 
 const PurchaseVehicles: React.FC = () => {
   return (

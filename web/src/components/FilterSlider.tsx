@@ -1,4 +1,4 @@
-import { Stack, Slider, Text } from "@mantine/core";
+import { Stack, Slider, Text } from '@mantine/core';
 
 interface Props {
   label: string;

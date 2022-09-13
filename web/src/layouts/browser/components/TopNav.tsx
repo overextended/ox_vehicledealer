@@ -1,11 +1,11 @@
-import { Select } from "@mantine/core";
-import { useEffect } from "react";
-import { TbCar } from "react-icons/tb";
-import { useDebounce } from "../../../hooks/useDebounce";
-import { useIsFirstRender } from "../../../hooks/useIsFirstRender";
-import { useLocales } from "../../../providers/LocaleProvider";
-import { useAppDispatch, useAppSelector } from "../../../state";
-import Filters from "./Filters";
+import { Select } from '@mantine/core';
+import { useEffect } from 'react';
+import { TbCar } from 'react-icons/tb';
+import { useDebounce } from '../../../hooks/useDebounce';
+import { useIsFirstRender } from '../../../hooks/useIsFirstRender';
+import { useLocales } from '../../../providers/LocaleProvider';
+import { useAppDispatch, useAppSelector } from '../../../state';
+import Filters from './Filters';
 
 const TopNav: React.FC<{ categories: string[] }> = ({ categories }) => {
   const { locale } = useLocales();
@@ -28,13 +28,13 @@ const TopNav: React.FC<{ categories: string[] }> = ({ categories }) => {
         searchable
         clearable
         nothingFound={locale.ui.no_vehicle_category}
-        onChange={(value) => dispatch.filters.setState({ key: "category", value })}
+        onChange={(value) => dispatch.filters.setState({ key: 'category', value })}
         value={filters.category}
         data={categories}
         width="100%"
         styles={{
           root: {
-            width: "100%",
+            width: '100%',
           },
         }}
       />

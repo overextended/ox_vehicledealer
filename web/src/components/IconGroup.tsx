@@ -1,5 +1,5 @@
-import { Group, Text } from "@mantine/core";
-import { IconBaseProps, IconType } from "react-icons";
+import { Group, Text } from '@mantine/core';
+import { IconBaseProps, IconType } from 'react-icons';
 
 interface Props {
   label: string | number;
