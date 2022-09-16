@@ -12,11 +12,11 @@ return {
 		blip = vec(-40.7, -1099.8),
 		stashes = {
 			{
-				label = 'Boss Stash',
+				name = 'Boss Stash',
 				coords = vec(-31.2, -1110.8, 26.4),
 			},
 			{
-				label = 'Office Stash',
+				name = 'Office Stash',
 				coords = vec(-29.8, -1107.7, 26.4),
 			},
 		},
