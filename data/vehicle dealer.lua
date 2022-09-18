@@ -30,7 +30,7 @@ return {
 			{
 				name = 'Showroom',
 				type = 'showroom',
-				vehicles = { automobile = true, bike = true },
+				vehicles = { automobile = true, bicycle = true, bike = true, quadbike = true },
 				restrictions = {
 					allow = {
 						weapons = false,
@@ -61,7 +61,7 @@ return {
 			{
 				name = 'Parking',
 				type = 'parking',
-				vehicles = { automobile = true, bike = true },
+				vehicles = { automobile = true, bicycle = true, bike = true, quadbike = true },
 				points = {
 					vec(-63.4, -1119.6, 26.4),
 					vec(-39.0, -1118.3, 26.4),
