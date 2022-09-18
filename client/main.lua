@@ -3,35 +3,10 @@ local table = lib.table
 
 lib.locale()
 
-local vehicleCategories = {
-	[1] =  "Compacts",
-	[2] =  "Sedans",
-	[3] =  "SUVs",
-	[4] =  "Coupes",
-	[5] =  "Muscle",
-	[6] =  "Sports Classics",
-	[7] =  "Sports",
-	[8] =  "Super",
-	[9] =  "Motorcycles",
-	[10] =  "Off-road",
-	[11] =  "Industrial",
-	[12] =  "Utility",
-	[13] =  "Vans",
-	[14] =  "Cycles",
-	[15] =  "Boats",
-	[16] =  "Helicopters",
-	[17] =  "Planes",
-	[18] =  "Service",
-	[19] =  "Emergency",
-	[20] =  "Military",
-	[21] =  "Commercial",
-	[22] =  "Trains",
-}
-
 exports.ox_property:registerZoneMenu('showroom',
 	function(currentZone)
 		local options = {}
-		local propertyVehicles, zoneVehicles = lib.callback.await('ox_property:getVehicleList', 100, {
+		local propertyVehicles, zoneVehicles, vehicleData = lib.callback.await('ox_property:getVehicleList', 100, {
 			property = currentZone.property,
 			zoneId = currentZone.zoneId,
 			propertyOnly = true
@@ -77,13 +52,12 @@ exports.ox_property:registerZoneMenu('showroom',
 		end
 
 		options[#options + 1] = {
-			title = 'Buy Wholesale',
-			description = 'Search for a vehicle to import',
+			title = 'Wholesale Menu',
+			description = 'Choose a vehicle to import',
 			event = 'ox_vehicledealer:buyWholesale',
 			args = {
 				property = currentZone.property,
-				zoneId = currentZone.zoneId,
-				restrictions = GlobalState['ShowroomRestrictions'][('%s:%s'):format(currentZone.property, currentZone.zoneId)]
+				zoneId = currentZone.zoneId
 			}
 		}
 
@@ -97,6 +71,7 @@ exports.ox_property:registerZoneMenu('showroom',
 					property = currentZone.property,
 					zoneId = currentZone.zoneId,
 					vehicles = zoneVehicles,
+					vehicleData = vehicleData,
 					zoneOnly = true
 				}
 			}
@@ -112,7 +87,8 @@ exports.ox_property:registerZoneMenu('showroom',
 			options[#options].args = {
 				property = currentZone.property,
 				zoneId = currentZone.zoneId,
-				vehicles = propertyVehicles
+				vehicles = propertyVehicles,
+				vehicleData = vehicleData
 			}
 		end
 
@@ -139,7 +115,7 @@ CreateThread(function()
 
 		if closeVehicle then
 			BeginTextCommandDisplayHelp('FloatingNotification')
-			AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(closeVehicle.modelData.name, closeVehicle.modelData.price))
+			AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(closeVehicle.data.name, closeVehicle.data.price))
 			EndTextCommandDisplayHelp(2, false, false, -1)
 			SetFloatingHelpTextWorldPosition(1, closeVehicle.vehPos.x, closeVehicle.vehPos.y, closeVehicle.vehPos.z + 1)
 			SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
@@ -155,7 +131,7 @@ lib.onCache('vehicle', function(vehicle)
 	if vehicle then
 		local veh = displayedVehicles[GetVehicleNumberPlateText(vehicle)]
 		if veh then
-			lib.showTextUI(('Plate: %s  \nMake: %s  \nBodyType: %s'):format(veh.plate, veh.modelData.make, veh.modelData.bodytype))
+			lib.showTextUI(('Plate: %s  \nMake: %s  \nType: %s'):format(veh.plate, veh.data.make, veh.data.type))
 		end
 	else
 		lib.hideTextUI()
@@ -170,6 +146,7 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 		local subMenus = {}
 		for i = 1, #data.vehicles do
 			local vehicle = data.vehicles[i]
+			vehicle.data = data.vehicleData[vehicle.model]
 
 			local zoneName = vehicle.stored == 'false' and 'Unknown' or vehicle.stored:gsub('^%l', string.upper)
 			if vehicle.stored:find(':') then
@@ -178,11 +155,11 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 				if currentZone.property == property and currentZone.zoneId == zoneId then
 					zoneName = 'Current Zone'
 				elseif properties[property].zones[zoneId] then
-					zoneName = string.strconcat(property, ' - ', properties[property].zones[zoneId].name)
+					zoneName = ('%s - %s'):format(property, properties[property].zones[zoneId].name)
 				end
 			end
 
-			options[('%s - %s'):format(vehicle.modelData.name, vehicle.plate)] = {
+			options[('%s - %s'):format(vehicle.data.name, vehicle.plate)] = {
 				menu = vehicle.plate,
 				metadata = {['Location'] = zoneName}
 			}
@@ -246,232 +223,18 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 	end
 end)
 
+local categories = GlobalState['VehicleClasses']
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-		local filters = {'model', 'name', 'make', 'type', 'bodytype', 'class', 'price', 'doors', 'seats', 'weapons'}
-		data.filters = data.filters or {}
-
-		local options = {}
-		for i = 1, #filters do
-			local filter = filters[i]
-			if not data.restrictions?[filter]?.hide then
-				options[#options + 1] = {
-					title =  ('%s: %s'):format(filter:gsub('^%l', string.upper), data.filters?[filter]?.label or 'any'),
-					arrow = true,
-					event = 'ox_vehicledealer:wholesaleFilter',
-					args = {
-						property = currentZone.property,
-						zoneId = currentZone.zoneId,
-						restrictions = data.restrictions,
-						filters = data.filters,
-						filter = filter
-					}
-				}
-			end
-		end
-
-		options[#options + 1] = {
-			title = 'Search',
-			event = 'ox_vehicledealer:wholesaleResults',
-			args = {
-				property = currentZone.property,
-				zoneId = currentZone.zoneId,
-				filters = data.filters
+		SendNUIMessage({
+			action = 'setVisible',
+			data = {
+				visible = true,
+				categories = categories
 			}
-		}
-
-		lib.registerContext({
-			id = 'buy_wholesale',
-			title = 'Buy Wholesale',
-			menu = 'zone_menu',
-			options = options
 		})
-		lib.showContext('buy_wholesale')
-	end
-end)
-
-RegisterNetEvent('ox_vehicledealer:wholesaleFilter', function(data)
-	local currentZone = exports.ox_property:getCurrentZone()
-	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-		local restriction = data.restrictions[data.filter]
-		if data.filter == 'model' or data.filter == 'name' then
-			local input = lib.inputDialog('Search Term', {data.filter:gsub('^%l', string.upper)})
-			if input then
-				data.filters[data.filter] = {label = input[1], value = input[1]}
-			else
-				data.filters[data.filter] = nil
-			end
-			Wait(100)
-			TriggerEvent('ox_vehicledealer:buyWholesale', data)
-		elseif data.filter == 'price' or data.filter == 'doors' or data.filter == 'seats' then
-			local range = GlobalState['VehicleFilters'][data.filter]
-			if restriction then
-				if restriction.allow then
-					range = {
-						restriction.data[1] > range[1] and restriction.data[1] or range[1],
-						restriction.data[2] < range[2] and restriction.data[2] or range[2]
-					}
-				else
-					if (restriction.data[1] - range[1]) > 0 and (range[2] - restriction.data[2]) > 0 then
-						range = {
-							range[1],
-							range[2],
-							restriction.data[1],
-							restriction.data[2],
-						}
-					else
-						range = {
-							restriction.data[1] == range[1] and restriction.data[2] or range[1],
-							restriction.data[2] == range[2] and restriction.data[1] or range[2]
-						}
-					end
-				end
-			end
-
-			local str = data.filter == 'price' and '$%s - $%s' or '%s - %s'
-			local label = str:format(range[1], range[2])
-			if range[3] and range[4] then
-				label = str:format(range[1], range[3]) .. ', ' .. str:format(range[4], range[2])
-			end
-
-			local input = lib.inputDialog(data.filter:gsub('^%l', string.upper) .. ' range ' .. label, {'Low', 'High'})
-			if input then
-				input[1] = tonumber(input[1])
-				input[2] = tonumber(input[2])
-
-				if input[1] then
-					if input[1] < range[1] then
-						input[1] = nil
-					elseif input[1] > range[2] then
-						input[1] = range[2]
-					end
-				end
-
-				if input[2] then
-					if input[2] > range[2] then
-						input[2] = nil
-					elseif input[2] < range[1] then
-						input[2] = range[1]
-					end
-				end
-
-				if input[1] and input[2] and input[1] > input[2] then
-					data.filters[data.filter] = nil
-					lib.notify({title = 'Input invalid', type = 'error'})
-				elseif input[1] or input[2] then
-					input[1] = input[1] or range[1]
-					input[2] = input[2] or range[2]
-					data.filters[data.filter] = {label = str:format(input[1], input[2]), value = {input[1], input[2]}}
-				else
-					data.filters[data.filter] = nil
-				end
-			else
-				data.filters[data.filter] = nil
-			end
-			Wait(100)
-			TriggerEvent('ox_vehicledealer:buyWholesale', data)
-		else
-			local available = data.filter == 'weapons' and {'yes', 'no'} or GlobalState['VehicleFilters'][data.filter]
-
-			local filters = table.deepclone(data.filters)
-			filters[data.filter] = nil
-
-			local options = {
-				{
-					title = 'Any',
-					event = 'ox_vehicledealer:buyWholesale',
-					args = {
-						property = currentZone.property,
-						zoneId = currentZone.zoneId,
-						restrictions = data.restrictions,
-						filters = filters
-					}
-				}
-			}
-
-			for i = data.filter == 'class' and 0 or 1, #available do
-				local item = data.filter == 'class' and i or available[i]
-				if restriction then
-					if restriction.allow then
-						if (type(restriction.data) == 'table' and not table.contains(restriction.data, item)) or (type(restriction.data) ~= 'table' and restriction.data ~= item) then
-							item = nil
-						end
-					else
-						if (type(restriction.data) == 'table' and table.contains(restriction.data, item)) or (type(restriction.data) ~= 'table' and restriction.data == item) then
-							item = nil
-						end
-					end
-				end
-
-				if item then
-					local args = table.deepclone(data)
-					args.property = currentZone.property
-					args.zoneId = currentZone.zoneId
-
-					item = data.filter == 'class' and available[i] or item
-					if data.filter == 'class' then
-						args.filters[data.filter] = {label = item, value = i}
-					elseif data.filter == 'weapons' then
-						args.filters[data.filter] = {label = item, value = item == 'yes'}
-					else
-						args.filters[data.filter] = {label = item, value = item}
-					end
-
-					options[#options + 1] = {
-						title = item:gsub('^%l', string.upper),
-						event = 'ox_vehicledealer:buyWholesale',
-						args = args
-					}
-				end
-			end
-
-			lib.registerContext({
-				id = 'filter_menu',
-				title = data.filter:gsub('^%l', string.upper),
-				menu = 'buy_wholesale',
-				options = options
-			})
-			lib.showContext('filter_menu')
-		end
-	end
-end)
-
-RegisterNetEvent('ox_vehicledealer:wholesaleResults', function(data)
-	local currentZone = exports.ox_property:getCurrentZone()
-	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-		for k, v in pairs(data.filters) do
-			data.filters[k] = v.value
-		end
-		local vehicles = lib.callback.await('ox_vehicledealer:getWholesaleVehicles', 100, data)
-
-		local options = {}
-		for i = 1, #vehicles do
-			local vehicle = vehicles[i]
-			options[#options + 1] = {
-				title = vehicle.name,
-				description = ('$%s'):format(vehicle.price),
-				serverEvent = 'ox_vehicledealer:buyWholesale',
-				args = {
-					property = currentZone.property,
-					zoneId = currentZone.zoneId,
-					model = vehicle.model,
-					type = vehicle.type
-				},
-				metadata = {
-					Type = vehicle.type,
-					Bodytype = vehicle.bodytype,
-					Make = vehicle.make,
-				}
-			}
-		end
-		lib.registerContext({
-			id = 'wholesale_results',
-			title = 'Purchase Vehicle',
-			menu = 'buy_wholesale',
-			options = options
-		})
-		lib.showContext('wholesale_results')
+		SetNuiFocus(true, true)
 	end
 end)
 
@@ -486,12 +249,10 @@ end)
 RegisterNetEvent('ox_vehicledealer:moveVehicle', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-		if data.rotate then
-			TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
-		else
+		if not data.rotate then
 			data.entities = exports.ox_property:getZoneEntities()
-			TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
 		end
+		TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
 	end
 end)
 
@@ -527,8 +288,12 @@ end)
 
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
-	-- Probably shouldn't use data.price instead get the price from the model?
-	print(json.encode(data, {indent=true}))
+	local currentZone = exports.ox_property:getCurrentZone()
+	TriggerServerEvent('ox_vehicledealer:buyWholesale', {
+		property = currentZone.property,
+		zoneId = currentZone.zoneId,
+		model = data.model
+	})
 end)
 
 
@@ -542,6 +307,7 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	cb(data)
 end)
 
+local vehicleCategories = GlobalState['VehicleClasses']
 RegisterNUICallback('fetchVehicles', function(data, cb)
 	local class = nil
 	for i = 1, #vehicleCategories do
@@ -557,23 +323,4 @@ end)
 RegisterNUICallback('exit', function(_, cb)
 	cb(1)
 	SetNuiFocus(false, false)
-end)
-
-RegisterCommand('testui', function()
-	local currentZone = exports.ox_property:getCurrentZone()
-	local deniedClasses = GlobalState['ShowroomRestrictions'][('%s:%s'):format(currentZone.property, currentZone.zoneId)].class.data
-	local categories = vehicleCategories
-
-	for i = 1, #deniedClasses do
-		categories[deniedClasses[i] + 1] = nil
-	end
-
-	SendNUIMessage({
-		action = 'setVisible',
-		data = {
-			visible = true,
-			categories = categories
-		}
-	})
-	SetNuiFocus(true, true)
 end)
