@@ -14,8 +14,14 @@ const Filters: React.FC = () => {
 
   return (
     <>
-      <Group noWrap sx={{ width: '100%' }} position="apart" grow>
-        <ActionIcon variant="outline" color="blue" size="lg" onClick={() => setOpen(true)}>
+      <Group sx={{ width: '100%' }} position="apart">
+        <ActionIcon
+          variant="outline"
+          color="blue"
+          size="lg"
+          onClick={() => setOpen(true)}
+          sx={{ height: 36, width: 36 }}
+        >
           <TbFilter fontSize={20} />
         </ActionIcon>
         <Search />

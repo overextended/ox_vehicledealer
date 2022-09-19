@@ -21,10 +21,10 @@ const NavIcon: React.FC<Props> = ({ tooltip, to, Icon, iconSize }) => {
           to={to}
           variant={location.pathname === to ? 'light' : 'transparent'}
           size="xl"
-          color="blue"
           sx={(theme) => ({
             width: 50,
             height: 50,
+            color: theme.colors.blue[4],
             transition: '300ms',
             ':hover': { color: theme.colors.blue[3] },
           })}

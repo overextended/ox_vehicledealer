@@ -4,6 +4,14 @@ import VehicleList from './components/VehicleList';
 import TopNav from './components/TopNav';
 import { useAppSelector } from '../../state';
 import { useLocales } from '../../providers/LocaleProvider';
+import { debugData } from '../../utils/debugData';
+
+debugData([
+  {
+    action: 'setBrowserVisible',
+    data: true,
+  },
+]);
 
 const VehicleBrowser: React.FC<{ categories: string[] }> = ({ categories }) => {
   const browserVisibility = useAppSelector((state) => state.visibility.browser);

@@ -10,13 +10,6 @@ import PurchaseVehicles from './views/purchase';
 import Stock from './views/stock';
 import Gallery from './views/gallery';
 
-debugData([
-  {
-    action: 'setManagementVisible',
-    data: true,
-  },
-]);
-
 const Management: React.FC = () => {
   const dispatch = useAppDispatch();
   const visible = useAppSelector((state) => state.visibility.management);
@@ -32,6 +25,7 @@ const Management: React.FC = () => {
           <AppShell
             style={style}
             padding={0}
+            fixed={false}
             styles={(theme) => ({
               main: {
                 backgroundColor: theme.colors.dark[8],

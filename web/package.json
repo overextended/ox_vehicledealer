@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/core": "^4.2.9",
-    "@mantine/hooks": "^4.2.9",
+    "@babel/core": "^7.19.1",
+    "@emotion/react": "^11.10.4",
+    "@mantine/core": "^5.4.0",
+    "@mantine/hooks": "^5.4.0",
     "@rematch/core": "^2.2.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

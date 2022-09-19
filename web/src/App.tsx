@@ -7,15 +7,15 @@ import { useExitListener } from './hooks/useExitListener';
 import Vehicle from './layouts/vehicle';
 import Management from './layouts/management';
 
-// debugData([
-//   {
-//     action: "setVisible",
-//     data: {
-//       categories: ["Compacts", "Sedans", "Motorcycles", "Sports"],
-//       visible: true,
-//     },
-//   },
-// ]);
+debugData([
+  {
+    action: 'setVisible',
+    data: {
+      categories: ['Compacts', 'Sedans', 'Motorcycles', 'Sports'],
+      visible: true,
+    },
+  },
+]);
 
 export default function App() {
   const [categories, setCategories] = useState<string[]>(['']);
