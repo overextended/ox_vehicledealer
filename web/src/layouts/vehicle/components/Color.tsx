@@ -5,16 +5,19 @@ import { useIsFirstRender } from '../../../hooks/useIsFirstRender';
 import { useLocales } from '../../../providers/LocaleProvider';
 import { fetchNui } from '../../../utils/fetchNui';
 import { isEnvBrowser } from '../../../utils/misc';
+import { useAppDispatch } from '../../../state';
 
 const Color: React.FC = () => {
   const { locale } = useLocales();
   const isFirst = useIsFirstRender();
   const [color, setColor] = useState('');
   const debouncedColor = useDebounce(color);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isFirst) return;
     if (!isEnvBrowser()) fetchNui('changeColor', debouncedColor);
+    dispatch.vehicleColor.setVehicleColor(debouncedColor);
   }, [debouncedColor]);
 
   return (

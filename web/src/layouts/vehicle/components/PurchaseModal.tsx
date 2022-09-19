@@ -2,6 +2,7 @@ import { Button, Group, Modal, Text } from '@mantine/core';
 import { useLocales } from '../../../providers/LocaleProvider';
 import { VehicleDataState } from '../../../state/models/vehicleData';
 import { fetchNui } from '../../../utils/fetchNui';
+import { store } from '../../../state';
 
 interface Props {
   opened: boolean;
@@ -30,7 +31,7 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
           variant="light"
           onClick={() => {
             setOpened(false);
-            fetchNui('purchaseVehicle', vehicle);
+            fetchNui('purchaseVehicle', { ...vehicle, color: store.getState().vehicleColor });
           }}
         >
           {locale.ui.purchase_modal.confirm}
