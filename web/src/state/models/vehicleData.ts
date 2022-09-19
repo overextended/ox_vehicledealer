@@ -40,7 +40,7 @@ export const vehicleData = createModel<RootModel>()({
     async getVehicleData(payload: string) {
       try {
         const vehicle = store.getState().vehicleList[payload];
-        const vehicleData = await fetchNui('clickVehicle', vehicle);
+        const vehicleData = await fetchNui('clickVehicle', { ...vehicle, model: payload });
         dispatch.vehicleData.setState(vehicleData);
       } catch {
         const vehicleData: VehicleDataState = {
