@@ -19,11 +19,12 @@ const VehiclePaper: React.FC<{
           dispatch.visibility.setVehicleVisible(true);
           dispatch.vehicleData.getVehicleData(index);
         }}
-        shadow="xs"
+        shadow="md"
         p="md"
         withBorder
         sx={(theme) => ({
           width: '100%',
+          border: '#25262B 1px solid',
           backgroundColor: theme.colors.dark[6],
           '&:hover': { backgroundColor: theme.colors.dark[5], cursor: 'pointer' },
         })}
