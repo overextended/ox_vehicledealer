@@ -296,14 +296,38 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
 	})
 end)
 
+local vehicleTypeToGroup = {
+	automobile = 'land',
+	bicycle = 'land',
+	bike = 'land',
+	quadbike = 'land',
+	train = 'land',
+	trailer = 'land',
+	plane = 'air',
+	heli = 'air',
+	blimp = 'air',
+	boat = 'sea',
+	submarine = 'sea'
+}
+
+local statTypes = {
+	braking = true,
+	agility = true,
+	speed = true,
+	acceleration = true
+}
+
+local topStats = Ox.GetTopVehicleStats()
 
 RegisterNUICallback('clickVehicle', function(data, cb)
-	-- data is vehicle table
-	print(json.encode(data, {indent=true}))
-	data.speed = 37
-	data.acceleration = 64
-	data.braking = 53.7
-	data.handling = 42.3
+	local groupTopStats = topStats[vehicleTypeToGroup[data.type]]
+
+	for k, v in pairs(data) do
+		if statTypes[k] then
+			data[k] = data[k] / groupTopStats[k] * 100
+		end
+	end
+	data.handling = data.agility
 	cb(data)
 end)
 
