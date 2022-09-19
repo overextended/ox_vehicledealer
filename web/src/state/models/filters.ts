@@ -39,6 +39,7 @@ const vehicleClasses = [
   'Military',
   'Commercial',
   'Trains',
+  'Open Wheel',
 ];
 
 export const filters = createModel<RootModel>()({
