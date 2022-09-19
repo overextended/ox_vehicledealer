@@ -286,6 +286,11 @@ RegisterNUICallback('loadLocale', function(_, cb)
 	})
 end)
 
+RegisterNUICallback('changeColor', function(data, cb)
+	cb(1)
+	-- Do stuff when colour changes
+end)
+
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	local currentZone = exports.ox_property:getCurrentZone()
