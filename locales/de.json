@@ -1,0 +1,29 @@
+{
+  "ui": {
+    "vehicle_category": "Fahrzeugkategorie",
+    "no_vehicle_category": "Es gibt diese Fahrzeugkategorie nicht",
+    "vehicles": "Fahrzeuge",
+    "no_vehicles_found": "Keine Fahrzeuge gefunden",
+    "filters": {
+      "advanced_filters": "Erweiterte Filter",
+      "max_price": "Maximaler Preis",
+      "seats": "Sitze",
+      "doors": "Türen"
+    },
+    "vehicle_info": {
+      "color_primary": "Hauptfarbe",
+      "color_secondary": "Sekundäre Farbe",
+      "speed": "Geschwindigkeit",
+      "acceleration": "Beschleunigung",
+      "braking": "Bremsen",
+      "handling": "Auto-Handling",
+      "purchase": "Kaufen"
+    },
+    "purchase_modal": {
+      "purchase_vehicle": "Fahrzeug kaufen",
+      "purchase_confirm": "Kauf von %s für $%d bestätigen?",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen"
+    }
+  }
+}
