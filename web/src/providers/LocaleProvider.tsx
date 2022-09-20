@@ -21,7 +21,8 @@ debugData([
           doors: 'Doors',
         },
         vehicle_info: {
-          vehicle_color: 'Vehicle color',
+          color_primary: 'Primary color',
+          color_secondary: 'Secondary color',
           speed: 'Speed',
           acceleration: 'Acceleration',
           braking: 'Braking',
@@ -52,7 +53,8 @@ interface Locale {
       doors: string;
     };
     vehicle_info: {
-      vehicle_color: string;
+      color_primary: string;
+      color_secondary: string;
       speed: string;
       acceleration: string;
       braking: string;
@@ -90,7 +92,8 @@ const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
         doors: '',
       },
       vehicle_info: {
-        vehicle_color: '',
+        color_primary: '',
+        color_secondary: '',
         speed: '',
         acceleration: '',
         braking: '',

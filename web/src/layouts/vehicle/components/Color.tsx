@@ -10,23 +10,32 @@ import { useAppDispatch } from '../../../state';
 const Color: React.FC = () => {
   const { locale } = useLocales();
   const isFirst = useIsFirstRender();
-  const [color, setColor] = useState('');
-  const debouncedColor = useDebounce(color);
+  const [primaryColor, setPrimaryColor] = useState('');
+  const [secondaryColor, setSecondaryColor] = useState('');
+  const debouncePrimaryColor = useDebounce(primaryColor);
+  const debounceSecondaryColor = useDebounce(secondaryColor);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isFirst) return;
-    if (!isEnvBrowser()) fetchNui('changeColor', debouncedColor);
-    dispatch.vehicleColor.setVehicleColor(debouncedColor);
-  }, [debouncedColor]);
+    if (!isEnvBrowser()) fetchNui('changeColor', [debouncePrimaryColor, debounceSecondaryColor]);
+    dispatch.vehicleColor.setColors([debounceSecondaryColor, debounceSecondaryColor]);
+  }, [debouncePrimaryColor, debounceSecondaryColor]);
 
   return (
     <>
       <ColorInput
-        label={locale.ui.vehicle_info.vehicle_color}
+        label={locale.ui.vehicle_info.color_primary}
         format="rgb"
-        value={color}
-        onChange={(value) => setColor(value)}
+        value={primaryColor}
+        onChange={(value) => setPrimaryColor(value)}
+        sx={{ width: '100%' }}
+      />
+      <ColorInput
+        label={locale.ui.vehicle_info.color_secondary}
+        format="rgb"
+        value={secondaryColor}
+        onChange={(value) => setSecondaryColor(value)}
         sx={{ width: '100%' }}
       />
     </>

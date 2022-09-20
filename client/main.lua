@@ -343,8 +343,10 @@ local displayVehicle
 RegisterNUICallback('changeColor', function(data, cb)
 	cb(1)
 	-- where secondary colour
-	local r, g, b = string.strsplit(',', data:sub(5, -2))
-	SetVehicleCustomPrimaryColour(displayVehicle, tonumber(r) --[[@as number]], tonumber(g) --[[@as number]], tonumber(b) --[[@as number]])
+	local pR, pG, pB = string.strsplit(',', data[1]:sub(5, -2))
+	SetVehicleCustomPrimaryColour(displayVehicle, tonumber(pR) --[[@as number]], tonumber(pG) --[[@as number]], tonumber(pB) --[[@as number]])
+	local sR, sG, sB = string.strsplit(',', data[2]:sub(5, -2))
+	SetVehicleCustomSecondaryColour(displayVehicle, tonumber(sR) --[[@as number]], tonumber(sG) --[[@as number]], tonumber(sB) --[[@as number]])
 end)
 
 RegisterNUICallback('purchaseVehicle', function(data, cb)
