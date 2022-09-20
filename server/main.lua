@@ -13,7 +13,7 @@ AddEventHandler('onResourceStart', function(resource)
 			if vehicle.data.display then
 				local zone = properties[vehicle.data.display.property].zones[vehicle.data.display.zone]
 
-				local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[vehicle.data.display.id].xyz, zone.spawns[vehicle.data.display.id].w + vehicle.data.display.rotate and 180 or 0)
+				local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[vehicle.data.display.id].xyz, zone.spawns[vehicle.data.display.id].w + (vehicle.data.display.rotate and 180 or 0))
 				veh.data = Ox.GetVehicleData(vehicle.model)
 
 				vehicles[veh.plate] = veh
