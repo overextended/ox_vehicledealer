@@ -352,13 +352,15 @@ end)
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	local currentZone = exports.ox_property:getCurrentZone()
-	local r, g, b = string.strsplit(',', data.color:sub(5, -2))
+	local pR, pG, pB = string.strsplit(',', data.color.primary:sub(5, -2))
+	local sR, sG, sB = string.strsplit(',', data.color.secondary:sub(5, -2))
 
+	SetNuiFocus(false, false)
 	TriggerServerEvent('ox_vehicledealer:buyWholesale', {
 		property = currentZone.property,
 		zoneId = currentZone.zoneId,
 		model = data.model,
-		color = { tonumber(r), tonumber(g), tonumber(b) }
+		color = { primary = {tonumber(pR), tonumber(pG), tonumber(pB)}, secondary = {tonumber(sR), tonumber(sG), tonumber(sB)} }
 	})
 end)
 

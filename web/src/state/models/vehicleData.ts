@@ -4,6 +4,10 @@ import { store } from '..';
 import { fetchNui } from '../../utils/fetchNui';
 import { VehicleData } from './vehicles';
 
+interface SelectedVehicle extends VehicleData {
+  model: string;
+}
+
 export const vehicleData = createModel<RootModel>()({
   state: {
     acceleration: 0,
@@ -17,26 +21,28 @@ export const vehicleData = createModel<RootModel>()({
     doors: 0,
     class: 0,
     weapons: false,
-  } as VehicleData,
+  } as SelectedVehicle,
+
   reducers: {
-    setState(state, payload: VehicleData) {
+    setState(state, payload: SelectedVehicle) {
       return (state = payload);
     },
   },
   effects: (dispatch) => ({
     getVehicleData(payload: string) {
       try {
-        const vehicle = store.getState().vehicles[payload];
-        fetchNui('clickVehicle', { ...vehicle, model: payload });
+        const vehicle = { ...store.getState().vehicles[payload], model: payload };
+        fetchNui('clickVehicle', vehicle);
         dispatch.vehicleData.setState(vehicle);
       } catch {
-        const vehicleData: VehicleData = {
+        const vehicleData: SelectedVehicle = {
           acceleration: 73.5,
           braking: 40.0,
           speed: 57.3,
           handling: 20.3,
           make: 'Dinka',
           name: 'Blista',
+          model: 'blista',
           type: 'automobile',
           price: 9500,
           seats: 4,
