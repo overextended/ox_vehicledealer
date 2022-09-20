@@ -308,20 +308,25 @@ RegisterNUICallback('loadLocale', function(_, cb)
 	})
 end)
 
+local displayVehicle
+
 RegisterNUICallback('changeColor', function(data, cb)
 	cb(1)
-	-- Do stuff when colour changes
+	-- where secondary colour
+	local r, g, b = string.strsplit(',', data:sub(5, -2))
+	SetVehicleCustomPrimaryColour(displayVehicle, tonumber(r) --[[@as number]], tonumber(g) --[[@as number]], tonumber(b) --[[@as number]])
 end)
 
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	local currentZone = exports.ox_property:getCurrentZone()
-	local r, g, b = data.color:sub(5, -2):strsplit(', ')
+	local r, g, b = string.strsplit(',', data.color:sub(5, -2))
+
 	TriggerServerEvent('ox_vehicledealer:buyWholesale', {
 		property = currentZone.property,
 		zoneId = currentZone.zoneId,
 		model = data.model,
-		color = {r, g, b}
+		color = { tonumber(r), tonumber(g), tonumber(b) }
 	})
 end)
 
@@ -347,7 +352,6 @@ local statTypes = {
 }
 
 local topStats = Ox.GetTopVehicleStats()
-local displayVehicle
 
 RegisterNUICallback('clickVehicle', function(data, cb)
 	local groupTopStats = topStats[vehicleTypeToGroup[data.type]]
