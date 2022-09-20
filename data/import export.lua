@@ -10,7 +10,7 @@ return {
 				vehicles = { automobile = true, bicycle = true, bike = true, quadbike = true },
 				box = true,
 				coords = vec3(855.0, -3217.0, 6.0),
-				size = vec3(18.0, 13.5, 4.0),
+				size = vec3(36.0, 27.0, 4.0),
 			},
 		},
 	},
