@@ -74,15 +74,9 @@ const Vehicle: React.FC = () => {
               <StatBar label={locale.ui.vehicle_info.acceleration} value={getVehicleStat('acceleration')} />
               <StatBar label={locale.ui.vehicle_info.braking} value={getVehicleStat('braking')} />
               <StatBar label={locale.ui.vehicle_info.handling} value={getVehicleStat('handling')} />
-              <Group>
-                <ActionIcon variant="outline" color="blue" size="lg">
-                  <TbRotate fontSize={20} />
-                </ActionIcon>
-                <Button onClick={() => setOpened(true)}>{locale.ui.vehicle_info.purchase}</Button>
-                <ActionIcon variant="outline" color="blue" size="lg">
-                  <TbRotateClockwise fontSize={20} />
-                </ActionIcon>
-              </Group>
+              <Button fullWidth onClick={() => setOpened(true)}>
+                {locale.ui.vehicle_info.purchase}
+              </Button>
             </Stack>
           </Box>
           <PurchaseModal opened={opened} setOpened={setOpened} price={vehicleData.price} vehicle={vehicleData} />
