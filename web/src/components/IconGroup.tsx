@@ -1,5 +1,5 @@
 import { Group, Text } from '@mantine/core';
-import { IconBaseProps, IconType } from 'react-icons';
+import { IconBaseProps } from 'react-icons';
 
 interface Props {
   label: string | number;
@@ -12,7 +12,7 @@ const IconGroup: React.FC<Props> = ({ label, Icon, style }) => {
     <>
       <Group spacing={5} position="left" style={style}>
         <Icon fontSize={20} />
-        <Text>{label}</Text>
+        <Text sx={{ lineHeight: '20px' }}>{label}</Text>
       </Group>
     </>
   );
