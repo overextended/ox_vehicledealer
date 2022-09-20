@@ -6,7 +6,7 @@ import { useAppSelector } from '../../../state';
 import VehiclePaper from './VehiclePaper';
 
 const VehicleList: React.FC = () => {
-  const vehicles = useAppSelector((state) => state.vehicles);
+  const vehicles = useAppSelector((state) => state.listVehicles);
   const isLoading = useAppSelector((state) => state.isLoading);
   const { locale } = useLocales();
 

@@ -7,7 +7,7 @@ import { MdAirlineSeatReclineNormal } from 'react-icons/md';
 import { useAppDispatch } from '../../../state';
 
 const VehiclePaper: React.FC<{
-  vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons: boolean };
+  vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons?: boolean };
   index: string;
 }> = ({ vehicle, index }) => {
   const dispatch = useAppDispatch();

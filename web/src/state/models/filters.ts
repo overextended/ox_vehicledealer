@@ -1,5 +1,4 @@
 import { createModel } from '@rematch/core';
-import { VehicleState } from './vehicles';
 import { RootModel } from '.';
 import { isEnvBrowser } from '../../utils/misc';
 import { store } from '..';
@@ -61,7 +60,7 @@ export const filters = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     filterVehicles(payload: FilterState) {
-      const vehiclesArray = Object.entries(store.getState().vehicleList);
+      const vehiclesArray = Object.entries(store.getState().vehicles);
       const filteredVehicles = vehiclesArray.filter((value) => {
         const vehicle = value[1];
 
@@ -81,7 +80,7 @@ export const filters = createModel<RootModel>()({
         return true;
       });
 
-      dispatch.vehicles.setState(Object.fromEntries(filteredVehicles));
+      dispatch.listVehicles.setVehicles(Object.fromEntries(filteredVehicles));
     },
   }),
 });

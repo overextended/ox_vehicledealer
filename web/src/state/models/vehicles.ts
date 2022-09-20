@@ -1,48 +1,66 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from '.';
-import { fetchNui } from '../../utils/fetchNui';
-import { FilterState } from './filters';
+import { isEnvBrowser } from '../../utils/misc';
 
-export interface VehicleState {
+interface Vehicles {
   [key: string]: {
+    class: number;
+    doors: number;
     make: string;
     name: string;
     price: number;
     seats: number;
-    doors: number;
-    class: number;
-    weapons: boolean;
+    type: string;
+    weapons?: boolean;
   };
 }
 
-export const vehicles = createModel<RootModel>()({
-  state: {} as VehicleState,
+const gameVehicles: Vehicles = await (async () => {
+  if (!isEnvBrowser()) {
+    const resp = await fetch(`nui://ox_core/shared/files/vehicles.json`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    });
+
+    return await resp.json();
+  } else {
+    return {
+      dinka: {
+        class: 0,
+        doors: 4,
+        make: 'Dinka',
+        name: 'Blista',
+        price: 9500,
+        seats: 4,
+        type: '',
+        weapons: false,
+      },
+      dominator: {
+        bodytype: 'automobile',
+        class: 1,
+        doors: 2,
+        make: 'Vapid',
+        name: 'Dominator',
+        price: 13500,
+        seats: 2,
+        type: '',
+        weapons: false,
+      },
+    };
+  }
+})();
+
+export const listVehicles = createModel<RootModel>()({
+  state: {} as Vehicles,
   reducers: {
-    setState(state, payload: VehicleState) {
+    setVehicles(state, payload: Vehicles) {
       return (state = payload);
     },
   },
-  effects: (dispatch) => ({
-    async fetchVehicles(payload: FilterState) {
-      dispatch.isLoading.setState(true);
-      try {
-        const vehicles = await fetchNui('fetchVehicles', payload);
-        dispatch.vehicles.setState(vehicles);
-      } catch {
-        const vehicles = {
-          dinka: {
-            make: 'Dinka',
-            name: 'Blista',
-            price: 9500,
-            seats: 4,
-            doors: 4,
-            class: 0,
-            weapons: false,
-          },
-        } as VehicleState;
-        dispatch.vehicles.setState(vehicles);
-      }
-      dispatch.isLoading.setState(false);
-    },
-  }),
+});
+
+export const vehicles = createModel<RootModel>()({
+  state: gameVehicles,
 });
