@@ -250,7 +250,8 @@ RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 		while displayVehicleCoords do
 			DisableAllControlActions(0)
 
-			if IsDisabledControlPressed(0, 24) then
+			if IsDisabledControlPressed(0, 25) then
+				EnableControlAction(0, 0, true)
 				EnableControlAction(0, 1, true)
 				EnableControlAction(0, 2, true)
 			end
