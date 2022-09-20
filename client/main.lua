@@ -96,6 +96,35 @@ exports.ox_property:registerZoneMenu('showroom',
 	end
 )
 
+exports.ox_property:registerZoneMenu('import/export',
+	function(currentZone)
+		local options = {}
+
+		if cache.seat == -1 then
+			options[#options + 1] = {
+				title = 'Sell Vehicle',
+				event = 'ox_vehicledealer:sellWholesale',
+				args = {
+					property = currentZone.property,
+					zoneId = currentZone.zoneId
+				}
+			}
+		elseif not cache.vehicle then
+			options[#options + 1] = {
+				title = 'Buy Vehicles',
+				description = 'Choose a vehicle to import',
+				event = 'ox_vehicledealer:buyWholesale',
+				args = {
+					property = currentZone.property,
+					zoneId = currentZone.zoneId
+				}
+			}
+		end
+
+		return options
+	end
+)
+
 local displayedVehicles = GlobalState['DisplayedVehicles']
 CreateThread(function()
 	while true do
