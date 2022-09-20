@@ -224,8 +224,11 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 end)
 
 local categories = GlobalState['VehicleClasses']
+local displayVehicleCoords
+
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
+
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
 		SendNUIMessage({
 			action = 'setVisible',
@@ -234,7 +237,26 @@ RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 				categories = categories
 			}
 		})
+
 		SetNuiFocus(true, true)
+		SetNuiFocusKeepInput(true)
+		NetworkStartSoloTutorialSession()
+		SetPlayerInvincible(cache.playerId, true)
+
+		local interiorId = GetInteriorFromEntity(cache.ped)
+		cache.coords = GetEntityCoords(cache.ped)
+		displayVehicleCoords = interiorId == 0 and cache.coords or vec3(GetInteriorPosition(interiorId))
+
+		while displayVehicleCoords do
+			DisableAllControlActions(0)
+
+			if IsDisabledControlPressed(0, 24) then
+				EnableControlAction(0, 1, true)
+				EnableControlAction(0, 2, true)
+			end
+
+			Wait(0)
+		end
 	end
 end)
 
@@ -325,15 +347,36 @@ local statTypes = {
 }
 
 local topStats = Ox.GetTopVehicleStats()
+local displayVehicle
 
 RegisterNUICallback('clickVehicle', function(data, cb)
 	local groupTopStats = topStats[vehicleTypeToGroup[data.type]]
 
 	for k, v in pairs(data) do
 		if statTypes[k] then
-			data[k] = data[k] / groupTopStats[k] * 100
+			data[k] = v / groupTopStats[k] * 100
 		end
 	end
+
+	if displayVehicle then
+		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle))
+		SetVehicleAsNoLongerNeeded(displayVehicle)
+		DeleteEntity(displayVehicle)
+	end
+
+	local hash = joaat(data.model)
+
+	if not HasModelLoaded(hash) then
+		RequestModel(hash)
+		repeat Wait(0) until HasModelLoaded(hash)
+	end
+
+	displayVehicle = CreateVehicle(hash, displayVehicleCoords.x, displayVehicleCoords.y, displayVehicleCoords.z + 1.0, 90.0, false, false)
+	SetVehicleOnGroundProperly(displayVehicle)
+	SetPedIntoVehicle(cache.ped, displayVehicle, -1)
+	FreezeEntityPosition(displayVehicle, true)
+	SetEntityCollision(displayVehicle, false, false)
+
 	data.handling = data.agility
 	cb(data)
 end)
@@ -354,4 +397,17 @@ end)
 RegisterNUICallback('exit', function(_, cb)
 	cb(1)
 	SetNuiFocus(false, false)
+	SetNuiFocusKeepInput(false)
+
+	if displayVehicle then
+		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle))
+		SetVehicleAsNoLongerNeeded(displayVehicle)
+		DeleteEntity(displayVehicle)
+		displayVehicleCoords = nil
+		displayVehicle = nil
+	end
+
+	NetworkEndTutorialSession()
+	SetPlayerInvincible(cache.playerId, false)
+	SetEntityCoords(cache.ped, cache.coords.x, cache.coords.y, cache.coords.z, true, false, false, false)
 end)
