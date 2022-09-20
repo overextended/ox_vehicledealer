@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Text } from '@mantine/core';
 import { useLocales } from '../../../providers/LocaleProvider';
 import { fetchNui } from '../../../utils/fetchNui';
-import { store } from '../../../state';
+import { store, useAppDispatch } from '../../../state';
 import { VehicleData } from '../../../state/models/vehicles';
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
 
 const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) => {
   const { locale } = useLocales();
+  const dispatch = useAppDispatch();
 
   return (
     <Modal title="Purchase vehicle" opened={opened} onClose={() => setOpened(false)}>
@@ -31,6 +32,8 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
           variant="light"
           onClick={() => {
             setOpened(false);
+            dispatch.visibility.setBrowserVisible(false);
+            dispatch.visibility.setVehicleVisible(false);
             fetchNui('purchaseVehicle', { ...vehicle, color: store.getState().vehicleColor });
           }}
         >
