@@ -5,9 +5,11 @@ import { visibility } from './visibility';
 import { vehicleData } from './vehicleData';
 import { listVehicles, vehicles } from './vehicles';
 import { vehicleColor } from './vehicleColor';
+import { topStats } from './topStats';
 
 export interface RootModel extends Models<RootModel> {
   filters: typeof filters;
+  topStats: typeof topStats;
   vehicles: typeof vehicles;
   isLoading: typeof isLoading;
   visibility: typeof visibility;
@@ -19,6 +21,7 @@ export interface RootModel extends Models<RootModel> {
 export const models: RootModel = {
   filters,
   vehicles,
+  topStats,
   isLoading,
   visibility,
   vehicleData,

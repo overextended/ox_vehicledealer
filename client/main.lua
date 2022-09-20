@@ -360,37 +360,8 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
 	})
 end)
 
-local vehicleTypeToGroup = {
-	automobile = 'land',
-	bicycle = 'land',
-	bike = 'land',
-	quadbike = 'land',
-	train = 'land',
-	trailer = 'land',
-	plane = 'air',
-	heli = 'air',
-	blimp = 'air',
-	boat = 'sea',
-	submarine = 'sea'
-}
-
-local statTypes = {
-	braking = true,
-	agility = true,
-	speed = true,
-	acceleration = true
-}
-
-local topStats = Ox.GetTopVehicleStats()
-
 RegisterNUICallback('clickVehicle', function(data, cb)
-	local groupTopStats = topStats[vehicleTypeToGroup[data.type]]
-
-	for k, v in pairs(data) do
-		if statTypes[k] then
-			data[k] = v / groupTopStats[k] * 100
-		end
-	end
+	cb(1)
 
 	if displayVehicle then
 		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle))
@@ -410,9 +381,6 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	SetPedIntoVehicle(cache.ped, displayVehicle, -1)
 	FreezeEntityPosition(displayVehicle, true)
 	SetEntityCollision(displayVehicle, false, false)
-
-	data.handling = data.agility
-	cb(data)
 end)
 
 local vehicleCategories = GlobalState['VehicleClasses']

@@ -1,13 +1,13 @@
 import { Button, Group, Modal, Text } from '@mantine/core';
 import { useLocales } from '../../../providers/LocaleProvider';
-import { VehicleDataState } from '../../../state/models/vehicleData';
 import { fetchNui } from '../../../utils/fetchNui';
 import { store } from '../../../state';
+import { VehicleData } from '../../../state/models/vehicles';
 
 interface Props {
   opened: boolean;
   setOpened: (opened: boolean) => void;
-  vehicle: VehicleDataState;
+  vehicle: VehicleData;
   price: number;
 }
 

@@ -2,20 +2,7 @@ import { createModel } from '@rematch/core';
 import { RootModel } from '.';
 import { store } from '..';
 import { fetchNui } from '../../utils/fetchNui';
-
-export interface VehicleDataState {
-  acceleration: number;
-  braking: number;
-  speed: number;
-  handling: number;
-  make: string;
-  name: string;
-  price: number;
-  seats: number;
-  doors: number;
-  class: number;
-  weapons: boolean;
-}
+import { VehicleData } from './vehicles';
 
 export const vehicleData = createModel<RootModel>()({
   state: {
@@ -30,26 +17,27 @@ export const vehicleData = createModel<RootModel>()({
     doors: 0,
     class: 0,
     weapons: false,
-  } as VehicleDataState,
+  } as VehicleData,
   reducers: {
-    setState(state, payload: VehicleDataState) {
+    setState(state, payload: VehicleData) {
       return (state = payload);
     },
   },
   effects: (dispatch) => ({
-    async getVehicleData(payload: string) {
+    getVehicleData(payload: string) {
       try {
         const vehicle = store.getState().vehicles[payload];
-        const vehicleData = await fetchNui('clickVehicle', { ...vehicle, model: payload });
-        dispatch.vehicleData.setState(vehicleData);
+        fetchNui('clickVehicle', { ...vehicle, model: payload });
+        dispatch.vehicleData.setState(vehicle);
       } catch {
-        const vehicleData: VehicleDataState = {
+        const vehicleData: VehicleData = {
           acceleration: 73.5,
           braking: 40.0,
           speed: 57.3,
           handling: 20.3,
           make: 'Dinka',
           name: 'Blista',
+          type: 'automobile',
           price: 9500,
           seats: 4,
           doors: 4,

@@ -2,17 +2,36 @@ import { createModel } from '@rematch/core';
 import { RootModel } from '.';
 import { isEnvBrowser } from '../../utils/misc';
 
+export type VehicleType =
+  | 'automobile'
+  | 'heli'
+  | 'bike'
+  | 'plane'
+  | 'trailer'
+  | 'submarine'
+  | 'quadbike'
+  | 'blimp'
+  | 'bicycle'
+  | 'boat'
+  | 'train';
+
+export interface VehicleData {
+  class: number;
+  doors: number;
+  make: string;
+  name: string;
+  price: number;
+  seats: number;
+  type: VehicleType;
+  weapons?: boolean;
+  acceleration: number;
+  handling: number;
+  braking: number;
+  speed: number;
+}
+
 interface Vehicles {
-  [key: string]: {
-    class: number;
-    doors: number;
-    make: string;
-    name: string;
-    price: number;
-    seats: number;
-    type: string;
-    weapons?: boolean;
-  };
+  [key: string]: VehicleData;
 }
 
 const gameVehicles: Vehicles = await (async () => {
@@ -34,21 +53,26 @@ const gameVehicles: Vehicles = await (async () => {
         name: 'Blista',
         price: 9500,
         seats: 4,
-        type: '',
-        weapons: false,
+        type: 'automobile',
+        acceleration: 0.23000000417232,
+        handling: 0.61000001430511,
+        braking: 0.60000002384185,
+        speed: 41.91736602783203,
       },
       dominator: {
-        bodytype: 'automobile',
-        class: 1,
-        doors: 2,
+        class: 4,
+        doors: 4,
         make: 'Vapid',
         name: 'Dominator',
-        price: 13500,
+        price: 15000,
         seats: 2,
-        type: '',
-        weapons: false,
+        type: 'automobile',
+        acceleration: 0.28999999165534,
+        handling: 0.6700000166893,
+        braking: 0.80000001192092,
+        speed: 48.33333587646484,
       },
-    };
+    } as Vehicles;
   }
 })();
 
