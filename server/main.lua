@@ -38,8 +38,9 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 	-- TODO financial integration
 	if true then
 		Ox.CreateVehicle({
-			model = 'stingergt',--data.model,
+			model = data.model,
 			owner = player.charid,
+			properties = {color1 = data.color, color2 = data.color},
 			stored = ('%s:%s'):format(data.property, data.zoneId)
 		})
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})

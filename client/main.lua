@@ -294,10 +294,12 @@ end)
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	local currentZone = exports.ox_property:getCurrentZone()
+	local r, g, b = data.color:sub(5, -2):strsplit(', ')
 	TriggerServerEvent('ox_vehicledealer:buyWholesale', {
 		property = currentZone.property,
 		zoneId = currentZone.zoneId,
-		model = data.model
+		model = data.model,
+		color = {r, g, b}
 	})
 end)
 
