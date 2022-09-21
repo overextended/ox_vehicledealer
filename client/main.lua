@@ -367,6 +367,24 @@ RegisterNUICallback('changeColor', function(data, cb)
 	end
 end)
 
+local function closeUi(_, cb)
+	if cb then cb(1) end
+
+	SetNuiFocus(false, false)
+	SetNuiFocusKeepInput(false)
+
+	if displayVehicle.entity then
+		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle.entity))
+		SetVehicleAsNoLongerNeeded(displayVehicle.entity)
+		DeleteEntity(displayVehicle.entity)
+		SetEntityCoordsNoOffset(cache.ped, cache.coords.x, cache.coords.y, cache.coords.z, true, false, false)
+	end
+
+	table.wipe(displayVehicle)
+	NetworkEndTutorialSession()
+	SetPlayerInvincible(cache.playerId, false)
+end
+
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	local currentZone = exports.ox_property:getCurrentZone()
@@ -380,6 +398,7 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
 		color2 = displayVehicle.secondary and { displayVehicle.secondary.x, displayVehicle.secondary.y, displayVehicle.secondary.z } or secondary,
 	})
 
+	closeUi()
 end)
 
 RegisterNUICallback('clickVehicle', function(data, cb)
@@ -418,20 +437,4 @@ RegisterNUICallback('fetchVehicles', function(data, cb)
 	cb(vehicles)
 end)
 
-RegisterNUICallback('exit', function(_, cb)
-	cb(1)
-	SetNuiFocus(false, false)
-	SetNuiFocusKeepInput(false)
-
-	if displayVehicle then
-		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle))
-		SetVehicleAsNoLongerNeeded(displayVehicle)
-		DeleteEntity(displayVehicle)
-		displayVehicleCoords = nil
-		displayVehicle = nil
-	end
-
-	NetworkEndTutorialSession()
-	SetPlayerInvincible(cache.playerId, false)
-	SetEntityCoords(cache.ped, cache.coords.x, cache.coords.y, cache.coords.z, true, false, false, false)
-end)
+RegisterNUICallback('exit', closeUi)
