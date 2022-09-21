@@ -1,32 +1,29 @@
-AddEventHandler('onResourceStart', function(resource)
-	if resource == GetCurrentResourceName() then
-		exports.ox_property:loadDataFiles()
+AddEventHandler('onServerResourceStart', function(resource)
+	if resource ~= cache.resource then return end
+	exports.ox_property:loadDataFiles()
 
-		local properties = GlobalState['Properties']
-		local displayedVehicles = MySQL.query.await('SELECT id, model, data FROM vehicles')
+	local properties = GlobalState['Properties']
+	local displayedVehicles = MySQL.query.await('SELECT id, model, JSON_QUERY(data, "$.display") as display FROM vehicles WHERE stored IS NOT NULL')
+	if not displayedVehicles then return end
 
-		local vehicles = {}
-		for i = 1, #displayedVehicles do
-			local vehicle = displayedVehicles[i]
-			vehicle.data = json.decode(vehicle.data)
+	local vehicles = {}
+	for i = 1, #displayedVehicles do
+		local vehicle = displayedVehicles[i]
+		local display = vehicle.display and json.decode(vehicle.display--[[@as string]] )
 
-			if vehicle.data.display then
-				local zone = properties[vehicle.data.display.property].zones[vehicle.data.display.zone]
+		if display then
+			local zone = properties[display.property].zones[display.zone]
+			local heading = zone.spawns[display.id].w + (display.rotate and 180 or 0)
 
-				local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[vehicle.data.display.id].xyz, zone.spawns[vehicle.data.display.id].w + (vehicle.data.display.rotate and 180 or 0))
-				veh.data = Ox.GetVehicleData(vehicle.model)
+			local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[display.id].xyz, heading)
+			veh.data = Ox.GetVehicleData(vehicle.model)
+			vehicles[veh.plate] = veh
 
-				vehicles[veh.plate] = veh
-			end
-		end
-
-		GlobalState['DisplayedVehicles'] = vehicles
-
-		Wait(1000)
-		for k, v in pairs(vehicles) do
-			FreezeEntityPosition(v.entity, true)
+			FreezeEntityPosition(veh.entity, true)
 		end
 	end
+
+	GlobalState['DisplayedVehicles'] = vehicles
 end)
 
 RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
