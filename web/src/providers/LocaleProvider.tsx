@@ -31,7 +31,7 @@ debugData([
         },
         purchase_modal: {
           purchase_vehicle: 'Purchase vehicle',
-          purchase_confirm: 'Confirm purchase of %s for $%d?',
+          purchase_confirm: 'Confirm purchase of %s for %d?',
           confirm: 'Confirm',
           cancel: 'Cancel',
         },

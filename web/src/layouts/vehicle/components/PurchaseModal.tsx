@@ -20,7 +20,12 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
       <Text>
         {locale.ui.purchase_modal.purchase_confirm
           .replace('%s', `${vehicle.make} ${vehicle.name}`)
-          .replace('%d', 'UNDEFINED')}
+          .replace(
+            '%d',
+            Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
+              vehicle.price
+            )
+          )}
       </Text>
 
       <Group position="right" mt={10}>
