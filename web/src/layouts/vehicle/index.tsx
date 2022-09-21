@@ -74,7 +74,7 @@ const Vehicle: React.FC = () => {
               <StatBar label={locale.ui.vehicle_info.acceleration} value={getVehicleStat('acceleration')} />
               <StatBar label={locale.ui.vehicle_info.braking} value={getVehicleStat('braking')} />
               <StatBar label={locale.ui.vehicle_info.handling} value={getVehicleStat('handling')} />
-              <Button fullWidth onClick={() => setOpened(true)}>
+              <Button fullWidth uppercase onClick={() => setOpened(true)}>
                 {locale.ui.vehicle_info.purchase}
               </Button>
             </Stack>

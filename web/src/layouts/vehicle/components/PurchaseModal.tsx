@@ -24,10 +24,11 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
       </Text>
 
       <Group position="right" mt={10}>
-        <Button color="red" variant="light" onClick={() => setOpened(false)}>
+        <Button uppercase variant="default" onClick={() => setOpened(false)}>
           {locale.ui.purchase_modal.cancel}
         </Button>
         <Button
+          uppercase
           color="green"
           variant="light"
           onClick={() => {
