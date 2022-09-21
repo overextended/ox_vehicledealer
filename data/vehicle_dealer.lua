@@ -24,8 +24,7 @@ return {
 			{
 				name = 'Management',
 				type = 'management',
-				sphere = true,
-				coords = vec(-31.6, -1113.9, 26.4),
+				sphere = vec(-31.6, -1113.9, 26.4),
 			},
 			{
 				name = 'Showroom',
