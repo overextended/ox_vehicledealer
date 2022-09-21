@@ -6,16 +6,8 @@ import { useAppDispatch } from './state';
 import { useExitListener } from './hooks/useExitListener';
 import Vehicle from './layouts/vehicle';
 import Management from './layouts/management';
-
-debugData([
-  {
-    action: 'setVisible',
-    data: {
-      categories: ['Compacts', 'Sedans', 'Motorcycles', 'Sports'],
-      visible: true,
-    },
-  },
-]);
+import Dev from './layouts/dev';
+import { isEnvBrowser } from './utils/misc';
 
 export default function App() {
   const [categories, setCategories] = useState<string[]>(['']);
@@ -35,6 +27,7 @@ export default function App() {
       <VehicleBrowser categories={categories} />
       <Vehicle />
       <Management />
+      {isEnvBrowser() && <Dev />}
     </>
   );
 }

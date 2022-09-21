@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { useExitListener } from '../../hooks/useExitListener';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useAppDispatch, useAppSelector } from '../../state';
-import { debugData } from '../../utils/debugData';
 import Nav from './components/nav';
 import Home from './views';
 import PurchaseVehicles from './views/purchase';
