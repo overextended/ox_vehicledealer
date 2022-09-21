@@ -38,7 +38,7 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 		Ox.CreateVehicle({
 			model = data.model,
 			owner = player.charid,
-			properties = {color1 = data.color.primary, color2 = data.color.secondary},
+			properties = { color1 = data.color1, color2 = data.color2 },
 			stored = ('%s:%s'):format(data.property, data.zoneId)
 		})
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})
