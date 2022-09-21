@@ -326,6 +326,14 @@ RegisterNetEvent('ox_lib:setLocale', function(locale)
 	})
 end)
 
+RegisterNUICallback('cameraMouseDown', function(_, cb)
+	cb(1)
+end)
+
+RegisterNUICallback('cameraMouseUp', function (_, cb)
+	cb(1)
+end)
+
 -- Loads the locales into UI on startup
 RegisterNUICallback('loadLocale', function(_, cb)
 	cb(1)

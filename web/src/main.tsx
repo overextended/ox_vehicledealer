@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from './state';
 import LocaleProvider from './providers/LocaleProvider';
 import { HashRouter } from 'react-router-dom';
+import { fetchNui } from './utils/fetchNui';
 
 if (isEnvBrowser()) {
   const root = document.getElementById('root');
@@ -19,6 +20,14 @@ if (isEnvBrowser()) {
   root!.style.backgroundRepeat = 'no-repeat';
   root!.style.backgroundPosition = 'center';
 }
+
+window.addEventListener('mousedown', (e) => {
+  if (e.button === 2 && store.getState().visibility.browser) fetchNui('cameraMouseDown');
+});
+
+window.addEventListener('mouseup', (e) => {
+  if (e.button === 2 && store.getState().visibility.browser) fetchNui('cameraMouseUp');
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
