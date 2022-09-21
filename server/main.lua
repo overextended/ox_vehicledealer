@@ -1,14 +1,15 @@
+local displayedVehicles = {}
+
 AddEventHandler('onServerResourceStart', function(resource)
 	if resource ~= cache.resource then return end
 	exports.ox_property:loadDataFiles()
 
 	local properties = GlobalState['Properties']
-	local displayedVehicles = MySQL.query.await('SELECT id, model, JSON_QUERY(data, "$.display") as display FROM vehicles WHERE stored IS NOT NULL')
-	if not displayedVehicles then return end
+	local vehicles = MySQL.query.await('SELECT id, model, JSON_QUERY(data, "$.display") as display FROM vehicles WHERE stored IS NOT NULL')
+	if not vehicles then return end
 
-	local vehicles = {}
-	for i = 1, #displayedVehicles do
-		local vehicle = displayedVehicles[i]
+	for i = 1, #vehicles do
+		local vehicle = vehicles[i]
 		local display = vehicle.display and json.decode(vehicle.display--[[@as string]] )
 
 		if display then
@@ -17,13 +18,13 @@ AddEventHandler('onServerResourceStart', function(resource)
 
 			local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[display.id].xyz, heading)
 			veh.data = Ox.GetVehicleData(vehicle.model)
-			vehicles[veh.plate] = veh
+			displayedVehicles[veh.plate] = veh
 
 			FreezeEntityPosition(veh.entity, true)
 		end
 	end
 
-	GlobalState['DisplayedVehicles'] = vehicles
+	GlobalState['DisplayedVehicles'] = displayedVehicles
 end)
 
 RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
@@ -81,9 +82,8 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
 		veh.set('display', {property = data.property, zone = data.zoneId, id = spawn.id, rotate = spawn.rotate})
 
-		local vehicles = GlobalState['DisplayedVehicles']
-		vehicles[veh.plate] = veh
-		GlobalState['DisplayedVehicles'] = vehicles
+		displayedVehicles[veh.plate] = veh
+		GlobalState['DisplayedVehicles'] = displayedVehicles
 
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle displayed', type = 'success'})
 
@@ -160,7 +160,6 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
 end)
 
 AddEventHandler('ox_property:vehicleStateChange', function(plate, action)
-	local vehicles = GlobalState['DisplayedVehicles']
-	vehicles[plate] = nil
-	GlobalState['DisplayedVehicles'] = vehicles
+	displayedVehicles[plate] = nil
+	GlobalState['DisplayedVehicles'] = displayedVehicles
 end)
