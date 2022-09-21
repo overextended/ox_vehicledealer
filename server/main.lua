@@ -87,7 +87,6 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle displayed', type = 'success'})
 
-		Wait(1000)
 		FreezeEntityPosition(veh.entity, true)
 	else
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to display', type = 'error'})
