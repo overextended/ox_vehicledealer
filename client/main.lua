@@ -253,7 +253,7 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 end)
 
 local categories = GlobalState['VehicleClasses']
-local displayVehicleCoords
+local displayVehicle = {}
 
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
@@ -274,9 +274,9 @@ RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 
 		local interiorId = GetInteriorFromEntity(cache.ped)
 		cache.coords = GetEntityCoords(cache.ped)
-		displayVehicleCoords = interiorId == 0 and cache.coords or vec3(GetInteriorPosition(interiorId))
+		displayVehicle.coords = interiorId == 0 and cache.coords or vec3(GetInteriorPosition(interiorId))
 
-		while displayVehicleCoords do
+		while displayVehicle.coords do
 			DisableAllControlActions(0)
 
 			if IsDisabledControlPressed(0, 25) then
@@ -346,39 +346,49 @@ RegisterNUICallback('loadLocale', function(_, cb)
 	})
 end)
 
-local displayVehicle
+---@param str string
+---@return vector3
+local function rgbToVector(str)
+	local r, g, b = string.strsplit(',', str:sub(5, -2))
+	return vec3(tonumber(r) or 0, tonumber(g) or 0, tonumber(b) or 0)
+end
 
 RegisterNUICallback('changeColor', function(data, cb)
 	cb(1)
-	-- where secondary colour
-	local pR, pG, pB = string.strsplit(',', data[1]:sub(5, -2))
-	SetVehicleCustomPrimaryColour(displayVehicle, tonumber(pR) --[[@as number]], tonumber(pG) --[[@as number]], tonumber(pB) --[[@as number]])
-	local sR, sG, sB = string.strsplit(',', data[2]:sub(5, -2))
-	SetVehicleCustomSecondaryColour(displayVehicle, tonumber(sR) --[[@as number]], tonumber(sG) --[[@as number]], tonumber(sB) --[[@as number]])
+
+	if data[1] ~= '' then
+		displayVehicle.primary = rgbToVector(data[1])
+		SetVehicleCustomPrimaryColour(displayVehicle.entity, displayVehicle.primary.x, displayVehicle.primary.y, displayVehicle.primary.z)
+	end
+
+	if data[2] ~= '' then
+		displayVehicle.secondary = rgbToVector(data[2])
+		SetVehicleCustomSecondaryColour(displayVehicle.entity, displayVehicle.secondary.x, displayVehicle.secondary.y, displayVehicle.secondary.z)
+	end
 end)
 
 RegisterNUICallback('purchaseVehicle', function(data, cb)
 	cb(1)
 	local currentZone = exports.ox_property:getCurrentZone()
-	local pR, pG, pB = string.strsplit(',', data.color.primary:sub(5, -2))
-	local sR, sG, sB = string.strsplit(',', data.color.secondary:sub(5, -2))
+	local primary, secondary = GetVehicleColours(displayVehicle.entity)
 
-	SetNuiFocus(false, false)
 	TriggerServerEvent('ox_vehicledealer:buyWholesale', {
 		property = currentZone.property,
 		zoneId = currentZone.zoneId,
 		model = data.model,
-		color = { primary = {tonumber(pR), tonumber(pG), tonumber(pB)}, secondary = {tonumber(sR), tonumber(sG), tonumber(sB)} }
+		color1 = displayVehicle.primary and { displayVehicle.primary.x, displayVehicle.primary.y, displayVehicle.primary.z } or primary,
+		color2 = displayVehicle.secondary and { displayVehicle.secondary.x, displayVehicle.secondary.y, displayVehicle.secondary.z } or secondary,
 	})
+
 end)
 
 RegisterNUICallback('clickVehicle', function(data, cb)
 	cb(1)
 
-	if displayVehicle then
-		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle))
-		SetVehicleAsNoLongerNeeded(displayVehicle)
-		DeleteEntity(displayVehicle)
+	if displayVehicle.entity then
+		SetModelAsNoLongerNeeded(GetEntityModel(displayVehicle.entity))
+		SetVehicleAsNoLongerNeeded(displayVehicle.entity)
+		DeleteEntity(displayVehicle.entity)
 	end
 
 	local hash = joaat(data.model)
@@ -388,11 +398,11 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 		repeat Wait(0) until HasModelLoaded(hash)
 	end
 
-	displayVehicle = CreateVehicle(hash, displayVehicleCoords.x, displayVehicleCoords.y, displayVehicleCoords.z + 1.0, 90.0, false, false)
-	SetVehicleOnGroundProperly(displayVehicle)
-	SetPedIntoVehicle(cache.ped, displayVehicle, -1)
-	FreezeEntityPosition(displayVehicle, true)
-	SetEntityCollision(displayVehicle, false, false)
+	displayVehicle.entity = CreateVehicle(hash, displayVehicle.coords.x, displayVehicle.coords.y, displayVehicle.coords.z + 1.0, 90.0, false, false)
+	SetVehicleOnGroundProperly(displayVehicle.entity)
+	SetPedIntoVehicle(cache.ped, displayVehicle.entity, -1)
+	FreezeEntityPosition(displayVehicle.entity, true)
+	SetEntityCollision(displayVehicle.entity, false, false)
 end)
 
 local vehicleCategories = GlobalState['VehicleClasses']
