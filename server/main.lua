@@ -35,12 +35,21 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 
 	-- TODO financial integration
 	if true then
-		Ox.CreateVehicle({
+		local vehicle = Ox.CreateVehicle({
 			model = data.model,
 			owner = player.charid,
 			properties = { color1 = data.color1, color2 = data.color2 },
-			stored = ('%s:%s'):format(data.property, data.zoneId)
-		})
+		}, GetEntityCoords(player.ped), GetEntityHeading(player.ped))
+
+        for i = 1, 50 do
+            Wait(0)
+            SetPedIntoVehicle(player.ped, vehicle.entity, -1)
+
+            if GetVehiclePedIsIn(player.ped, false) == vehicle.entity then
+                break
+            end
+        end
+
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})
 	else
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
