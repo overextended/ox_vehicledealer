@@ -51,16 +51,6 @@ exports.ox_property:registerZoneMenu('showroom',
             end
         end
 
-        options[#options + 1] = {
-            title = 'Wholesale Menu',
-            description = 'Choose a vehicle to import',
-            event = 'ox_vehicledealer:buyWholesale',
-            args = {
-                property = currentZone.property,
-                zoneId = currentZone.zoneId
-            }
-        }
-
         if zoneVehicles[1] then
             options[#options + 1] = {
                 title = 'Open Showroom',
