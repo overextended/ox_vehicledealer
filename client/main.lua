@@ -428,17 +428,4 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	end
 end)
 
-local vehicleCategories = GlobalState['VehicleClasses']
-RegisterNUICallback('fetchVehicles', function(data, cb)
-    local class = nil
-    for i = 1, #vehicleCategories do
-        if vehicleCategories[i] == data.category then
-            class = i - 1 -- classes start from 0, like arrays should
-            break
-        end
-    end
-    vehicles = lib.callback.await('ox_vehicledealer:fetchVehicles', false, class)
-    cb(vehicles)
-end)
-
 RegisterNUICallback('exit', closeUi)
