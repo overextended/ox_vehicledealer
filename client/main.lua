@@ -160,7 +160,6 @@ lib.onCache('vehicle', function(vehicle)
 	if vehicle then
 		local veh = displayedVehicles[GetVehicleNumberPlateText(vehicle)]
 		if veh then
-			lib.showTextUI(('Plate: %s  \nMake: %s  \nType: %s'):format(veh.plate, veh.data.make, veh.data.type))
 		end
 	else
 		lib.hideTextUI()
