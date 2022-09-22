@@ -21,14 +21,6 @@ if (isEnvBrowser()) {
   root!.style.backgroundPosition = 'center';
 }
 
-window.addEventListener('mousedown', (e) => {
-  if (e.button === 2 && store.getState().visibility.browser) fetchNui('cameraMouseDown');
-});
-
-window.addEventListener('mouseup', (e) => {
-  if (e.button === 2 && store.getState().visibility.browser) fetchNui('cameraMouseUp');
-});
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HashRouter>
