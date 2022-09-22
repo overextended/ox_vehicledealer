@@ -43,6 +43,7 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 				color2 = data.color2,
 				modLivery = data.livery,
 				modRoofLivery = data.roofLivery,
+				dirtLevel = 0.0
 			},
 		}, GetEntityCoords(player.ped), GetEntityHeading(player.ped))
 

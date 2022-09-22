@@ -432,6 +432,7 @@ RegisterNUICallback('clickVehicle', function(data, cb)
     SetVehicleMod(displayVehicle.entity, 48, -1, false)
     SetVehicleLivery(displayVehicle.entity, 0)
     SetVehicleRoofLivery(displayVehicle.entity, 0)
+    SetVehicleDirtLevel(displayVehicle.entity, 0.0)
 	SetEntityCollision(displayVehicle.entity, false, false)
 end)
 
