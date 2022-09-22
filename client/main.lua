@@ -144,7 +144,7 @@ CreateThread(function()
 
 		if closeVehicle then
 			BeginTextCommandDisplayHelp('FloatingNotification')
-			AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(closeVehicle.data.name, closeVehicle.data.price))
+			AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(closeVehicle.name, closeVehicle.price))
 			EndTextCommandDisplayHelp(2, false, false, -1)
 			SetFloatingHelpTextWorldPosition(1, closeVehicle.vehPos.x, closeVehicle.vehPos.y, closeVehicle.vehPos.z + 1)
 			SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
@@ -200,7 +200,9 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
 					args = {
 						property = currentZone.property,
 						zoneId = currentZone.zoneId,
-						plate = vehicle.plate
+						plate = vehicle.plate,
+						name = vehicle.data.name,
+						price = vehicle.data.price
 					}
 				}
 				subOptions['Retrieve'] = {
@@ -293,8 +295,15 @@ end)
 RegisterNetEvent('ox_vehicledealer:displayVehicle', function(data)
 	local currentZone = exports.ox_property:getCurrentZone()
 	if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-		data.entities = exports.ox_property:getZoneEntities()
-		TriggerServerEvent('ox_vehicledealer:displayVehicle', data)
+		local price = lib.inputDialog(('Set price for %s'):format(data.name), {
+            { type = 'input', label = ('Wholesale price: $%s'):format(data.price), default = data.price },
+        })
+
+		if price then
+			data.price = price[1]
+			data.entities = exports.ox_property:getZoneEntities()
+			TriggerServerEvent('ox_vehicledealer:displayVehicle', data)
+		end
 	end
 end)
 

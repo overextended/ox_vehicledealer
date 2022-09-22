@@ -17,8 +17,13 @@ AddEventHandler('onServerResourceStart', function(resource)
 			local heading = zone.spawns[display.id].w + (display.rotate and 180 or 0)
 
 			local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[display.id].xyz, heading)
-			veh.data = Ox.GetVehicleData(vehicle.model)
-			displayedVehicles[veh.plate] = veh
+
+			displayedVehicles[veh.plate] = {
+				plate = veh.plate,
+				netid = veh.netid,
+				name = Ox.GetVehicleData(veh.model).name,
+				price = display.price
+			}
 
 			FreezeEntityPosition(veh.entity, true)
 		end
@@ -95,9 +100,14 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 		local veh = Ox.CreateVehicle(vehicle.id, spawn.coords, spawn.heading)
 		veh.data = vehicle.data
 
-		veh.set('display', {property = data.property, zone = data.zoneId, id = spawn.id, rotate = spawn.rotate})
+		veh.set('display', {property = data.property, zone = data.zoneId, id = spawn.id, rotate = spawn.rotate, price = data.price})
 
-		displayedVehicles[veh.plate] = veh
+		displayedVehicles[veh.plate] = {
+			plate = veh.plate,
+			netid = veh.netid,
+			name = Ox.GetVehicleData(veh.model).name,
+			price = data.price
+		}
 		GlobalState['DisplayedVehicles'] = displayedVehicles
 
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle displayed', type = 'success'})
@@ -122,7 +132,7 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 		SetEntityHeading(vehicle.entity, heading)
 		TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle rotated', type = 'success'})
 
-		vehicle.set('display', {property = display.property, zone = display.zone, id = display.id, rotate = not display.rotate})
+		vehicle.set('display', {property = display.property, zone = display.zone, id = display.id, rotate = not display.rotate, price = display.price})
 	else
 		local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
 
@@ -131,7 +141,7 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
 			SetEntityHeading(vehicle.entity, spawn.heading)
 			TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle moved', type = 'success'})
 
-			vehicle.set('display', {property = display.property, zone = display.zone, id = spawn.id, rotate = spawn.rotate})
+			vehicle.set('display', {property = display.property, zone = display.zone, id = spawn.id, rotate = spawn.rotate, price = display.price})
 		else
 			TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to move', type = 'error'})
 		end
