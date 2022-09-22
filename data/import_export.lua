@@ -13,6 +13,13 @@ return {
                         bicycle = true,
                         bike = true,
                         quadbike = true,
+                        -- plane = true,
+                        -- heli = true,
+                        -- blimp = true,
+                        -- boat = true,
+                        -- submarine = true,
+                        -- trailer = true,
+                        -- train = true,
                     },
                     class = {
                         [0] = true, --'Compacts',
