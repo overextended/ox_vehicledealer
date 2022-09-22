@@ -397,11 +397,6 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
     cb(1)
     local currentZone = exports.ox_property:getCurrentZone()
     local primary, secondary = GetVehicleColours(displayVehicle.entity)
-
-    local livery = GetVehicleLivery(displayVehicle.entity)
-    if livery == -1 then
-        livery = GetVehicleMod(displayVehicle.entity, 48)
-    end
     local roofLivery = GetVehicleRoofLivery(displayVehicle.entity)
 
     TriggerServerEvent('ox_vehicledealer:buyWholesale', {
@@ -410,8 +405,8 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
         model = data.model,
         color1 = displayVehicle.primary and { displayVehicle.primary.x, displayVehicle.primary.y, displayVehicle.primary.z } or primary,
         color2 = displayVehicle.secondary and { displayVehicle.secondary.x, displayVehicle.secondary.y, displayVehicle.secondary.z } or secondary,
-        livery = livery,
-        roofLivery = roofLivery
+        livery = displayVehicle.livery or -1,
+        roofLivery = roofLivery ~= -1 and roofLivery or nil
     })
 
     closeUi()
@@ -433,12 +428,19 @@ RegisterNUICallback('clickVehicle', function(data, cb)
         repeat Wait(0) until HasModelLoaded(hash)
     end
 
-    displayVehicle.entity = CreateVehicle(hash, displayVehicle.coords.x, displayVehicle.coords.y, displayVehicle.coords.z + 1.0, 90.0, false, false)
-    SetVehicleOnGroundProperly(displayVehicle.entity)
-    SetPedIntoVehicle(cache.ped, displayVehicle.entity, -1)
-    FreezeEntityPosition(displayVehicle.entity, true)
-    SetVehicleDirtLevel(displayVehicle.entity, 0.0)
-    SetEntityCollision(displayVehicle.entity, false, false)
+    local entity = CreateVehicle(hash, displayVehicle.coords.x, displayVehicle.coords.y, displayVehicle.coords.z + 1.0, 90.0, false, false)
+	displayVehicle.entity = entity
+
+    SetVehicleOnGroundProperly(entity)
+    SetPedIntoVehicle(cache.ped, entity, -1)
+    FreezeEntityPosition(entity, true)
+    SetVehicleDirtLevel(entity, 0.0)
+    SetEntityCollision(entity, false, false)
+
+	if GetVehicleLivery(entity) ~= -1 then
+		SetVehicleLivery(entity, 0)
+		displayVehicle.livery = 0
+	end
 end)
 
 local vehicleCategories = GlobalState['VehicleClasses']
