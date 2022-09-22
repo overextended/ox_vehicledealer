@@ -39,7 +39,7 @@ return {
                         -- [21] = true, --'Trains',
                         [22] = true, --'Open Wheel',
                     },
-                    weapons = true,
+                    weapons = nil,
                 },
                 box = vec3(855.0, -3217.0, 6.0),
                 size = vec3(36.0, 27.0, 4.0),
