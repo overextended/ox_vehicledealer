@@ -390,12 +390,20 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
 	local currentZone = exports.ox_property:getCurrentZone()
 	local primary, secondary = GetVehicleColours(displayVehicle.entity)
 
-	TriggerServerEvent('ox_vehicledealer:buyWholesale', {
+    local livery = GetVehicleLivery(displayVehicle.entity)
+    if livery == -1 then
+        livery = GetVehicleMod(displayVehicle.entity, 48)
+    end
+    local roofLivery = GetVehicleRoofLivery(displayVehicle.entity)
+
+    TriggerServerEvent('ox_vehicledealer:buyWholesale', {
 		property = currentZone.property,
 		zoneId = currentZone.zoneId,
 		model = data.model,
 		color1 = displayVehicle.primary and { displayVehicle.primary.x, displayVehicle.primary.y, displayVehicle.primary.z } or primary,
 		color2 = displayVehicle.secondary and { displayVehicle.secondary.x, displayVehicle.secondary.y, displayVehicle.secondary.z } or secondary,
+        livery = livery,
+        roofLivery = roofLivery
 	})
 
 	closeUi()
@@ -421,6 +429,9 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	SetVehicleOnGroundProperly(displayVehicle.entity)
 	SetPedIntoVehicle(cache.ped, displayVehicle.entity, -1)
 	FreezeEntityPosition(displayVehicle.entity, true)
+    SetVehicleMod(displayVehicle.entity, 48, -1, false)
+    SetVehicleLivery(displayVehicle.entity, 0)
+    SetVehicleRoofLivery(displayVehicle.entity, 0)
 	SetEntityCollision(displayVehicle.entity, false, false)
 end)
 

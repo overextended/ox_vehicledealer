@@ -38,7 +38,12 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 		local vehicle = Ox.CreateVehicle({
 			model = data.model,
 			owner = player.charid,
-			properties = { color1 = data.color1, color2 = data.color2 },
+			properties = {
+				color1 = data.color1,
+				color2 = data.color2,
+				modLivery = data.livery,
+				modRoofLivery = data.roofLivery,
+			},
 		}, GetEntityCoords(player.ped), GetEntityHeading(player.ped))
 
         for i = 1, 50 do
