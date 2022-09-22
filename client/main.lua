@@ -253,18 +253,21 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
     end
 end)
 
-local categories = GlobalState['VehicleClasses']
+--local categories = GlobalState['VehicleClasses']
 local displayVehicle = {}
 
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
     local currentZone = exports.ox_property:getCurrentZone()
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
     if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
         SendNUIMessage({
             action = 'setVisible',
             data = {
                 visible = true,
-                categories = categories
+                categories = zone.restrictions.class,
+                types = zone.restrictions.type,
+                weapons = zone.restrictions.weapons
             }
         })
 

@@ -10,12 +10,14 @@ export interface FilterState {
   doors: number;
   category: string | null;
   categories: string[];
+  types: string[];
+  weapons?: boolean;
 }
 
-type PayloadKey = 'search' | 'category' | 'price' | 'seats' | 'doors' | 'categories';
-type PayloadValue = string | string[] | number | undefined | null;
+type PayloadKey = 'search' | 'category' | 'price' | 'seats' | 'doors' | 'categories' | 'types' | 'weapons';
+type PayloadValue = string | string[] | number | boolean | undefined | null;
 
-const vehicleClasses = [
+export const vehicleClasses = [
   'Compacts',
   'Sedans',
   'SUVs',
@@ -49,6 +51,8 @@ export const filters = createModel<RootModel>()({
     doors: 0,
     category: null,
     categories: [],
+    types: [],
+    weapons: undefined,
   } as FilterState,
   reducers: {
     setState(state, payload: { key: PayloadKey; value: PayloadValue }) {
@@ -56,6 +60,12 @@ export const filters = createModel<RootModel>()({
         ...state,
         [payload.key]: payload.value,
       };
+    },
+    setTypes(state, payload: Record<string, true>) {
+      return { ...state, types: Object.keys(payload) };
+    },
+    setCategories(state, payload: Record<string, true>) {
+      return { ...state, categories: Object.keys(payload) };
     },
   },
   effects: (dispatch) => ({
@@ -71,6 +81,8 @@ export const filters = createModel<RootModel>()({
         if (payload.seats !== 0 && vehicle.seats !== payload.seats) return false;
         if (payload.price && vehicle.price > payload.price) return false;
         if (payload.category && vehicleClasses[vehicle.class] !== payload.category) return false;
+        if (!payload.types.includes(vehicle.type)) return false;
+        if ((payload.weapons === false && vehicle.weapons) || (payload.weapons && !vehicle.weapons)) return false;
         if (payload.categories[vehicle.class] === null) return false; // doesn't allow filtering through not allowed classes
 
         const regEx = new RegExp(payload.search, 'gi');
