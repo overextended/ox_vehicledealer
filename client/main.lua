@@ -253,8 +253,11 @@ RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
 
     if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
 
-        for k, v in pairs(zone.restrictions.class) do
-            allowedClasses[#allowedClasses + 1] = k
+        for i = 0, 22 do
+            local class = zone.restrictions.class[i]
+            if class then
+                allowedClasses[#allowedClasses + 1] = i
+            end
         end
 
         SendNUIMessage({
