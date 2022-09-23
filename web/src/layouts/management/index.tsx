@@ -18,7 +18,7 @@ const Management: React.FC = () => {
   useExitListener(dispatch.visibility.setManagementVisible);
 
   return (
-    <Center sx={{ height: '100%' }}>
+    <Center sx={{ height: '100%', position: 'absolute', width: '100%' }}>
       <Transition transition="slide-up" mounted={visible}>
         {(style) => (
           <AppShell

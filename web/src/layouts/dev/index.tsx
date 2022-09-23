@@ -44,6 +44,31 @@ const Dev: React.FC = () => {
           >
             Open Management
           </Button>
+          <Button
+            onClick={() => {
+              debugData([
+                {
+                  action: 'setStatsVisible',
+                  data: {
+                    name: 'Blista',
+                    acceleration: 20,
+                    braking: 0.3,
+                    class: 0,
+                    doors: 4,
+                    handling: 0.5,
+                    make: 'Dinka',
+                    price: 135000,
+                    seats: 4,
+                    speed: 22,
+                    type: 'automobile',
+                    weapons: false,
+                  },
+                },
+              ]);
+            }}
+          >
+            Open vehicle popup
+          </Button>
         </Stack>
       </Drawer>
     </>

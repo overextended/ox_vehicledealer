@@ -9,6 +9,7 @@ import Management from './layouts/management';
 import Dev from './layouts/dev';
 import { isEnvBrowser } from './utils/misc';
 import { vehicleClasses } from './state/models/filters';
+import Popup from './layouts/popup';
 
 export default function App() {
   const [categories, setCategories] = useState<string[]>(['']);
@@ -34,6 +35,7 @@ export default function App() {
       <VehicleBrowser categories={categories} />
       <Vehicle />
       <Management />
+      <Popup />
       {isEnvBrowser() && <Dev />}
     </>
   );

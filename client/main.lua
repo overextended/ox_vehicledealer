@@ -3,6 +3,13 @@ local table = lib.table
 
 lib.locale()
 
+local function setStatsUi(data)
+    SendNUIMessage({
+        action = 'setStatsVisible',
+        data = data
+    })
+end
+
 exports.ox_property:registerZoneMenu('showroom',
     function(currentZone)
         local options = {}

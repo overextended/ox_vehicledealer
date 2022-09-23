@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from '.';
 import { isEnvBrowser } from '../../utils/misc';
+import { TopStatsKey } from './topStats';
 
 export type VehicleType =
   | 'automobile'
@@ -33,6 +34,20 @@ export interface VehicleData {
 interface Vehicles {
   [key: string]: VehicleData;
 }
+
+export const vehicleTypeToGroup: Record<VehicleType, TopStatsKey> = {
+  automobile: 'land',
+  bicycle: 'land',
+  bike: 'land',
+  quadbike: 'land',
+  train: 'land',
+  trailer: 'land',
+  plane: 'air',
+  heli: 'air',
+  blimp: 'air',
+  boat: 'sea',
+  submarine: 'sea',
+};
 
 const gameVehicles: Vehicles = await (async () => {
   if (!isEnvBrowser()) {

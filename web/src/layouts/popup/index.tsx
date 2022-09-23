@@ -1,11 +1,10 @@
-import { Box, Button, createStyles, Stack, Title, Transition } from '@mantine/core';
-import { useExitListener } from '../../hooks/useExitListener';
-import { useAppDispatch, useAppSelector } from '../../state';
-import StatBar from './components/StatBar';
-import Color from './components/Color';
-import PurchaseModal from './components/PurchaseModal';
+import { Box, createStyles, Stack, Text, Transition } from '@mantine/core';
 import { useMemo, useState } from 'react';
+import { VehicleData } from '../../state/models/vehicles';
+import StatBar from '../vehicle/components/StatBar';
 import { useLocales } from '../../providers/LocaleProvider';
+import { useAppSelector } from '../../state';
+import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { vehicleTypeToGroup } from '../../state/models/vehicles';
 
 const useStyles = createStyles((theme) => ({
@@ -28,46 +27,61 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Vehicle: React.FC = () => {
+const Popup: React.FC = () => {
   const { classes } = useStyles();
   const { locale } = useLocales();
-  const dispatch = useAppDispatch();
+  const [visible, setVisible] = useState(false);
   const topStats = useAppSelector((state) => state.topStats);
-  const vehicleVisibility = useAppSelector((state) => state.visibility.vehicle);
-  const vehicleData = useAppSelector((state) => state.vehicleData);
-  const [opened, setOpened] = useState(false);
+  const [vehicle, setVehicle] = useState<VehicleData>({
+    name: '',
+    acceleration: 0,
+    braking: 0,
+    class: 0,
+    doors: 0,
+    handling: 0,
+    make: '',
+    price: 0,
+    seats: 0,
+    speed: 0,
+    type: 'automobile',
+    weapons: false,
+  });
 
-  useExitListener(dispatch.visibility.setVehicleVisible);
+  useNuiEvent('setStatsVisible', (data: VehicleData | false) => {
+    if (!data) return setVisible(false);
+    setVisible(true);
+    setVehicle(data);
+  });
 
   const getVehicleStat = useMemo(
     () => (key: 'speed' | 'handling' | 'braking' | 'acceleration') => {
-      return (vehicleData[key] / topStats[vehicleTypeToGroup[vehicleData.type]][key]) * 100;
+      return (vehicle[key] / topStats[vehicleTypeToGroup[vehicle.type]][key]) * 100;
     },
-    [vehicleData]
+    [vehicle]
   );
 
   return (
-    <Transition mounted={vehicleVisibility} transition="slide-left">
+    <Transition mounted={visible} transition="slide-left">
       {(style) => (
         <Box style={style} className={classes.wrapper}>
           <Box className={classes.box}>
-            <Stack align="center">
-              <Title order={4}>{`${vehicleData.make} ${vehicleData.name}`}</Title>
-              <Color />
+            <Stack>
+              <Text align="center" size={20} weight={700}>{`${vehicle.make} ${vehicle.name}`}</Text>
               <StatBar label={locale.ui.vehicle_info.speed} value={getVehicleStat('speed')} />
               <StatBar label={locale.ui.vehicle_info.acceleration} value={getVehicleStat('acceleration')} />
               <StatBar label={locale.ui.vehicle_info.braking} value={getVehicleStat('braking')} />
               <StatBar label={locale.ui.vehicle_info.handling} value={getVehicleStat('handling')} />
-              <Button fullWidth uppercase onClick={() => setOpened(true)}>
-                {locale.ui.vehicle_info.purchase}
-              </Button>
+              <Text align="center" color="teal" size={20} weight={700}>
+                {Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
+                  vehicle.price
+                )}
+              </Text>
             </Stack>
           </Box>
-          <PurchaseModal opened={opened} setOpened={setOpened} price={vehicleData.price} vehicle={vehicleData} />
         </Box>
       )}
     </Transition>
   );
 };
 
-export default Vehicle;
+export default Popup;
