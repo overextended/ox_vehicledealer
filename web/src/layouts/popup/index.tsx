@@ -6,6 +6,7 @@ import { useLocales } from '../../providers/LocaleProvider';
 import { useAppSelector } from '../../state';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { vehicleTypeToGroup } from '../../state/models/vehicles';
+import { useAppDispatch } from '../../state';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -30,6 +31,7 @@ const useStyles = createStyles((theme) => ({
 const Popup: React.FC = () => {
   const { classes } = useStyles();
   const { locale } = useLocales();
+  const dispatch = useAppDispatch();
   const [visible, setVisible] = useState(false);
   const topStats = useAppSelector((state) => state.topStats);
   const [vehicle, setVehicle] = useState<VehicleData>({
@@ -47,10 +49,12 @@ const Popup: React.FC = () => {
     weapons: false,
   });
 
-  useNuiEvent('setStatsVisible', (data: VehicleData | false) => {
+  useNuiEvent('setStatsVisible', (data: [string, number] | false) => {
     if (!data) return setVisible(false);
+    const vehicle = dispatch.vehicleData.getSingleVehicle(data[0]);
+    vehicle.price = data[1];
+    setVehicle(vehicle);
     setVisible(true);
-    setVehicle(data);
   });
 
   const getVehicleStat = useMemo(

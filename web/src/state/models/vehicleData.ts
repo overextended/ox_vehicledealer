@@ -53,5 +53,8 @@ export const vehicleData = createModel<RootModel>()({
         dispatch.vehicleData.setState(vehicleData);
       }
     },
+    getSingleVehicle(payload: string) {
+      return store.getState().vehicles[payload];
+    },
   }),
 });

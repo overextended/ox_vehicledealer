@@ -3,6 +3,7 @@ local table = lib.table
 
 lib.locale()
 
+-- setStatsUi({'blista', 13000})
 local function setStatsUi(data)
     SendNUIMessage({
         action = 'setStatsVisible',
