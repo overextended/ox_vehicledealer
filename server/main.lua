@@ -133,18 +133,18 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
     if data.rotate then
         local heading = GetEntityHeading(vehicle.entity) + 180
         SetEntityHeading(vehicle.entity, heading)
-        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle rotated', type = 'success'})
-
         vehicle.set('display', {property = display.property, zone = display.zone, id = display.id, rotate = not display.rotate, price = display.price})
+
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle rotated', type = 'success'})
     else
         local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
 
         if spawn then
             SetEntityCoords(vehicle.entity, spawn.coords.x, spawn.coords.y, spawn.coords.z)
             SetEntityHeading(vehicle.entity, spawn.heading)
-            TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle moved', type = 'success'})
-
             vehicle.set('display', {property = display.property, zone = display.zone, id = spawn.id, rotate = spawn.rotate, price = display.price})
+
+            TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle moved', type = 'success'})
         else
             TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to move', type = 'error'})
         end
