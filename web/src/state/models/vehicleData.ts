@@ -2,8 +2,7 @@ import { createModel } from '@rematch/core';
 import { RootModel } from '.';
 import { store } from '..';
 import { fetchNui } from '../../utils/fetchNui';
-import { VehicleData, VehicleType } from './vehicles';
-import { TopStatsKey } from './topStats';
+import { VehicleData } from './vehicles';
 
 interface SelectedVehicle extends VehicleData {
   model: string;
@@ -56,16 +55,3 @@ export const vehicleData = createModel<RootModel>()({
     },
   }),
 });
-export const vehicleTypeToGroup: Record<VehicleType, TopStatsKey> = {
-  automobile: 'land',
-  bicycle: 'land',
-  bike: 'land',
-  quadbike: 'land',
-  train: 'land',
-  trailer: 'land',
-  plane: 'air',
-  heli: 'air',
-  blimp: 'air',
-  boat: 'sea',
-  submarine: 'sea',
-};
