@@ -10,6 +10,7 @@ import Dev from './layouts/dev';
 import { isEnvBrowser } from './utils/misc';
 import { vehicleClasses } from './state/models/filters';
 import Popup from './layouts/popup';
+import vehicle from './layouts/vehicle';
 
 export default function App() {
   const [categories, setCategories] = useState<string[]>(['']);
@@ -19,11 +20,10 @@ export default function App() {
 
   useNuiEvent(
     'setVisible',
-    (data: { categories: Record<string, true>; types: Record<string, true>; weapons?: boolean; visible: boolean }) => {
+    (data: { categories: number[]; types: Record<string, true>; weapons?: boolean; visible: boolean }) => {
       const categories: string[] = [];
-      for (const category in Object.keys(data.categories)) categories.push(vehicleClasses[category]);
+      for (let i = 0; i < data.categories.length; i++) categories.push(vehicleClasses[data.categories[i]]);
       setCategories(categories);
-      dispatch.filters.setCategories(data.categories);
       dispatch.filters.setTypes(data.types);
       dispatch.filters.setState({ key: 'weapons', value: data.weapons });
       dispatch.visibility.setBrowserVisible(data.visible);

@@ -1,6 +1,5 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from '.';
-import { isEnvBrowser } from '../../utils/misc';
 import { store } from '..';
 
 export interface FilterState {
@@ -9,12 +8,11 @@ export interface FilterState {
   seats: number;
   doors: number;
   category: string | null;
-  categories: string[];
   types: string[];
   weapons?: boolean;
 }
 
-type PayloadKey = 'search' | 'category' | 'price' | 'seats' | 'doors' | 'categories' | 'types' | 'weapons';
+type PayloadKey = 'search' | 'category' | 'price' | 'seats' | 'doors' | 'types' | 'weapons';
 type PayloadValue = string | string[] | number | boolean | undefined | null;
 
 export const vehicleClasses = [
@@ -50,7 +48,6 @@ export const filters = createModel<RootModel>()({
     seats: 0,
     doors: 0,
     category: null,
-    categories: [],
     types: [],
     weapons: undefined,
   } as FilterState,
@@ -63,9 +60,6 @@ export const filters = createModel<RootModel>()({
     },
     setTypes(state, payload: Record<string, true>) {
       return { ...state, types: Object.keys(payload) };
-    },
-    setCategories(state, payload: Record<string, true>) {
-      return { ...state, categories: Object.keys(payload) };
     },
   },
   effects: (dispatch) => ({
@@ -83,7 +77,6 @@ export const filters = createModel<RootModel>()({
         if (payload.category && vehicleClasses[vehicle.class] !== payload.category) return false;
         if (!payload.types.includes(vehicle.type)) return false;
         if ((payload.weapons === false && vehicle.weapons) || (payload.weapons && !vehicle.weapons)) return false;
-        if (payload.categories[vehicle.class] === null) return false; // doesn't allow filtering through not allowed classes
 
         const regEx = new RegExp(payload.search, 'gi');
         const vehicleModel = `${vehicle.make} ${vehicle.name}`;

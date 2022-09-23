@@ -249,18 +249,23 @@ local displayVehicle = {}
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
     local currentZone = exports.ox_property:getCurrentZone()
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+    local allowedClasses = {}
 
     if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
+
+        for k, v in pairs(zone.restrictions.class) do
+            allowedClasses[#allowedClasses + 1] = k
+        end
+
         SendNUIMessage({
             action = 'setVisible',
             data = {
                 visible = true,
-                categories = zone.restrictions.class,
+                categories = allowedClasses,
                 types = zone.restrictions.type,
                 weapons = zone.restrictions.weapons
             }
         })
-
         SetNuiFocus(true, true)
         SetNuiFocusKeepInput(true)
         NetworkStartSoloTutorialSession()
