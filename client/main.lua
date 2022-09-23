@@ -88,13 +88,23 @@ exports.ox_property:registerZoneMenu('showroom',
 
 exports.ox_property:registerZoneMenu('import/export',
     function(currentZone)
-        return {
-            event = 'ox_vehicledealer:buyWholesale',
-            args = {
-                property = currentZone.property,
-                zoneId = currentZone.zoneId
+        if cache.vehicle then
+            return {
+                event = 'ox_lib:notify',
+                args = {
+                    title = 'You cannot shop while in a vehicle',
+                    type = 'error'
+                }
             }
-        }
+        else
+            return {
+                event = 'ox_vehicledealer:buyWholesale',
+                args = {
+                    property = currentZone.property,
+                    zoneId = currentZone.zoneId
+                }
+            }
+        end
     end
 )
 
