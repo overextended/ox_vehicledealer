@@ -156,31 +156,16 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(GetPlayerPed(player.source), false))
     -- TODO financial integration
     if true then
-        MySQL.update.await('UPDATE vehicles SET owner = ?, stored = NULL WHERE plate = ?', {player.charid, vehicle.plate})
-        local vehicles = GlobalState['DisplayedVehicles']
-        vehicles[vehicle.plate] = nil
-        GlobalState['DisplayedVehicles'] = vehicles
+        vehicle.set('display')
+        vehicle.setStored()
+        vehicle.setOwner(player.charid)
 
-        local vehPos = GetEntityCoords(vehicle.entity)
-        local vehHeading = GetEntityHeading(vehicle.entity)
-        local passengers = {}
-        local seats = Ox.GetVehicleData(vehicle.model).seats
-
-        for i = -1, seats - 1 do
-            local ped = GetPedInVehicleSeat(vehicle.entity, i)
-            if ped ~= 0 then
-                passengers[i] = ped
-            end
-        end
-
-        vehicle.despawn()
-
-        vehicle = Ox.CreateVehicle(vehicle.id, vehPos, vehHeading)
-        for k, v in pairs(passengers) do
-            SetPedIntoVehicle(v, vehicle.entity, k)
-        end
+        displayedVehicles[vehicle.plate] = nil
+        GlobalState['DisplayedVehicles'] = displayedVehicles
 
         TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle purchased', type = 'success'})
+
+        FreezeEntityPosition(vehicle.entity, false)
     else
         TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
     end
