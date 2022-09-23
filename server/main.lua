@@ -5,7 +5,7 @@ AddEventHandler('onServerResourceStart', function(resource)
     exports.ox_property:loadDataFiles()
 
     local properties = GlobalState['Properties']
-    local vehicles = MySQL.query.await('SELECT id, model, JSON_QUERY(data, "$.display") as display FROM vehicles WHERE stored IS NOT NULL')
+    local vehicles = MySQL.query.await('SELECT id, model, JSON_QUERY(data, "$.display") as display FROM vehicles WHERE stored = "displayed"')
     if not vehicles then return end
 
     for i = 1, #vehicles do
@@ -17,6 +17,8 @@ AddEventHandler('onServerResourceStart', function(resource)
             local heading = zone.spawns[display.id].w + (display.rotate and 180 or 0)
 
             local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[display.id].xyz, heading)
+
+            veh.setStored('displayed')
 
             displayedVehicles[veh.plate] = {
                 plate = veh.plate,
@@ -101,6 +103,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
         veh.data = vehicle.data
 
         veh.set('display', {property = data.property, zone = data.zoneId, id = spawn.id, rotate = spawn.rotate, price = data.price})
+        veh.setStored('displayed')
 
         displayedVehicles[veh.plate] = {
             plate = veh.plate,
