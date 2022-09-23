@@ -40,6 +40,12 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 
     if not exports.ox_property:isPermitted(player, zone) then return end
 
+    local modelData =  Ox.GetVehicleData(data.model)
+    if not zone.restrictions.type[modelData.type] or not zone.restrictions.class[modelData.class] or (zone.restrictions.weapons ~= nil and zone.restrictions.weapons ~= modelData.weapons) then
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle not available', type = 'error'})
+        return
+    end
+
     -- TODO financial integration
     if true then
         local vehicle = Ox.CreateVehicle({
