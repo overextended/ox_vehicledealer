@@ -1,38 +1,50 @@
-import { Tooltip, ActionIcon } from '@mantine/core';
+import { ActionIcon, createStyles, Tooltip } from '@mantine/core';
 import { IconBaseProps } from 'react-icons';
 import { Link, useLocation } from 'react-router-dom';
-import React from 'react';
 
 interface Props {
   tooltip: string;
   to: string;
   Icon: React.ComponentType<IconBaseProps>;
-  iconSize?: number;
+  color?: string;
+  hoverColor?: string;
+  handleClick?: () => void;
 }
 
-const NavIcon: React.FC<Props> = ({ tooltip, to, Icon, iconSize }) => {
+const useStyles = createStyles((theme, color) => ({
+  icon: {
+    width: 50,
+    height: 50,
+    transition: '300ms',
+  },
+}));
+
+const NavIcon: React.FC<Props> = ({ tooltip, Icon, color, to, handleClick }) => {
+  const { classes } = useStyles();
   const location = useLocation();
 
   return (
-    <>
-      <Tooltip label={tooltip} withArrow position="right">
-        <ActionIcon
-          component={Link}
-          to={to}
-          variant={location.pathname === to ? 'light' : 'transparent'}
-          size="xl"
-          sx={(theme) => ({
-            width: 50,
-            height: 50,
-            color: theme.colors.blue[4],
-            transition: '300ms',
-            ':hover': { color: theme.colors.blue[3] },
-          })}
-        >
-          <Icon fontSize={iconSize || 24} />
-        </ActionIcon>
-      </Tooltip>
-    </>
+    <Tooltip label={tooltip} position="right">
+      <ActionIcon
+        onClick={() => {
+          if (handleClick) return handleClick();
+        }}
+        size="xl"
+        component={Link}
+        to={to}
+        color={color || 'blue.4'}
+        className={classes.icon}
+        variant={location.pathname === to ? 'light' : 'transparent'}
+        sx={(theme) => ({
+          '&:hover': {
+            color: color ? theme.colors.red[3] : theme.colors.blue[3],
+            backgroundColor: location.pathname !== to ? theme.colors.dark[6] : undefined,
+          },
+        })}
+      >
+        <Icon fontSize={24} />
+      </ActionIcon>
+    </Tooltip>
   );
 };
 

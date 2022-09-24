@@ -5,7 +5,6 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useAppDispatch, useAppSelector } from '../../state';
 import Nav from './components/nav';
 import Home from './views';
-import PurchaseVehicles from './views/purchase';
 import Stock from './views/stock';
 import Gallery from './views/gallery';
 
@@ -37,9 +36,7 @@ const Management: React.FC = () => {
             navbar={<Nav />}
           >
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/purchase_vehicles" element={<PurchaseVehicles />} />
-              <Route path="/stock" element={<Stock />} />
+              <Route path="/" element={<Stock />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/employees" element={<>Employees</>} />
             </Routes>
