@@ -3,7 +3,6 @@ local table = lib.table
 
 lib.locale()
 
--- setStatsUi({'blista', 13000})
 local function setStatsUi(data)
     SendNUIMessage({
         action = 'setStatsVisible',
@@ -151,9 +150,10 @@ lib.onCache('vehicle', function(vehicle)
     if vehicle then
         local veh = displayedVehicles[GetVehicleNumberPlateText(vehicle)]
         if veh then
+            setStatsUi({veh.model, veh.price})
         end
     else
-        lib.hideTextUI()
+        setStatsUi(false)
     end
 end)
 
@@ -244,7 +244,6 @@ RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
     end
 end)
 
---local categories = GlobalState['VehicleClasses']
 local displayVehicle = {}
 
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
@@ -321,7 +320,7 @@ end)
 RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
     local currentZone = exports.ox_property:getCurrentZone()
     if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-        lib.hideTextUI()
+        setStatsUi(false)
         TriggerServerEvent('ox_vehicledealer:buyVehicle', data)
     end
 end)

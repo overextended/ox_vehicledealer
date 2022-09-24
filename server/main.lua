@@ -22,6 +22,7 @@ AddEventHandler('onServerResourceStart', function(resource)
 
             displayedVehicles[veh.plate] = {
                 plate = veh.plate,
+                model = veh.model,
                 netid = veh.netid,
                 name = Ox.GetVehicleData(veh.model).name,
                 price = display.price
@@ -113,6 +114,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
         displayedVehicles[veh.plate] = {
             plate = veh.plate,
+            model = veh.model,
             netid = veh.netid,
             name = Ox.GetVehicleData(veh.model).name,
             price = data.price
