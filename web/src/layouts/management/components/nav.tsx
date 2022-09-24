@@ -2,8 +2,11 @@ import { Navbar, Center, Stack } from '@mantine/core';
 import { RiGalleryLine } from 'react-icons/ri';
 import { TbDatabase, TbUsers, TbLogout } from 'react-icons/tb';
 import NavIcon from './NavIcon';
+import { useAppDispatch } from '../../../state';
 
 const Nav: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <Navbar
@@ -24,7 +27,13 @@ const Nav: React.FC = () => {
 
         <Navbar.Section>
           <Center>
-            <NavIcon tooltip="Home" Icon={TbLogout} to="" color="red.4" />
+            <NavIcon
+              tooltip="Exit"
+              Icon={TbLogout}
+              to=""
+              color="red.4"
+              handleClick={() => dispatch.visibility.setManagementVisible(false)}
+            />
           </Center>
         </Navbar.Section>
       </Navbar>
