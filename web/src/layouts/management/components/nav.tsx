@@ -3,6 +3,7 @@ import { RiGalleryLine } from 'react-icons/ri';
 import { TbDatabase, TbUsers, TbLogout } from 'react-icons/tb';
 import NavIcon from './NavIcon';
 import { useAppDispatch } from '../../../state';
+import { fetchNui } from '../../../utils/fetchNui';
 
 const Nav: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +33,10 @@ const Nav: React.FC = () => {
               Icon={TbLogout}
               to=""
               color="red.4"
-              handleClick={() => dispatch.visibility.setManagementVisible(false)}
+              handleClick={() => {
+                dispatch.visibility.setManagementVisible(false);
+                fetchNui('exit');
+              }}
             />
           </Center>
         </Navbar.Section>

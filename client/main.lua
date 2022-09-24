@@ -3,6 +3,14 @@ local table = lib.table
 
 lib.locale()
 
+RegisterCommand('openManagement', function()
+    SendNUIMessage({
+        action = 'setManagementVisible',
+        true
+    })
+    SetNuiFocus(true, true)
+end)
+
 local function setStatsUi(data)
     SendNUIMessage({
         action = 'setStatsVisible',
