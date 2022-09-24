@@ -5,6 +5,7 @@ specifiers:
   '@emotion/react': ^11.10.4
   '@mantine/core': ^5.4.0
   '@mantine/hooks': ^5.4.0
+  '@mantine/modals': ^5.4.1
   '@rematch/core': ^2.2.0
   '@types/react': ^18.0.0
   '@types/react-dom': ^18.0.0
@@ -24,6 +25,7 @@ dependencies:
   '@emotion/react': 11.10.4_q5xdqnrmy3gelxefgckz3cjhaa
   '@mantine/core': 5.4.0_uptyyzp44b7odje72hnfc6e6dq
   '@mantine/hooks': 5.4.0_react@18.2.0
+  '@mantine/modals': 5.4.1_4nihu2fnob2c2gd6dzqgplmj4m
   '@rematch/core': 2.2.0_redux@4.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -521,6 +523,21 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@mantine/modals/5.4.1_4nihu2fnob2c2gd6dzqgplmj4m:
+    resolution: {integrity: sha512-eTVqTwH0/0y5V502b4RlTg4ZBMzc3KfYTCVPmE5pUttLWNYYd93ENBy6u1sM79jCQAN88l3XQ7wwd1KqtU5/Jg==}
+    peerDependencies:
+      '@mantine/core': 5.4.1
+      '@mantine/hooks': 5.4.1
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@mantine/core': 5.4.0_uptyyzp44b7odje72hnfc6e6dq
+      '@mantine/hooks': 5.4.0_react@18.2.0
+      '@mantine/utils': 5.4.1_react@18.2.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@mantine/styles/5.4.0_7xbt6cqxny5okm7nuwm4cfiesq:
     resolution: {integrity: sha512-WnCRaqX8D1l4Y7QQD4e/tBKkLgTHbl0BeAOe/U4UDBM916mEboOmR8sa81zCUj4eJQoMlloe0WR1+erYX4JHLQ==}
     peerDependencies:
@@ -537,6 +554,14 @@ packages:
 
   /@mantine/utils/5.4.0_react@18.2.0:
     resolution: {integrity: sha512-XZE168OhQxrNz9wrFYFOdGDVxDH3wP0uZ5apBezHvf0D74qyUZjGzndkfXbvAq+/mVnMZA/fKju9ydo/IXMftg==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /@mantine/utils/5.4.1_react@18.2.0:
+    resolution: {integrity: sha512-yaZ7gv9dkr98L65EjaAniZmJpVEPzHbe5aDDljIePLgcU5hVCdUls2v31YXslTf1/CJ5yZp/L7LPYLN86EXlEA==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:

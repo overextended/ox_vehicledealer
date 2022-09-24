@@ -18,6 +18,15 @@ export const vehicleStock = createModel<RootModel>()({
     setVehicleStock(state, payload: VehicleStock) {
       return (state = payload);
     },
+    setVehiclePrice(state, payload: { model: string; price: number }) {
+      return {
+        ...state,
+        [payload.model]: {
+          ...state[payload.model],
+          price: payload.price,
+        },
+      };
+    },
   },
   effects: (dispatch) => ({
     async fetchVehicleStock() {

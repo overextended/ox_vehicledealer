@@ -10,6 +10,7 @@ import { store } from './state';
 import LocaleProvider from './providers/LocaleProvider';
 import { HashRouter } from 'react-router-dom';
 import { fetchNui } from './utils/fetchNui';
+import { ModalsProvider } from '@mantine/modals';
 
 if (isEnvBrowser()) {
   const root = document.getElementById('root');
@@ -26,9 +27,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <HashRouter>
       <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
         <Provider store={store}>
-          <LocaleProvider>
-            <App />
-          </LocaleProvider>
+          <ModalsProvider modalProps={{ size: 'xs', centered: true }}>
+            <LocaleProvider>
+              <App />
+            </LocaleProvider>
+          </ModalsProvider>
         </Provider>
       </MantineProvider>
     </HashRouter>

@@ -17,8 +17,8 @@ const Stock: React.FC = () => {
       <Table verticalSpacing="sm">
         <TableHeadings />
         <tbody>
-          {Object.values(vehicles).map((vehicle, index) => (
-            <TableRows vehicle={vehicle} key={`${vehicle.name}-${index}`} />
+          {Object.entries(vehicles).map((vehicle, index) => (
+            <TableRows model={vehicle[0]} vehicle={vehicle[1]} key={`${vehicle[1].name}-${index}`} />
           ))}
         </tbody>
       </Table>
