@@ -30,7 +30,7 @@ const Dev: React.FC = () => {
               debugData([
                 {
                   action: 'setVisible',
-                  data: { visible: true, categories: ['Compacts', 'Sedans', 'Motorcycles', 'Sports'] },
+                  data: { visible: true, categories: [0, 1, 2, 3, 4], types: { automobile: true } },
                 },
               ])
             }
