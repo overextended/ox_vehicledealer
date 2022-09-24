@@ -1,33 +1,17 @@
 import { Table, ScrollArea } from '@mantine/core';
 import TableHeadings from './components/TableHeadings';
 import TableRows from './components/TableRows';
-
-const vehicles: {
-  [key: string]: {
-    make: string;
-    name: string;
-    price: number;
-    stock: number;
-    gallery: boolean;
-  };
-} = {
-  blista: {
-    make: 'Dinka',
-    name: 'Blista',
-    price: 9500,
-    gallery: true,
-    stock: 3,
-  },
-  dominator: {
-    make: 'Vapid',
-    name: 'Dominator',
-    price: 135000,
-    gallery: false,
-    stock: 1,
-  },
-};
+import { useAppDispatch, useAppSelector } from '../../../../state';
+import { useEffect } from 'react';
 
 const Stock: React.FC = () => {
+  const vehicles = useAppSelector((state) => state.vehicleStock);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch.vehicleStock.fetchVehicleStock();
+  }, []);
+
   return (
     <ScrollArea style={{ height: 584 }} offsetScrollbars scrollbarSize={6}>
       <Table verticalSpacing="sm">
