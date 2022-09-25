@@ -2,7 +2,7 @@ import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 import { fetchNui } from '../../utils/fetchNui';
 
-interface VehicleStock {
+export interface VehicleStock {
   [key: string]: {
     make: string;
     name: string;
