@@ -8,6 +8,7 @@ interface VehicleStock {
     name: string;
     price: number;
     stock: number;
+    wholesale: number;
     gallery: boolean;
   };
 }
@@ -40,12 +41,14 @@ export const vehicleStock = createModel<RootModel>()({
             name: 'Blista',
             price: 13000,
             stock: 3,
+            wholesale: 9500,
             gallery: true,
           },
           ['dominator']: {
             make: 'Vapid',
             name: 'Dominator',
             price: 29000,
+            wholesale: 15000,
             stock: 1,
             gallery: false,
           },

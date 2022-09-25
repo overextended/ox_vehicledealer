@@ -9,6 +9,7 @@ interface VehicleStock {
   price: number;
   stock: number;
   gallery: boolean;
+  wholesale: number;
 }
 
 interface Props {
@@ -24,6 +25,11 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
       <td>
         {Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
           vehicle.price
+        )}
+      </td>
+      <td>
+        {Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
+          vehicle.wholesale
         )}
       </td>
       <td>{vehicle.stock}</td>
