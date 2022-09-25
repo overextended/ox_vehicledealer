@@ -7,9 +7,9 @@ game         'gta5'
 --[[ Resource Information ]]--
 name         'ox_vehicledealer'
 version      '0.3.4'
-description  'Vehicle Dealer'
+description  'Sus aux anglois'
 license      'GPL-3.0-or-later'
-author       'overextended'
+author       'French Republic'
 repository   'https://github.com/overextended/ox_vehicledealer'
 
 --[[ Manifest ]]--
