@@ -21,7 +21,6 @@ const Nav: React.FC = () => {
             <Stack spacing={0}>
               <NavIcon tooltip="Stock" Icon={TbDatabase} to="/" />
               <NavIcon tooltip="Gallery" Icon={RiGalleryLine} to="/gallery" />
-              <NavIcon tooltip="Employees" Icon={TbUsers} to="/employees" />
             </Stack>
           </Center>
         </Navbar.Section>

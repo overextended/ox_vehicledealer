@@ -37,7 +37,6 @@ const Management: React.FC = () => {
             <Routes>
               <Route path="/" element={<Stock />} />
               <Route path="/gallery" element={<Gallery />} />
-              <Route path="/employees" element={<>Employees</>} />
             </Routes>
           </AppShell>
         )}
