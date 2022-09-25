@@ -97,7 +97,7 @@ exports.ox_property:registerZoneMenu('showroom',
             }
         end
 
-        return options
+        return {options = options}, 'context'
     end
 )
 
