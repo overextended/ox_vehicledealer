@@ -3,6 +3,8 @@ import { FaCarSide } from 'react-icons/fa';
 import { TbDatabase, TbPlus, TbTag } from 'react-icons/tb';
 import IconGroup from '../../../../../components/IconGroup';
 import { GalleryVehicle } from '../index';
+import { openModal } from '@mantine/modals';
+import GalleryModal from './GalleryModal';
 
 interface Props {
   vehicle: GalleryVehicle | null;
@@ -17,6 +19,13 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
         height: 180,
         '&:hover': { backgroundColor: !vehicle ? theme.colors.dark[6] : undefined },
       })}
+      onClick={() => {
+        if (vehicle) return;
+        openModal({
+          title: 'Select vehicle',
+          children: <GalleryModal index={index} setGallerySlots={setGallerySlots} />,
+        });
+      }}
       p="md"
     >
       {!vehicle ? (
