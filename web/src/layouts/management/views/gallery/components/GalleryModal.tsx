@@ -1,9 +1,10 @@
 import { Select, Stack, Button } from '@mantine/core';
 import { TbCar } from 'react-icons/tb';
-import { useAppSelector } from '../../../../../state';
+import { useAppDispatch, useAppSelector } from '../../../../../state';
 import { GalleryVehicle } from '../index';
 import { closeAllModals } from '@mantine/modals';
 import { useState } from 'react';
+import { fetchNui } from '../../../../../utils/fetchNui';
 
 interface Props {
   setGallerySlots: React.Dispatch<React.SetStateAction<(GalleryVehicle | null)[]>>;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
+  const dispatch = useAppDispatch();
   const vehicleStock = useAppSelector((state) => state.vehicleStock);
   const vehicles = Object.entries(vehicleStock).map((vehicle) => {
     const vehicleModel = vehicle[0];
@@ -26,6 +28,7 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
         icon={<TbCar size={20} />}
         searchable
         clearable
+        nothingFound="No such vehicle in stock"
         value={selectedVehicle}
         onChange={(value) => setSelectedVehicle(value)}
       />
@@ -42,6 +45,8 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
               else return item;
             });
           });
+          fetchNui('galleryAddVehicle', { vehicle: selectedVehicle, slot: index + 1 });
+          dispatch.vehicleStock.setVehicleInGallery({ model: selectedVehicle, gallery: true });
         }}
       >
         Confirm

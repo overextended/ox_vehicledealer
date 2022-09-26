@@ -5,6 +5,8 @@ import IconGroup from '../../../../../components/IconGroup';
 import { GalleryVehicle } from '../index';
 import { openModal } from '@mantine/modals';
 import GalleryModal from './GalleryModal';
+import { fetchNui } from '../../../../../utils/fetchNui';
+import { useAppDispatch } from '../../../../../state';
 
 interface Props {
   vehicle: GalleryVehicle | null;
@@ -13,6 +15,8 @@ interface Props {
 }
 
 const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
+  const dispatch = useAppDispatch();
+
   return (
     <Paper
       sx={(theme) => ({
@@ -55,14 +59,16 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
             uppercase
             color="red"
             variant="light"
-            onClick={() =>
+            onClick={() => {
               setGallerySlots((prevState) => {
                 return prevState.map((item, indx) => {
                   if (indx === index) return null;
                   else return item;
                 });
-              })
-            }
+              });
+              fetchNui('galleryRemoveVehicle', { vehicle: vehicle.model, slot: index + 1 });
+              dispatch.vehicleStock.setVehicleInGallery({ model: vehicle.model, gallery: false });
+            }}
           >
             Remove vehicle
           </Button>

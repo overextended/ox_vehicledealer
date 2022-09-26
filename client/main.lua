@@ -444,4 +444,39 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	end
 end)
 
+RegisterNUICallback('getVehicleStock', function(_, cb)
+    cb({
+        blista = {
+            make = 'Dinka',
+            name = 'Blista',
+            price = 8000,
+            stock = 3,
+            wholesale = 13000,
+            gallery = false,
+        },
+        dominator = {
+            make = 'Vapid',
+            name = 'Dominator',
+            price = 29000,
+            wholesale = 15000,
+            stock = 1,
+            gallery = false,
+        }
+    })
+end)
+
+RegisterNUICallback('fetchGallery', function(_, cb)
+    cb({0, 'blista', 'dominator', 0, 0})
+end)
+
+RegisterNUICallback('galleryAddVehicle', function(data, cb)
+    cb(1)
+    print(data.vehicle, data.slot)
+end)
+
+RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
+    cb(1)
+    print(data.vehicle, data.slot)
+end)
+
 RegisterNUICallback('exit', closeUi)

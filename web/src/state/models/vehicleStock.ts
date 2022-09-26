@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 import { fetchNui } from '../../utils/fetchNui';
+import { store } from '../index';
 
 export interface VehicleStock {
   [key: string]: {
@@ -25,6 +26,15 @@ export const vehicleStock = createModel<RootModel>()({
         [payload.model]: {
           ...state[payload.model],
           price: payload.price,
+        },
+      };
+    },
+    setVehicleInGallery(state, payload: { model: string; gallery: boolean }) {
+      return {
+        ...state,
+        [payload.model]: {
+          ...state[payload.model],
+          gallery: payload.gallery,
         },
       };
     },
