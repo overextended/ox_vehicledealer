@@ -444,6 +444,11 @@ RegisterNUICallback('clickVehicle', function(data, cb)
 	end
 end)
 
+RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
+    cb(1)
+    print(data.model, data.price)
+end)
+
 RegisterNUICallback('getVehicleStock', function(_, cb)
     cb({
         blista = {

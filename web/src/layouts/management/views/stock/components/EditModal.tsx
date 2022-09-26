@@ -3,6 +3,7 @@ import { NumberInput, Stack, Button } from '@mantine/core';
 import { TbTag } from 'react-icons/tb';
 import { closeAllModals } from '@mantine/modals';
 import { useAppDispatch } from '../../../../../state';
+import { fetchNui } from '../../../../../utils/fetchNui';
 
 const EditModal: React.FC<{ currentPrice: number; model: string }> = ({ currentPrice, model }) => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ const EditModal: React.FC<{ currentPrice: number; model: string }> = ({ currentP
         onClick={() => {
           closeAllModals();
           if (price === undefined) return;
+          fetchNui('changeVehicleStockPrice', { model, price });
           dispatch.vehicleStock.setVehiclePrice({ model, price });
         }}
       >
