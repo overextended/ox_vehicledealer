@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <HashRouter>
       <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
         <Provider store={store}>
-          <ModalsProvider modalProps={{ size: 'xs', centered: true }}>
+          <ModalsProvider modalProps={{ size: 'xs', centered: true, transition: 'slide-up' }}>
             <LocaleProvider>
               <App />
             </LocaleProvider>
