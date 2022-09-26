@@ -29,7 +29,7 @@ const Gallery: React.FC = () => {
       <ScrollArea offsetScrollbars scrollbarSize={6} style={{ height: 584 }}>
         <SimpleGrid cols={3}>
           {gallerySlots.map((vehicle, index) => (
-            <GalleryCard vehicle={vehicle} index={index} />
+            <GalleryCard vehicle={vehicle} index={index} setGallerySlots={setGallerySlots} />
           ))}
         </SimpleGrid>
       </ScrollArea>

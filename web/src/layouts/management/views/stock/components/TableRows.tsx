@@ -41,7 +41,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
         )}
       </td>
       <td>
-        <Tooltip label="Edit" withArrow position="right" offset={10}>
+        <Tooltip label="Edit" withArrow position="top" offset={10}>
           <ActionIcon
             color="blue"
             variant="light"

@@ -7,9 +7,10 @@ import { GalleryVehicle } from '../index';
 interface Props {
   vehicle: GalleryVehicle | null;
   index: number;
+  setGallerySlots: React.Dispatch<React.SetStateAction<(GalleryVehicle | null)[]>>;
 }
 
-const GalleryCard: React.FC<Props> = ({ vehicle, index }) => {
+const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
   return (
     <Paper
       sx={(theme) => ({
@@ -40,7 +41,20 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index }) => {
             />
             <IconGroup label={vehicle.stock} Icon={TbDatabase} />
           </Group>
-          <Button fullWidth uppercase color="red" variant="light">
+          <Button
+            fullWidth
+            uppercase
+            color="red"
+            variant="light"
+            onClick={() =>
+              setGallerySlots((prevState) => {
+                return prevState.map((item, indx) => {
+                  if (indx === index) return null;
+                  else return item;
+                });
+              })
+            }
+          >
             Remove vehicle
           </Button>
         </Stack>
