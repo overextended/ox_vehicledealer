@@ -457,8 +457,23 @@ RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
 end)
 
 RegisterNUICallback('fetchGallery', function(_, cb)
-    -- 0 or vehicle plate
-    cb({0, 'ABCD1234', '1234DCBA', 0, 0})
+    local currentZone = exports.ox_property:getCurrentZone()
+    local zone = GlobalState['Properties'][currentZone.property].zones[currentZone.zoneId]
+    local vehicles = {}
+
+    for k, v in pairs(displayedVehicles) do
+        if currentZone.property == v.property and currentZone.zoneId == v.zone then
+            vehicles[v.slot] = k
+        end
+    end
+
+    for i = 1, #zone.spawns do
+        if not vehicles[i] then
+            vehicles[i] = 0
+        end
+    end
+
+    cb(vehicles)
 end)
 
 RegisterNUICallback('galleryAddVehicle', function(data, cb)
