@@ -61,7 +61,7 @@ const gameVehicles: Vehicles = await (async () => {
     return await resp.json();
   } else {
     return {
-      dinka: {
+      blista: {
         class: 0,
         doors: 4,
         make: 'Dinka',

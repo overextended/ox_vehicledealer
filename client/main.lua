@@ -6,7 +6,10 @@ lib.locale()
 RegisterCommand('openManagement', function()
     SendNUIMessage({
         action = 'setManagementVisible',
-        true
+        data = {
+            {model = 'blista', plate = 'ABCD1234', price = 3000},
+            {model = 'dominator', plate = '1234DCBA', price = 13000}
+        }
     })
     SetNuiFocus(true, true)
 end)
@@ -446,41 +449,24 @@ end)
 
 RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
     cb(1)
-    print(data.model, data.price)
-end)
-
-RegisterNUICallback('getVehicleStock', function(_, cb)
-    cb({
-        blista = {
-            make = 'Dinka',
-            name = 'Blista',
-            price = 8000,
-            stock = 3,
-            wholesale = 13000,
-            gallery = false,
-        },
-        dominator = {
-            make = 'Vapid',
-            name = 'Dominator',
-            price = 29000,
-            wholesale = 15000,
-            stock = 1,
-            gallery = false,
-        }
-    })
+    print(json.encode(data))
+    print(data.plate, data.price)
 end)
 
 RegisterNUICallback('fetchGallery', function(_, cb)
-    cb({0, 'blista', 'dominator', 0, 0})
+    -- 0 or vehicle plate
+    cb({0, 'ABCD1234', '1234DCBA', 0, 0})
 end)
 
 RegisterNUICallback('galleryAddVehicle', function(data, cb)
     cb(1)
+    -- data.vehicle is plate
     print(data.vehicle, data.slot)
 end)
 
 RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
     cb(1)
+    -- data.vehicle is plate
     print(data.vehicle, data.slot)
 end)
 

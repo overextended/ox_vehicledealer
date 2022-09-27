@@ -1,16 +1,10 @@
 import { Table, ScrollArea } from '@mantine/core';
 import TableHeadings from './components/TableHeadings';
 import TableRows from './components/TableRows';
-import { useAppDispatch, useAppSelector } from '../../../../state';
-import { useEffect } from 'react';
+import { useAppSelector } from '../../../../state';
 
 const Stock: React.FC = () => {
   const vehicles = useAppSelector((state) => state.vehicleStock);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch.vehicleStock.fetchVehicleStock();
-  }, []);
 
   return (
     <ScrollArea style={{ height: 584 }} offsetScrollbars scrollbarSize={6}>

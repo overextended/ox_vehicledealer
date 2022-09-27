@@ -1,17 +1,16 @@
-import { Card, Stack, Group, Center, Button, Text, Paper, Box } from '@mantine/core';
-import { FaCarSide } from 'react-icons/fa';
+import { Stack, Group, Center, Button, Text, Paper, Box } from '@mantine/core';
 import { TbDatabase, TbPlus, TbTag } from 'react-icons/tb';
 import IconGroup from '../../../../../components/IconGroup';
-import { GalleryVehicle } from '../index';
 import { openModal } from '@mantine/modals';
 import GalleryModal from './GalleryModal';
 import { fetchNui } from '../../../../../utils/fetchNui';
 import { useAppDispatch } from '../../../../../state';
+import { VehicleStock } from '../../../../../state/models/vehicleStock';
 
 interface Props {
-  vehicle: GalleryVehicle | null;
+  vehicle: VehicleStock | null;
   index: number;
-  setGallerySlots: React.Dispatch<React.SetStateAction<(GalleryVehicle | null)[]>>;
+  setGallerySlots: React.Dispatch<React.SetStateAction<(VehicleStock | null)[]>>;
 }
 
 const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
@@ -52,7 +51,7 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
               Icon={TbTag}
               textColor="teal"
             />
-            <IconGroup label={vehicle.stock} Icon={TbDatabase} />
+            <Text>{vehicle.plate}</Text>
           </Group>
           <Button
             fullWidth
@@ -66,8 +65,8 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
                   else return item;
                 });
               });
-              fetchNui('galleryRemoveVehicle', { vehicle: vehicle.model, slot: index + 1 });
-              dispatch.vehicleStock.setVehicleInGallery({ model: vehicle.model, gallery: false });
+              fetchNui('galleryRemoveVehicle', { vehicle: vehicle.plate, slot: index + 1 });
+              dispatch.vehicleStock.setVehicleInGallery({ plate: vehicle.plate, gallery: false });
             }}
           >
             Remove vehicle

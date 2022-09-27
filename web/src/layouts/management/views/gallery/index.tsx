@@ -8,41 +8,18 @@ import { isEnvBrowser } from '../../../../utils/misc';
 import { fetchNui } from '../../../../utils/fetchNui';
 import { useAppSelector } from '../../../../state';
 
-export interface GalleryVehicle {
-  make: string;
-  name: string;
-  price: number;
-  stock: number;
-  wholesale: number;
-  model: string;
-}
-
 const Gallery: React.FC = () => {
-  const [gallerySlots, setGallerySlots] = useState<Array<null | GalleryVehicle>>([]);
+  const [gallerySlots, setGallerySlots] = useState<Array<null | VehicleStock>>([]);
   const vehicleStock = useAppSelector((state) => state.vehicleStock);
 
   useEffect(() => {
-    if (isEnvBrowser())
-      return setGallerySlots([
-        null,
-        { make: 'Dinka', name: 'Blista', stock: 3, price: 13000, wholesale: 9500, model: 'blista' },
-        null,
-        {
-          make: 'Vapid',
-          name: 'Dominator',
-          price: 29000,
-          wholesale: 15000,
-          stock: 1,
-          model: 'dominator',
-        },
-        null,
-      ]);
+    if (isEnvBrowser()) return setGallerySlots([null, vehicleStock[0], null, vehicleStock[1], null]);
 
     const fetchGallery = async () => {
       const fetchedGallery = (await fetchNui('fetchGallery')) as Array<string | null>;
-      const galleryArray: Array<null | GalleryVehicle> = [];
-      for (const vehicle of fetchedGallery) {
-        galleryArray.push(vehicle ? { ...vehicleStock[vehicle], model: vehicle } : null);
+      const galleryArray: Array<null | VehicleStock> = [];
+      for (const plate of fetchedGallery) {
+        galleryArray.push(plate ? vehicleStock.find((veh) => veh.plate === plate)! : null);
       }
       setGallerySlots(galleryArray);
     };

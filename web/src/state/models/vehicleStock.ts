@@ -4,66 +4,53 @@ import { fetchNui } from '../../utils/fetchNui';
 import { store } from '../index';
 
 export interface VehicleStock {
-  [key: string]: {
-    make: string;
-    name: string;
-    price: number;
-    stock: number;
-    wholesale: number;
-    gallery: boolean;
-  };
+  make: string;
+  name: string;
+  price: number;
+  model: string;
+  wholesale: number;
+  plate: string;
+  gallery: boolean;
 }
 
 export const vehicleStock = createModel<RootModel>()({
-  state: {} as VehicleStock,
+  state: [] as VehicleStock[],
   reducers: {
-    setVehicleStock(state, payload: VehicleStock) {
+    setVehicleStock(state, payload: VehicleStock[]) {
       return (state = payload);
     },
-    setVehiclePrice(state, payload: { model: string; price: number }) {
-      return {
-        ...state,
-        [payload.model]: {
-          ...state[payload.model],
-          price: payload.price,
-        },
-      };
+    setVehiclePrice(state, payload: { plate: string; price: number }) {
+      return state.map((vehicle) => {
+        if (vehicle.plate === payload.plate) return { ...vehicle, price: payload.price };
+        else return vehicle;
+      });
     },
-    setVehicleInGallery(state, payload: { model: string; gallery: boolean }) {
-      return {
-        ...state,
-        [payload.model]: {
-          ...state[payload.model],
-          gallery: payload.gallery,
-        },
-      };
+    setVehicleInGallery(state, payload: { plate: string; gallery: boolean }) {
+      return state.map((vehicle) => {
+        if (vehicle.plate === payload.plate) return { ...vehicle, gallery: payload.gallery };
+        else return vehicle;
+      });
     },
   },
   effects: (dispatch) => ({
-    async fetchVehicleStock() {
-      try {
-        const vehicleStock = await fetchNui('getVehicleStock');
-        dispatch.vehicleStock.setVehicleStock(vehicleStock);
-      } catch {
-        dispatch.vehicleStock.setVehicleStock({
-          ['blista']: {
-            make: 'Dinka',
-            name: 'Blista',
-            price: 13000,
-            stock: 3,
-            wholesale: 9500,
-            gallery: true,
-          },
-          ['dominator']: {
-            make: 'Vapid',
-            name: 'Dominator',
-            price: 29000,
-            wholesale: 15000,
-            stock: 1,
-            gallery: false,
-          },
-        });
+    // Converts data sent from Lua to match data types in UI
+    convertToStock(payload: { model: string; plate: string; price: number; gallery: boolean }[]) {
+      const vehicleStock: VehicleStock[] = [];
+      for (const vehicle of payload) {
+        console.log(vehicle.model);
+        const vehicleData = store.getState().vehicles[vehicle.model];
+        const stockVehicle: VehicleStock = {
+          wholesale: vehicleData.price,
+          make: vehicleData.make,
+          name: vehicleData.name,
+          price: vehicle.price,
+          plate: vehicle.plate,
+          model: vehicle.model,
+          gallery: vehicle.gallery,
+        };
+        vehicleStock.push(stockVehicle);
       }
+      return vehicleStock;
     },
   }),
 });

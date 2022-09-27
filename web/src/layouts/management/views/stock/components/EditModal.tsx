@@ -5,7 +5,7 @@ import { closeAllModals } from '@mantine/modals';
 import { useAppDispatch } from '../../../../../state';
 import { fetchNui } from '../../../../../utils/fetchNui';
 
-const EditModal: React.FC<{ currentPrice: number; model: string }> = ({ currentPrice, model }) => {
+const EditModal: React.FC<{ currentPrice: number; plate: string }> = ({ currentPrice, plate }) => {
   const dispatch = useAppDispatch();
   const [price, setPrice] = useState<number | undefined>();
 
@@ -26,8 +26,8 @@ const EditModal: React.FC<{ currentPrice: number; model: string }> = ({ currentP
         onClick={() => {
           closeAllModals();
           if (price === undefined) return;
-          fetchNui('changeVehicleStockPrice', { model, price });
-          dispatch.vehicleStock.setVehiclePrice({ model, price });
+          fetchNui('changeVehicleStockPrice', { plate, price });
+          dispatch.vehicleStock.setVehiclePrice({ plate, price });
         }}
       >
         Confirm

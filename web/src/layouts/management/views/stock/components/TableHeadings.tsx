@@ -6,7 +6,7 @@ const TableHeadings: React.FC = () => {
         <th style={{ textAlign: 'center' }}>Name</th>
         <th style={{ textAlign: 'center' }}>Price</th>
         <th style={{ textAlign: 'center' }}>Wholesale</th>
-        <th style={{ textAlign: 'center' }}>Stock</th>
+        <th style={{ textAlign: 'center' }}>Plate</th>
         <th></th>
         <th></th>
       </tr>

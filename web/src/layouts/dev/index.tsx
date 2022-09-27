@@ -39,7 +39,25 @@ const Dev: React.FC = () => {
           </Button>
           <Button
             onClick={() => {
-              debugData([{ action: 'setManagementVisible', data: true }]);
+              debugData([
+                {
+                  action: 'setManagementVisible',
+                  data: [
+                    {
+                      price: 13000,
+                      model: 'blista',
+                      plate: 'XYZD3112',
+                      gallery: true,
+                    },
+                    {
+                      price: 29000,
+                      model: 'dominator',
+                      plate: 'YXZE1221',
+                      gallery: false,
+                    },
+                  ],
+                },
+              ]);
             }}
           >
             Open Management
