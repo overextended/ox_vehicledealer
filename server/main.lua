@@ -35,6 +35,23 @@ AddEventHandler('onServerResourceStart', function(resource)
     GlobalState['DisplayedVehicles'] = displayedVehicles
 end)
 
+lib.callback.register('ox_vehicledealer:getDealerVehicles', function(source, data)
+    local player = Ox.GetPlayer(source)
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+    if not exports.ox_property:isPermitted(player, zone) then return end
+
+    local dealerVehicles = MySQL.query.await('SELECT plate, model FROM vehicles WHERE stored = ? AND owner = ?', {('%s:%s'):format(data.property, data.zoneId), player.charid})
+
+    for k, v in pairs(displayedVehicles) do
+        if data.property == v.property and data.zoneId == v.zone then
+            dealerVehicles[#dealerVehicles + 1] = v
+        end
+    end
+
+    return dealerVehicles
+end)
+
 RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]

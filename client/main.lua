@@ -5,12 +5,15 @@ local displayedVehicles = GlobalState['DisplayedVehicles']
 lib.locale()
 
 RegisterCommand('openManagement', function()
+    local currentZone = exports.ox_property:getCurrentZone()
+    local dealerVehicles = lib.callback.await('ox_vehicledealer:getDealerVehicles', 100, {
+        property = currentZone.property,
+        zoneId = currentZone.zoneId
+    })
+
     SendNUIMessage({
         action = 'setManagementVisible',
-        data = {
-            {model = 'blista', plate = 'ABCD1234', price = 3000},
-            {model = 'dominator', plate = '1234DCBA', price = 13000}
-        }
+        data = dealerVehicles
     })
     SetNuiFocus(true, true)
 end)
