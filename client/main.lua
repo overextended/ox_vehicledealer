@@ -478,14 +478,25 @@ end)
 
 RegisterNUICallback('galleryAddVehicle', function(data, cb)
     cb(1)
-    -- data.vehicle is plate
-    print(data.vehicle, data.slot)
+
+    local currentZone = exports.ox_property:getCurrentZone()
+    TriggerServerEvent('ox_vehicledealer:displayVehicle', {
+        property = currentZone.property,
+        zoneId = currentZone.zoneId,
+        plate = data.vehicle,
+        slot = data.slot
+    })
 end)
 
 RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
     cb(1)
-    -- data.vehicle is plate
-    print(data.vehicle, data.slot)
+
+    local currentZone = exports.ox_property:getCurrentZone()
+    TriggerServerEvent('ox_vehicledealer:hideVehicle', {
+        property = currentZone.property,
+        zoneId = currentZone.zoneId,
+        plate = data.vehicle
+    })
 end)
 
 RegisterNUICallback('exit', closeUi)

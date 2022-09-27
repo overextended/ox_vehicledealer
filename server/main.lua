@@ -14,13 +14,16 @@ AddEventHandler('onServerResourceStart', function(resource)
 
         if display then
             local zone = properties[display.property].zones[display.zone]
-            local heading = zone.spawns[display.id].w + (display.rotate and 180 or 0)
+            local heading = zone.spawns[display.slot].w + (display.rotate and 180 or 0)
 
-            local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[display.id].xyz, heading)
+            local veh = Ox.CreateVehicle(vehicle.id, zone.spawns[display.slot].xyz, heading)
 
             veh.setStored('displayed')
 
             displayedVehicles[veh.plate] = {
+                property = display.property,
+                zone = display.zone,
+                slot = display.slot,
                 plate = veh.plate,
                 model = veh.model,
                 netid = veh.netid,
@@ -120,20 +123,23 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
         vehicle.data = Ox.GetVehicleData(vehicle.model)
     end
 
-    local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
+    local spawn = zone.spawns[data.slot]
 
     if vehicle and spawn and zone.vehicles[vehicle.data.type] then
-        local veh = Ox.CreateVehicle(vehicle.id, spawn.coords, spawn.heading)
+        local veh = Ox.CreateVehicle(vehicle.id, spawn.xyz, spawn.w)
         veh.data = vehicle.data
 
-        veh.set('display', {property = data.property, zone = data.zoneId, id = spawn.id, rotate = spawn.rotate, price = data.price})
+        veh.set('display', {property = data.property, zone = data.zoneId, slot = data.slot, rotate = spawn.rotate, price = data.price})
         veh.setStored('displayed')
 
         displayedVehicles[veh.plate] = {
+            property = data.property,
+            zone = data.zone,
+            slot = data.slot,
             plate = veh.plate,
             model = veh.model,
             netid = veh.netid,
-            name = Ox.GetVehicleData(veh.model).name,
+            name = veh.data.name,
             price = data.price
         }
         GlobalState['DisplayedVehicles'] = displayedVehicles
@@ -174,6 +180,21 @@ RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
             TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to move', type = 'error'})
         end
     end
+end)
+
+RegisterServerEvent('ox_vehicledealer:hideVehicle', function(data)
+    local player = Ox.GetPlayer(source)
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+    if not exports.ox_property:isPermitted(player, zone) then return end
+
+    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(displayedVehicles[data.plate].netid))
+
+    vehicle.set('display')
+    vehicle.setStored(('%s:%s'):format(data.property, data.zoneId))
+
+    displayedVehicles[vehicle.plate] = nil
+    GlobalState['DisplayedVehicles'] = displayedVehicles
 end)
 
 RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
