@@ -452,8 +452,11 @@ end)
 
 RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
     cb(1)
-    print(json.encode(data))
-    print(data.plate, data.price)
+
+    local currentZone = exports.ox_property:getCurrentZone()
+    data.property = currentZone.property
+    data.zoneId = currentZone.zoneId
+    TriggerServerEvent('ox_vehicledealer:updatePrice', data)
 end)
 
 RegisterNUICallback('fetchGallery', function(_, cb)

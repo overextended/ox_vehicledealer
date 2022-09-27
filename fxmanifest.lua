@@ -6,7 +6,7 @@ game         'gta5'
 
 --[[ Resource Information ]]--
 name         'ox_vehicledealer'
-version      '0.3.4'
+version      '0.3.5'
 description  'Vehicle Dealer'
 license      'GPL-3.0-or-later'
 author       'overextended'

@@ -217,6 +217,23 @@ RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
     end
 end)
 
+RegisterServerEvent('ox_vehicledealer:updatePrice', function(data)
+    local player = Ox.GetPlayer(source)
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+    if not exports.ox_property:isPermitted(player, zone) then return end
+
+    local vehicle = displayedVehicles[data.plate]
+    local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
+
+    local display = veh.get('display')
+    display.price = data.price
+    veh.set('display', display)
+
+    vehicle.price = data.price
+    displayedVehicles[vehicle.plate] = vehicle
+    GlobalState['DisplayedVehicles'] = displayedVehicles
+end)
+
 AddEventHandler('ox_property:vehicleStateChange', function(plate, action)
     displayedVehicles[plate] = nil
     GlobalState['DisplayedVehicles'] = displayedVehicles
