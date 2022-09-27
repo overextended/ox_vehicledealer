@@ -1,5 +1,6 @@
 
 local table = lib.table
+local displayedVehicles = GlobalState['DisplayedVehicles']
 
 lib.locale()
 
@@ -39,7 +40,7 @@ exports.ox_property:registerZoneMenu('showroom',
                     zoneId = currentZone.zoneId
                 }
             }
-            local vehicle = GlobalState['DisplayedVehicles'][GetVehicleNumberPlateText(cache.vehicle)]
+            local vehicle = displayedVehicles[GetVehicleNumberPlateText(cache.vehicle)]
             if vehicle then
                 options[#options + 1] = {
                     title = 'Move Vehicle',
@@ -126,7 +127,6 @@ exports.ox_property:registerZoneMenu('import/export',
     end
 )
 
-local displayedVehicles = GlobalState['DisplayedVehicles']
 CreateThread(function()
     while true do
         Wait(0)
