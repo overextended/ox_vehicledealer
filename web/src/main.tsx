@@ -27,7 +27,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <HashRouter>
       <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
         <Provider store={store}>
-          <ModalsProvider modalProps={{ size: 'xs', centered: true, transition: 'slide-up' }}>
+          <ModalsProvider
+            modalProps={{
+              size: 'xs',
+              centered: true,
+              transition: 'slide-up',
+              // Modals would overflow the page with slide-up transition
+              styles: { inner: { overflow: 'hidden' } },
+            }}
+          >
             <LocaleProvider>
               <App />
             </LocaleProvider>
