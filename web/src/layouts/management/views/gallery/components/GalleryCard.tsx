@@ -25,7 +25,7 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
       onClick={() => {
         if (vehicle) return;
         openModal({
-          title: 'Select vehicle',
+          title: 'Add gallery vehicle',
           children: <GalleryModal index={index} setGallerySlots={setGallerySlots} />,
         });
       }}

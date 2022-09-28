@@ -25,10 +25,12 @@ export const vehicleStock = createModel<RootModel>()({
         else return vehicle;
       });
     },
-    setVehicleInGallery(state, payload: { plate: string; gallery: boolean }) {
+    setVehicleInGallery(state, payload: { plate: string; gallery: boolean; price?: number }) {
       return state.map((vehicle) => {
-        if (vehicle.plate === payload.plate) return { ...vehicle, gallery: payload.gallery };
-        else return vehicle;
+        if (vehicle.plate === payload.plate) {
+          if (payload.price) return { ...vehicle, gallery: payload.gallery, price: payload.price };
+          else return { ...vehicle, gallery: payload.gallery };
+        } else return vehicle;
       });
     },
   },
