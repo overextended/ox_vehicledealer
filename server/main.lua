@@ -134,7 +134,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
         displayedVehicles[veh.plate] = {
             property = data.property,
-            zone = data.zone,
+            zone = data.zoneId,
             slot = data.slot,
             plate = veh.plate,
             model = veh.model,
