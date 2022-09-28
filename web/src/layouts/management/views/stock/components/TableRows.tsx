@@ -37,6 +37,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
           <ActionIcon
             color="blue"
             variant="light"
+            disabled={!vehicle.gallery}
             onClick={() =>
               openModal({ title: 'Edit', children: <EditModal currentPrice={vehicle.price} plate={vehicle.plate} /> })
             }
