@@ -191,7 +191,7 @@ RegisterServerEvent('ox_vehicledealer:hideVehicle', function(data)
     local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(displayedVehicles[data.plate].netid))
 
     vehicle.set('display')
-    vehicle.setStored(('%s:%s'):format(data.property, data.zoneId))
+    vehicle.setStored(('%s:%s'):format(data.property, data.zoneId), true)
 
     displayedVehicles[vehicle.plate] = nil
     GlobalState['DisplayedVehicles'] = displayedVehicles
