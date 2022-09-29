@@ -62,7 +62,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
                   style: 'currency',
                   currency: 'USD',
                   maximumFractionDigits: 0,
-                }).format(vehicle.price)}?`,
+                }).format(vehicle.wholesale)}?`,
                 labels: { confirm: 'Confirm', cancel: 'Cancel' },
                 confirmProps: { color: 'red', uppercase: true },
                 cancelProps: { uppercase: true },
