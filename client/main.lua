@@ -502,4 +502,9 @@ RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
     })
 end)
 
+RegisterNUICallback('sellVehicle', function(plate, cb)
+    cb(1)
+    print(plate)
+end)
+
 RegisterNUICallback('exit', closeUi)

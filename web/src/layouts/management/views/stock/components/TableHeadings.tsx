@@ -9,6 +9,7 @@ const TableHeadings: React.FC = () => {
         <th style={{ textAlign: 'center' }}>Plate</th>
         <th></th>
         <th></th>
+        <th></th>
       </tr>
     </thead>
   );

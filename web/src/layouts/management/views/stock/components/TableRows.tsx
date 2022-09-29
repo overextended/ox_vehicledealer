@@ -1,8 +1,9 @@
 import { Tooltip, Badge, ActionIcon } from '@mantine/core';
-import { TbEdit } from 'react-icons/tb';
-import { openModal } from '@mantine/modals';
+import { TbEdit, TbTrash } from 'react-icons/tb';
+import { openConfirmModal, openModal } from '@mantine/modals';
 import EditModal from './EditModal';
 import { VehicleStock } from '../../../../../state/models/vehicleStock';
+import { fetchNui } from '../../../../../utils/fetchNui';
 
 interface Props {
   vehicle: VehicleStock;
@@ -43,6 +44,33 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
             }
           >
             <TbEdit fontSize={20} />
+          </ActionIcon>
+        </Tooltip>
+      </td>
+      <td>
+        <Tooltip label="Sell" withArrow position="top" offset={10}>
+          <ActionIcon
+            color="red"
+            variant="light"
+            onClick={() =>
+              openConfirmModal({
+                title: 'Sell vehicle',
+                size: 'sm',
+                children: `Are you sure you want to sell ${vehicle.make} ${vehicle.name} (${
+                  vehicle.plate
+                }) for ${Intl.NumberFormat('en-us', {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 0,
+                }).format(vehicle.price)}?`,
+                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                confirmProps: { color: 'red', uppercase: true },
+                cancelProps: { uppercase: true },
+                onConfirm: () => fetchNui('sellVehicle', vehicle.plate),
+              })
+            }
+          >
+            <TbTrash fontSize={20} />
           </ActionIcon>
         </Tooltip>
       </td>
