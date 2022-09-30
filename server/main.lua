@@ -48,6 +48,7 @@ lib.callback.register('ox_vehicledealer:getDealerVehicles', function(source, dat
 
     for k, v in pairs(displayedVehicles) do
         if data.property == v.property and data.zoneId == v.zone then
+            v.gallery = true
             dealerVehicles[#dealerVehicles + 1] = v
         end
     end
