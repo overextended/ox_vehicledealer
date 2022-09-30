@@ -4,57 +4,18 @@ local displayedVehicles = GlobalState['DisplayedVehicles']
 
 lib.locale()
 
-RegisterCommand('openManagement', function()
-    local currentZone = exports.ox_property:getCurrentZone()
-    local dealerVehicles = lib.callback.await('ox_vehicledealer:getDealerVehicles', 100, {
-        property = currentZone.property,
-        zoneId = currentZone.zoneId
-    })
-
-    SendNUIMessage({
-        action = 'setManagementVisible',
-        data = dealerVehicles
-    })
-    SetNuiFocus(true, true)
-end)
-
 exports.ox_property:registerZoneMenu('showroom',
     function(currentZone)
         local options = {}
-        local propertyVehicles, zoneVehicles, vehicleData = lib.callback.await('ox_property:getVehicleList', 100, {
+        local subMenus = {}
+        local _, zoneVehicles, vehicleData = lib.callback.await('ox_property:getVehicleList', 100, {
             property = currentZone.property,
             zoneId = currentZone.zoneId,
             propertyOnly = true
         })
 
         if cache.seat == -1 then
-            options[#options + 1] = {
-                title = 'Store Vehicle',
-                event = 'ox_property:storeVehicle',
-                args = {
-                    property = currentZone.property,
-                    zoneId = currentZone.zoneId
-                }
-            }
-            local vehicle = displayedVehicles[GetVehicleNumberPlateText(cache.vehicle)]
-            if vehicle then
-                options[#options + 1] = {
-                    title = 'Move Vehicle',
-                    event = 'ox_vehicledealer:moveVehicle',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId
-                    }
-                }
-                options[#options + 1] = {
-                    title = 'Rotate Vehicle',
-                    event = 'ox_vehicledealer:moveVehicle',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId,
-                        rotate = true
-                    }
-                }
+            if displayedVehicles[GetVehicleNumberPlateText(cache.vehicle)] then
                 options[#options + 1] = {
                     title = 'Buy Vehicle',
                     event = 'ox_vehicledealer:buyVehicle',
@@ -63,41 +24,64 @@ exports.ox_property:registerZoneMenu('showroom',
                         zoneId = currentZone.zoneId
                     }
                 }
+            else
+                options[#options + 1] = {
+                    title = 'Store Vehicle',
+                    event = 'ox_property:storeVehicle',
+                    args = {
+                        property = currentZone.property,
+                        zoneId = currentZone.zoneId
+                    }
+                }
             end
         end
 
-        if zoneVehicles[1] then
-            options[#options + 1] = {
-                title = 'Open Showroom',
-                description = 'View your vehicles at this showroom',
-                metadata = {['Vehicles'] = #zoneVehicles},
-                event = 'ox_vehicledealer:vehicleList',
-                args = {
-                    property = currentZone.property,
-                    zoneId = currentZone.zoneId,
-                    vehicles = zoneVehicles,
-                    vehicleData = vehicleData,
-                    zoneOnly = true
-                }
-            }
-        end
-
         options[#options + 1] = {
-            title = 'Property Vehicles',
-            description = 'View all your vehicles stored at this property',
-            metadata = {['Vehicles'] = #propertyVehicles}
+            title = 'Manage Showroom',
+            onSelect = function()
+                local dealerVehicles = lib.callback.await('ox_vehicledealer:getDealerVehicles', 100, {
+                    property = currentZone.property,
+                    zoneId = currentZone.zoneId
+                })
+
+                SendNUIMessage({
+                    action = 'setManagementVisible',
+                    data = dealerVehicles
+                })
+                SetNuiFocus(true, true)
+            end
         }
-        if #propertyVehicles > 0 then
-            options[#options].event = 'ox_vehicledealer:vehicleList'
-            options[#options].args = {
-                property = currentZone.property,
-                zoneId = currentZone.zoneId,
-                vehicles = propertyVehicles,
-                vehicleData = vehicleData
+
+        if next(zoneVehicles) then
+            options[#options + 1] = {
+                title = 'Retrieve From Showroom',
+                menu = 'stored_vehicles',
+                metadata = {['Vehicles'] = #zoneVehicles}
+            }
+
+            local subOptions = {}
+            for i = 1, #zoneVehicles do
+                local vehicle = zoneVehicles[i]
+                    subOptions[i] = {
+                    title = ('%s - %s'):format(vehicleData[vehicle.model].name, vehicle.plate),
+                    event = 'ox_property:retrieveVehicle',
+                    args = {
+                        property = currentZone.property,
+                        zoneId = currentZone.zoneId,
+                        plate = vehicle.plate
+                    }
+                }
+            end
+
+            subMenus[1] = {
+                id = 'stored_vehicles',
+                title = 'Retrieve vehicle',
+                menu = 'zone_menu',
+                options = subOptions
             }
         end
 
-        return {options = options}, 'context'
+        return {options = options, subMenus = subMenus}, 'context'
     end
 )
 
@@ -171,93 +155,6 @@ lib.onCache('vehicle', function(vehicle)
     end
 end)
 
-RegisterNetEvent('ox_vehicledealer:vehicleList', function(data)
-    local currentZone = exports.ox_property:getCurrentZone()
-    if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-        local properties = GlobalState['Properties']
-        local options = {}
-        local subMenus = {}
-        for i = 1, #data.vehicles do
-            local vehicle = data.vehicles[i]
-            vehicle.data = data.vehicleData[vehicle.model]
-
-            local zoneName = vehicle.stored == 'false' and 'Unknown' or vehicle.stored:gsub('^%l', string.upper)
-            if vehicle.stored:find(':') then
-                local property, zoneId = string.strsplit(':', vehicle.stored)
-                zoneId = tonumber(zoneId)
-                if currentZone.property == property and currentZone.zoneId == zoneId then
-                    zoneName = 'Current Zone'
-                elseif properties[property].zones[zoneId] then
-                    zoneName = ('%s - %s'):format(property, properties[property].zones[zoneId].name)
-                end
-            end
-
-            options[('%s - %s'):format(vehicle.data.name, vehicle.plate)] = {
-                menu = vehicle.plate,
-                metadata = {['Location'] = zoneName}
-            }
-
-            local subOptions = {}
-            if vehicle.stored == ('%s:%s'):format(data.property, data.zoneId) then
-                subOptions['Display'] = {
-                    event = 'ox_vehicledealer:displayVehicle',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId,
-                        plate = vehicle.plate,
-                        name = vehicle.data.name,
-                        price = vehicle.data.price
-                    }
-                }
-                subOptions['Retrieve'] = {
-                    event = 'ox_property:retrieveVehicle',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId,
-                        plate = vehicle.plate
-                    }
-                }
-                subOptions['Sell Wholesale'] = {
-                    serverEvent = 'ox_vehicledealer:sellWholesale',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId,
-                        plate = vehicle.plate
-                    }
-                }
-            else
-                subOptions['Move'] = {
-                    serverEvent = 'ox_property:moveVehicle',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId,
-                        plate = vehicle.plate
-                    }
-                }
-            end
-            subMenus[#subMenus + 1] = {
-                id = vehicle.plate,
-                title = vehicle.plate,
-                menu = 'vehicle_list',
-                options = subOptions
-            }
-        end
-
-        local menu = {
-            id = 'vehicle_list',
-            title = data.zoneOnly and ('%s - %s - Vehicles'):format(currentZone.property, currentZone.name) or ('%s - Vehicles'):format(currentZone.property),
-            menu = 'zone_menu',
-            options = options
-        }
-        for i = 1, #subMenus do
-            menu[i] = subMenus[i]
-        end
-
-        lib.registerContext(menu)
-        lib.showContext('vehicle_list')
-    end
-end)
-
 local displayVehicle = {}
 
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
@@ -302,21 +199,6 @@ RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
             end
 
             Wait(0)
-        end
-    end
-end)
-
-RegisterNetEvent('ox_vehicledealer:displayVehicle', function(data)
-    local currentZone = exports.ox_property:getCurrentZone()
-    if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-        local price = lib.inputDialog(('Set price for %s'):format(data.name), {
-            { type = 'input', label = ('Wholesale price: $%s'):format(data.price), default = data.price },
-        })
-
-        if price then
-            data.price = price[1]
-            data.entities = exports.ox_property:getZoneEntities()
-            TriggerServerEvent('ox_vehicledealer:displayVehicle', data)
         end
     end
 end)
