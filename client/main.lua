@@ -114,6 +114,86 @@ exports.ox_property:registerZoneMenu('import/export',
     end
 )
 
+exports.ox_property:registerZoneMenu('vehicleYard',
+    function(currentZone)
+        local options = {}
+        local usedVehicles, currentVehicleData = lib.callback.await('ox_vehicledealer:getUsedVehicles', 100, {
+            property = currentZone.property,
+            zoneId = currentZone.zoneId
+        })
+
+        if cache.seat == -1 then
+            local plate = GetVehicleNumberPlateText(cache.vehicle)
+            if usedVehicles[plate] then
+                options['Move Vehicle'] = {
+                    serverEvent = 'ox_vehicledealer:moveUsedVehicle',
+                    args = {
+                        property = currentZone.property,
+                        zoneId = currentZone.zoneId,
+                        entities = exports.ox_property:getZoneEntities()
+                    }
+                }
+
+                options['Rotate Vehicle'] = {
+                    serverEvent = 'ox_vehicledealer:moveUsedVehicle',
+                    args = {
+                        property = currentZone.property,
+                        zoneId = currentZone.zoneId,
+                        rotate = true
+                    }
+                }
+
+                options['Remove Vehicle From Display'] = {
+                    onSelect = function()
+                        setStatsUi(false)
+                        TriggerServerEvent('ox_vehicledealer:retrieveUsedVehicle', {
+                            property = currentZone.property,
+                            zoneId = currentZone.zoneId
+                        })
+                    end
+                }
+            elseif displayedVehicles[plate] then
+                options['Buy Vehicle'] = {
+                    onSelect = function()
+                        setStatsUi(false)
+                        TriggerServerEvent('ox_vehicledealer:buyUsedVehicle', {
+                            property = currentZone.property,
+                            zoneId = currentZone.zoneId
+                        })
+                    end
+                }
+            else
+                options['Display Vehicle'] = {
+                    onSelect = function()
+                        local price = lib.inputDialog(('Set price for %s'):format(currentVehicleData.name), {
+                            { type = 'input', label = ('Wholesale price: $%s'):format(currentVehicleData.price), default = currentVehicleData.price },
+                        })
+
+                        if price then
+                            TriggerServerEvent('ox_vehicledealer:displayUsedVehicle',{
+                                property = currentZone.property,
+                                zoneId = currentZone.zoneId,
+                                price = price[1],
+                                entities = exports.ox_property:getZoneEntities()
+                            })
+                        end
+                    end
+                }
+            end
+
+            return {options = options}, 'context'
+        else
+            return {
+                event = 'ox_lib:notify',
+                args = {
+                    title = 'You need to be driving a vehicle',
+                    type = 'error'
+                }
+            }
+        end
+    end
+)
+
 CreateThread(function()
     while true do
         Wait(0)
