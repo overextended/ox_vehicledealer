@@ -104,12 +104,23 @@ RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
     if not exports.ox_property:isPermitted(player, zone) then return end
 
     -- TODO financial integration
-    if true then
-        MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {data.plate})
-        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle sold', type = 'success'})
+    local vehicle = displayedVehicles[data.plate]
+    if vehicle then
+        local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
+        local value = Ox.GetVehicleData(veh.model).price
+
+        veh.delete()
+
+        displayedVehicles[vehicle.plate] = nil
+        GlobalState['DisplayedVehicles'] = displayedVehicles
     else
-        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle transaction failed', type = 'error'})
+        local veh = MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
+        local value = Ox.GetVehicleData(veh.model).price
+
+        MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {data.plate})
     end
+
+    TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle sold', type = 'success'})
 end)
 
 RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
@@ -221,6 +232,7 @@ end)
 RegisterServerEvent('ox_vehicledealer:updatePrice', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
     if not exports.ox_property:isPermitted(player, zone) then return end
 
     local vehicle = displayedVehicles[data.plate]

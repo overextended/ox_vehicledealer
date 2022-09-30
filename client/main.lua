@@ -504,7 +504,13 @@ end)
 
 RegisterNUICallback('sellVehicle', function(plate, cb)
     cb(1)
-    print(plate)
+
+    local currentZone = exports.ox_property:getCurrentZone()
+    TriggerServerEvent('ox_vehicledealer:sellWholesale', {
+        property = currentZone.property,
+        zoneId = currentZone.zoneId,
+        plate = plate
+    })
 end)
 
 RegisterNUICallback('exit', closeUi)
