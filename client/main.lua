@@ -18,13 +18,6 @@ RegisterCommand('openManagement', function()
     SetNuiFocus(true, true)
 end)
 
-local function setStatsUi(data)
-    SendNUIMessage({
-        action = 'setStatsVisible',
-        data = data
-    })
-end
-
 exports.ox_property:registerZoneMenu('showroom',
     function(currentZone)
         local options = {}
@@ -159,6 +152,13 @@ end)
 AddStateBagChangeHandler('DisplayedVehicles', 'global', function(bagName, key, value, reserved, replicated)
     displayedVehicles = value
 end)
+
+local function setStatsUi(data)
+    SendNUIMessage({
+        action = 'setStatsVisible',
+        data = data
+    })
+end
 
 lib.onCache('vehicle', function(vehicle)
     if vehicle then
