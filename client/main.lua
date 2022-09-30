@@ -487,6 +487,7 @@ RegisterNUICallback('galleryAddVehicle', function(data, cb)
         property = currentZone.property,
         zoneId = currentZone.zoneId,
         plate = data.vehicle,
+        price = data.price,
         slot = data.slot
     })
 end)
