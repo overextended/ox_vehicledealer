@@ -39,7 +39,6 @@ export const vehicleStock = createModel<RootModel>()({
     convertToStock(payload: { model: string; plate: string; price: number; gallery: boolean }[]) {
       const vehicleStock: VehicleStock[] = [];
       for (const vehicle of payload) {
-        console.log(vehicle.model);
         const vehicleData = store.getState().vehicles[vehicle.model];
         const stockVehicle: VehicleStock = {
           wholesale: vehicleData.price,

@@ -44,7 +44,7 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
       <NumberInput
         label="Vehicle price"
         ref={ref}
-        description="Set the price of the vehicle"
+        description="If not set defaults to wholesale price"
         hideControls
         icon={<TbTag size={20} />}
       />
@@ -53,22 +53,23 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
         fullWidth
         variant="light"
         onClick={() => {
-          if (!ref.current?.value || !selectedVehicle) return;
+          if (!selectedVehicle) return;
+          const vehicle = vehicleStock.find((veh) => veh.plate === selectedVehicle)!;
+          const price = ref.current?.value || vehicle.wholesale;
           closeAllModals();
           dispatch.vehicleStock.setVehicleInGallery({
             plate: selectedVehicle,
             gallery: true,
-            price: parseInt(ref.current.value),
+            price: parseInt(price as string),
           });
           // @ts-ignore
           setGallerySlots((prevState) => {
             return prevState.map((item, indx) => {
-              if (indx === index)
-                return { ...vehicleStock.find((veh) => veh.plate === selectedVehicle)!, price: ref.current!.value };
+              if (indx === index) return { ...vehicleStock.find((veh) => veh.plate === selectedVehicle)!, price };
               else return item;
             });
           });
-          fetchNui('galleryAddVehicle', { vehicle: selectedVehicle, slot: index + 1, price: ref.current.value });
+          fetchNui('galleryAddVehicle', { vehicle: selectedVehicle, slot: index + 1, price });
         }}
       >
         Confirm
