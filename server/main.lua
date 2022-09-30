@@ -56,6 +56,29 @@ lib.callback.register('ox_vehicledealer:getDealerVehicles', function(source, dat
     return dealerVehicles
 end)
 
+lib.callback.register('ox_vehicledealer:getUsedVehicles', function(source, data)
+    local player = Ox.GetPlayer(source)
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+    if not exports.ox_property:isPermitted(player, zone) then return end
+
+    local vehicles = MySQL.query.await('SELECT plate FROM vehicles WHERE stored = "displayed" AND owner = ?', {player.charid})
+
+    local usedVehicles = {}
+    for k, v in pairs(vehicles) do
+        local vehicle = displayedVehicles[v.plate]
+        if vehicle and data.property == vehicle.property and data.zoneId == vehicle.zone then
+            vehicle.data = Ox.GetVehicleData(vehicle.model)
+            usedVehicles[vehicle.plate] = vehicle
+        end
+    end
+
+    local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
+
+
+    return usedVehicles, vehicle and Ox.GetVehicleData(vehicle.model)
+end)
+
 RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
@@ -139,7 +162,6 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
 
     if vehicle and spawn and zone.vehicles[vehicle.data.type] then
         local veh = Ox.CreateVehicle(vehicle.id, spawn.xyz, spawn.w)
-        veh.data = vehicle.data
 
         veh.set('display', {property = data.property, zone = data.zoneId, slot = data.slot, rotate = spawn.rotate, price = data.price})
         veh.setStored('displayed')
@@ -151,7 +173,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
             plate = veh.plate,
             model = veh.model,
             netid = veh.netid,
-            name = veh.data.name,
+            name = vehicle.data.name,
             price = data.price
         }
         GlobalState['DisplayedVehicles'] = displayedVehicles
@@ -164,13 +186,78 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
     end
 end)
 
-RegisterServerEvent('ox_vehicledealer:moveVehicle', function(data)
+RegisterServerEvent('ox_vehicledealer:displayUsedVehicle', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
 
+    if vehicle.owner ~= player.charid then
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Permission Denied', type = 'error'})
+        return
+    end
+
+    vehicle.data = Ox.GetVehicleData(vehicle.model)
+
+    local spawn = exports.ox_property:findClearSpawn(zone.spawns, data.entities)
+
+    if vehicle and spawn and zone.vehicles[vehicle.data.type] then
+        exports.ox_property:clearVehicleOfPassengers(vehicle)
+
+        SetEntityCoords(vehicle.entity, spawn.coords.x, spawn.coords.y, spawn.coords.z)
+        SetEntityHeading(vehicle.entity, spawn.heading)
+
+        vehicle.set('display', {property = data.property, zone = data.zoneId, slot = data.slot, rotate = spawn.rotate, price = data.price})
+        vehicle.setStored('displayed')
+
+        displayedVehicles[vehicle.plate] = {
+            property = data.property,
+            zone = data.zoneId,
+            slot = data.slot,
+            plate = vehicle.plate,
+            model = vehicle.model,
+            netid = vehicle.netid,
+            name = vehicle.data.name,
+            price = data.price
+        }
+        GlobalState['DisplayedVehicles'] = displayedVehicles
+
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle displayed', type = 'success'})
+
+        FreezeEntityPosition(vehicle.entity, true)
+    else
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle failed to display', type = 'error'})
+    end
+end)
+
+RegisterServerEvent('ox_vehicledealer:retrieveUsedVehicle', function(data)
+    local player = Ox.GetPlayer(source)
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(GetPlayerPed(player.source), false))
+
+    if vehicle.owner ~= player.charid then
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Permission Denied', type = 'error'})
+        return
+    end
+
+    vehicle.set('display')
+    vehicle.setStored()
+
+    displayedVehicles[vehicle.plate] = nil
+    GlobalState['DisplayedVehicles'] = displayedVehicles
+
+    FreezeEntityPosition(vehicle.entity, false)
+end)
+
+RegisterServerEvent('ox_vehicledealer:moveUsedVehicle', function(data)
+    local player = Ox.GetPlayer(source)
+    local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(GetPlayerPed(player.source), false))
+
+    if vehicle.owner ~= player.charid then
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Permission Denied', type = 'error'})
+        return
+    end
+
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
     local display = vehicle.get('display')
 
     if data.rotate then
@@ -201,6 +288,8 @@ RegisterServerEvent('ox_vehicledealer:hideVehicle', function(data)
     if not exports.ox_property:isPermitted(player, zone) then return end
 
     local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(displayedVehicles[data.plate].netid))
+
+    exports.ox_property:clearVehicleOfPassengers(vehicle)
 
     vehicle.set('display')
     vehicle.setStored(('%s:%s'):format(data.property, data.zoneId), true)
