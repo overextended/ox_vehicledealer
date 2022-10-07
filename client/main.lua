@@ -238,67 +238,63 @@ end)
 local displayVehicle = {}
 
 RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
-    local currentZone = exports.ox_property:getCurrentZone()
+    if not exports.ox_property:checkCurrentZone(data) then return end
+
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
     local allowedClasses = {}
 
-    if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
+    for i = 0, 22 do
+        local class = zone.restrictions.class[i]
+        if class then
+            allowedClasses[#allowedClasses + 1] = i
+        end
+    end
 
-        for i = 0, 22 do
-            local class = zone.restrictions.class[i]
-            if class then
-                allowedClasses[#allowedClasses + 1] = i
-            end
+    SendNUIMessage({
+        action = 'setVisible',
+        data = {
+            visible = true,
+            categories = allowedClasses,
+            types = zone.restrictions.type,
+            weapons = zone.restrictions.weapons
+        }
+    })
+    SetNuiFocus(true, true)
+    SetNuiFocusKeepInput(true)
+    NetworkStartSoloTutorialSession()
+    SetPlayerInvincible(cache.playerId, true)
+
+    local interiorId = GetInteriorFromEntity(cache.ped)
+    cache.coords = GetEntityCoords(cache.ped)
+    displayVehicle.coords = interiorId == 0 and cache.coords or vec3(GetInteriorPosition(interiorId))
+
+    while displayVehicle.coords do
+        DisableAllControlActions(0)
+
+        if IsDisabledControlPressed(0, 25) then
+            EnableControlAction(0, 0, true)
+            EnableControlAction(0, 1, true)
+            EnableControlAction(0, 2, true)
         end
 
-        SendNUIMessage({
-            action = 'setVisible',
-            data = {
-                visible = true,
-                categories = allowedClasses,
-                types = zone.restrictions.type,
-                weapons = zone.restrictions.weapons
-            }
-        })
-        SetNuiFocus(true, true)
-        SetNuiFocusKeepInput(true)
-        NetworkStartSoloTutorialSession()
-        SetPlayerInvincible(cache.playerId, true)
-
-        local interiorId = GetInteriorFromEntity(cache.ped)
-        cache.coords = GetEntityCoords(cache.ped)
-        displayVehicle.coords = interiorId == 0 and cache.coords or vec3(GetInteriorPosition(interiorId))
-
-        while displayVehicle.coords do
-            DisableAllControlActions(0)
-
-            if IsDisabledControlPressed(0, 25) then
-                EnableControlAction(0, 0, true)
-                EnableControlAction(0, 1, true)
-                EnableControlAction(0, 2, true)
-            end
-
-            Wait(0)
-        end
+        Wait(0)
     end
 end)
 
 RegisterNetEvent('ox_vehicledealer:moveVehicle', function(data)
-    local currentZone = exports.ox_property:getCurrentZone()
-    if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-        if not data.rotate then
-            data.entities = exports.ox_property:getZoneEntities()
-        end
-        TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
+    if not exports.ox_property:checkCurrentZone(data) then return end
+
+    if not data.rotate then
+        data.entities = exports.ox_property:getZoneEntities()
     end
+    TriggerServerEvent('ox_vehicledealer:moveVehicle', data)
 end)
 
 RegisterNetEvent('ox_vehicledealer:buyVehicle', function(data)
-    local currentZone = exports.ox_property:getCurrentZone()
-    if currentZone.property == data.property and currentZone.zoneId == data.zoneId then
-        setStatsUi(false)
-        TriggerServerEvent('ox_vehicledealer:buyVehicle', data)
-    end
+    if not exports.ox_property:checkCurrentZone(data) then return end
+
+    setStatsUi(false)
+    TriggerServerEvent('ox_vehicledealer:buyVehicle', data)
 end)
 
 -- Changes the locales in UI on locale change
