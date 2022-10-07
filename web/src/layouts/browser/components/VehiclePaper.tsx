@@ -5,14 +5,13 @@ import { TbReceipt2 } from 'react-icons/tb';
 import { GiCarDoor, GiHeavyBullets } from 'react-icons/gi';
 import { MdAirlineSeatReclineNormal } from 'react-icons/md';
 import { useAppDispatch } from '../../../state';
-import { useLocales } from '../../../providers/LocaleProvider';
+import { formatNumber } from '../../../utils/formatNumber';
 
 const VehiclePaper: React.FC<{
   vehicle: { make: string; name: string; price: number; seats: number; doors: number; weapons?: boolean };
   index: string;
 }> = ({ vehicle, index }) => {
   const dispatch = useAppDispatch();
-  const { locale } = useLocales();
 
   return (
     <>
@@ -37,14 +36,7 @@ const VehiclePaper: React.FC<{
             {vehicle.weapons && <GiHeavyBullets fontSize={20} />}
           </Group>
           <Group position="apart">
-            <IconGroup
-              label={Intl.NumberFormat('en-us', {
-                style: 'currency',
-                currency: 'USD',
-                maximumFractionDigits: 0,
-              }).format(vehicle.price)}
-              Icon={TbReceipt2}
-            />
+            <IconGroup label={formatNumber(vehicle.price)} Icon={TbReceipt2} />
             <Group>
               <IconGroup label={vehicle.seats} Icon={MdAirlineSeatReclineNormal} />
               <IconGroup label={vehicle.doors} Icon={GiCarDoor} />

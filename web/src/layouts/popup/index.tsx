@@ -7,6 +7,7 @@ import { useAppSelector } from '../../state';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { vehicleTypeToGroup } from '../../state/models/vehicles';
 import { useAppDispatch } from '../../state';
+import { formatNumber } from '../../utils/formatNumber';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -76,9 +77,7 @@ const Popup: React.FC = () => {
               <StatBar label={locale.ui.vehicle_info.braking} value={getVehicleStat('braking')} />
               <StatBar label={locale.ui.vehicle_info.handling} value={getVehicleStat('handling')} />
               <Text align="center" color="teal" size={20} weight={700}>
-                {Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
-                  vehicle.price
-                )}
+                {formatNumber(vehicle.price)}
               </Text>
             </Stack>
           </Box>

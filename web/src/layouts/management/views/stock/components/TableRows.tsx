@@ -4,6 +4,7 @@ import { openConfirmModal, openModal } from '@mantine/modals';
 import EditModal from './EditModal';
 import { VehicleStock } from '../../../../../state/models/vehicleStock';
 import { fetchNui } from '../../../../../utils/fetchNui';
+import { formatNumber } from '../../../../../utils/formatNumber';
 
 interface Props {
   vehicle: VehicleStock;
@@ -15,16 +16,8 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
     <tr style={{ textAlign: 'center' }}>
       <td>{vehicle.make}</td>
       <td>{vehicle.name}</td>
-      <td>
-        {Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
-          vehicle.price
-        )}
-      </td>
-      <td>
-        {Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
-          vehicle.wholesale
-        )}
-      </td>
+      <td>{formatNumber(vehicle.price)}</td>
+      <td>{formatNumber(vehicle.wholesale)}</td>
       <td>{vehicle.plate}</td>
       <td>
         {vehicle.gallery && (
@@ -58,11 +51,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
                 size: 'sm',
                 children: `Are you sure you want to sell ${vehicle.make} ${vehicle.name} (${
                   vehicle.plate
-                }) for ${Intl.NumberFormat('en-us', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 0,
-                }).format(vehicle.wholesale)}?`,
+                }) for ${formatNumber(vehicle.wholesale)}?`,
                 labels: { confirm: 'Confirm', cancel: 'Cancel' },
                 confirmProps: { color: 'red', uppercase: true },
                 cancelProps: { uppercase: true },

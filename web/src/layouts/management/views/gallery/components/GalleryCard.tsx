@@ -6,6 +6,7 @@ import GalleryModal from './GalleryModal';
 import { fetchNui } from '../../../../../utils/fetchNui';
 import { useAppDispatch } from '../../../../../state';
 import { VehicleStock } from '../../../../../state/models/vehicleStock';
+import { formatNumber } from '../../../../../utils/formatNumber';
 
 interface Props {
   vehicle: VehicleStock | null;
@@ -42,15 +43,7 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
             <Text>{vehicle.name}</Text>
           </Box>
           <Group position="apart">
-            <IconGroup
-              label={Intl.NumberFormat('en-us', {
-                style: 'currency',
-                currency: 'USD',
-                maximumFractionDigits: 0,
-              }).format(vehicle.price)}
-              Icon={TbTag}
-              textColor="teal"
-            />
+            <IconGroup label={formatNumber(vehicle.price)} Icon={TbTag} textColor="teal" />
             <Text>{vehicle.plate}</Text>
           </Group>
           <Button

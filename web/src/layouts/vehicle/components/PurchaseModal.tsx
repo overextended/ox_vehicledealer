@@ -3,6 +3,7 @@ import { useLocales } from '../../../providers/LocaleProvider';
 import { fetchNui } from '../../../utils/fetchNui';
 import { useAppDispatch } from '../../../state';
 import { VehicleData } from '../../../state/models/vehicles';
+import { formatNumber } from '../../../utils/formatNumber';
 
 interface Props {
   opened: boolean;
@@ -20,12 +21,7 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
       <Text>
         {locale.ui.purchase_modal.purchase_confirm
           .replace('%s', `${vehicle.make} ${vehicle.name}`)
-          .replace(
-            '%d',
-            Intl.NumberFormat('en-us', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
-              vehicle.price
-            )
-          )}
+          .replace('%d', formatNumber(vehicle.price))}
       </Text>
 
       <Group position="right" mt={10}>
