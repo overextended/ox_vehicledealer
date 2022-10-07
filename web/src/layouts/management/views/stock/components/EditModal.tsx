@@ -4,10 +4,12 @@ import { TbTag } from 'react-icons/tb';
 import { closeAllModals } from '@mantine/modals';
 import { useAppDispatch } from '../../../../../state';
 import { fetchNui } from '../../../../../utils/fetchNui';
+import { useLocales } from '../../../../../providers/LocaleProvider';
 
 const EditModal: React.FC<{ currentPrice: number; plate: string }> = ({ currentPrice, plate }) => {
   const dispatch = useAppDispatch();
   const [price, setPrice] = useState<number | undefined>();
+  const { locale } = useLocales();
 
   return (
     <Stack>
@@ -15,7 +17,7 @@ const EditModal: React.FC<{ currentPrice: number; plate: string }> = ({ currentP
         icon={<TbTag size={20} />}
         hideControls
         defaultValue={currentPrice}
-        label="Vehicle price"
+        label={locale.ui.management.vehicle_price}
         value={price}
         onChange={(val) => setPrice(val)}
       />
@@ -30,7 +32,7 @@ const EditModal: React.FC<{ currentPrice: number; plate: string }> = ({ currentP
           dispatch.vehicleStock.setVehiclePrice({ plate, price });
         }}
       >
-        Confirm
+        {locale.ui.confirm}
       </Button>
     </Stack>
   );

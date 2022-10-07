@@ -5,6 +5,7 @@ import { closeAllModals } from '@mantine/modals';
 import { useMemo, useRef, useState } from 'react';
 import { fetchNui } from '../../../../../utils/fetchNui';
 import { VehicleStock } from '../../../../../state/models/vehicleStock';
+import { useLocales } from '../../../../../providers/LocaleProvider';
 
 interface Props {
   setGallerySlots: React.Dispatch<React.SetStateAction<(VehicleStock | null)[]>>;
@@ -13,6 +14,7 @@ interface Props {
 
 const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
   const dispatch = useAppDispatch();
+  const { locale } = useLocales();
   const ref = useRef<HTMLInputElement | null>(null);
   const [vehicles, setVehicles] = useState<{ label: string; value: string }[]>([]);
   const vehicleStock = useAppSelector((state) => state.vehicleStock);
@@ -35,16 +37,16 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
         icon={<TbCar size={20} />}
         searchable
         clearable
-        label="Vehicle"
-        description="Select a vehicle from the stock to display"
-        nothingFound="No such vehicle in stock"
+        label={locale.ui.management_gallery.modal.vehicle_select}
+        description={locale.ui.management_gallery.modal.vehicle_select_description}
+        nothingFound={locale.ui.management_gallery.modal.vehicle_nothing_found}
         value={selectedVehicle}
         onChange={(value) => setSelectedVehicle(value)}
       />
       <NumberInput
-        label="Vehicle price"
+        label={locale.ui.management.vehicle_price}
         ref={ref}
-        description="If not set defaults to wholesale price"
+        description={locale.ui.management_gallery.modal.vehicle_price_description}
         hideControls
         icon={<TbTag size={20} />}
       />
@@ -72,7 +74,7 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
           fetchNui('galleryAddVehicle', { vehicle: selectedVehicle, slot: index + 1, price });
         }}
       >
-        Confirm
+        {locale.ui.confirm}
       </Button>
     </Stack>
   );

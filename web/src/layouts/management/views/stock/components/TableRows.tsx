@@ -5,6 +5,7 @@ import EditModal from './EditModal';
 import { VehicleStock } from '../../../../../state/models/vehicleStock';
 import { fetchNui } from '../../../../../utils/fetchNui';
 import { formatNumber } from '../../../../../utils/formatNumber';
+import { useLocales } from '../../../../../providers/LocaleProvider';
 
 interface Props {
   vehicle: VehicleStock;
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const TableRows: React.FC<Props> = ({ vehicle, model }) => {
+  const { locale } = useLocales();
+
   return (
     <tr style={{ textAlign: 'center' }}>
       <td>{vehicle.make}</td>
@@ -22,7 +25,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
       <td>
         {vehicle.gallery && (
           <Tooltip withArrow label="Vehicle is displayed in the gallery">
-            <Badge>Gallery</Badge>
+            <Badge>{locale.ui.management.gallery}</Badge>
           </Tooltip>
         )}
       </td>
@@ -33,7 +36,10 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
             variant="light"
             disabled={!vehicle.gallery}
             onClick={() =>
-              openModal({ title: 'Edit', children: <EditModal currentPrice={vehicle.price} plate={vehicle.plate} /> })
+              openModal({
+                title: locale.ui.stock.edit,
+                children: <EditModal currentPrice={vehicle.price} plate={vehicle.plate} />,
+              })
             }
           >
             <TbEdit fontSize={20} />
@@ -41,18 +47,19 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
         </Tooltip>
       </td>
       <td>
-        <Tooltip label="Sell" withArrow position="top" offset={10}>
+        <Tooltip label={locale.ui.stock.sell} withArrow position="top" offset={10}>
           <ActionIcon
             color="red"
             variant="light"
             onClick={() =>
               openConfirmModal({
-                title: 'Sell vehicle',
+                title: locale.ui.stock.vehicle_sell,
                 size: 'sm',
-                children: `Are you sure you want to sell ${vehicle.make} ${vehicle.name} (${
-                  vehicle.plate
-                }) for ${formatNumber(vehicle.wholesale)}?`,
-                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                children: locale.ui.stock.vehicle_sell_text
+                  .replace('%s', `${vehicle.make} ${vehicle.name}`)
+                  .replace('%s', vehicle.plate)
+                  .replace('%d', formatNumber(vehicle.wholesale)),
+                labels: { confirm: locale.ui.confirm, cancel: locale.ui.cancel },
                 confirmProps: { color: 'red', uppercase: true },
                 cancelProps: { uppercase: true },
                 onConfirm: () => fetchNui('sellVehicle', vehicle.plate),

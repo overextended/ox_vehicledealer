@@ -26,7 +26,7 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
 
       <Group position="right" mt={10}>
         <Button uppercase variant="default" onClick={() => setOpened(false)}>
-          {locale.ui.purchase_modal.cancel}
+          {locale.ui.cancel}
         </Button>
         <Button
           uppercase
@@ -39,7 +39,7 @@ const PurchaseModal: React.FC<Props> = ({ opened, setOpened, vehicle, price }) =
             fetchNui('purchaseVehicle', vehicle);
           }}
         >
-          {locale.ui.purchase_modal.confirm}
+          {locale.ui.confirm}
         </Button>
       </Group>
     </Modal>

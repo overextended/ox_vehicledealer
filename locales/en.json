@@ -1,5 +1,7 @@
 {
   "ui": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
     "vehicle_category": "Vehicle category",
     "no_vehicle_category": "No such vehicle category",
     "vehicles": "Vehicles",
@@ -21,9 +23,35 @@
     },
     "purchase_modal": {
       "purchase_vehicle": "Purchase vehicle",
-      "purchase_confirm": "Confirm purchase of %s for %d?",
-      "confirm": "Confirm",
-      "cancel": "Cancel"
+      "purchase_confirm": "Confirm purchase of %s for %d?"
+    },
+    "management": {
+      "stock": "Stock",
+      "gallery": "Gallery",
+      "exit": "Exit",
+      "vehicle_price": "Vehicle price"
+    },
+    "management_gallery": {
+      "add_vehicle": "Add gallery vehicle",
+      "remove_vehicle": "Remove vehicle",
+      "modal": {
+        "vehicle_select": "Vehicle",
+        "vehicle_select_description": "Select a vehicle from the stock to display",
+        "vehicle_nothing_found": "No such vehicle in stock",
+        "vehicle_price_description": "If not set defaults to wholesale price"
+      }
+    },
+    "stock": {
+      "vehicle_make": "Make",
+      "vehicle_name": "Name",
+      "vehicle_price": "Price",
+      "vehicle_wholesale": "Wholesale",
+      "vehicle_plate": "Plate",
+      "vehicle_in_gallery": "Vehicle is displayed in the gallery",
+      "edit": "Edit",
+      "sell": "Sell",
+      "vehicle_sell": "Sell vehicle",
+      "vehicle_sell_text": "Are you sure you want to sell %s (%s) for %d"
     }
   }
 }

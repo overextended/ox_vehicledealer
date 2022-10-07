@@ -10,6 +10,8 @@ debugData([
     action: 'setLocale',
     data: {
       ui: {
+        confirm: 'Confirm',
+        cancel: 'Cancel',
         vehicle_category: 'Vehicle category',
         no_vehilce_category: 'No such vehicle category',
         vehicles: 'Vehicles',
@@ -32,8 +34,34 @@ debugData([
         purchase_modal: {
           purchase_vehicle: 'Purchase vehicle',
           purchase_confirm: 'Confirm purchase of %s for %d?',
-          confirm: 'Confirm',
-          cancel: 'Cancel',
+        },
+        management: {
+          stock: 'Stock',
+          gallery: 'Gallery',
+          exit: 'Exit',
+          vehicle_price: 'Vehicle price',
+        },
+        management_gallery: {
+          add_vehicle: 'Add gallery vehicle',
+          remove_vehicle: 'Remove vehicle',
+          modal: {
+            vehicle_select: 'Vehicle',
+            vehicle_select_description: 'Select a vehicle from the stock to display',
+            vehicle_nothing_found: 'No such vehicle in stock',
+            vehicle_price_description: 'If not set defaults to wholesale price',
+          },
+        },
+        stock: {
+          vehicle_make: 'Make',
+          vehicle_name: 'Name',
+          vehicle_price: 'Price',
+          vehicle_wholesale: 'Wholesale',
+          vehicle_plate: 'Plate',
+          vehicle_in_gallery: 'Vehicle is displayed in the gallery',
+          edit: 'Edit',
+          sell: 'Sell',
+          vehicle_sell: 'Sell vehicle',
+          vehicle_sell_text: 'Are you sure you want to sell %s (%s) for %d',
         },
       },
     },
@@ -42,6 +70,8 @@ debugData([
 
 interface Locale {
   ui: {
+    confirm: string;
+    cancel: string;
     vehicle_category: string;
     no_vehicle_category: string;
     vehicles: string;
@@ -64,8 +94,34 @@ interface Locale {
     purchase_modal: {
       purchase_vehicle: string;
       purchase_confirm: string;
-      confirm: string;
-      cancel: string;
+    };
+    management: {
+      stock: string;
+      gallery: string;
+      exit: string;
+      vehicle_price: string;
+    };
+    management_gallery: {
+      add_vehicle: string;
+      remove_vehicle: string;
+      modal: {
+        vehicle_select: string;
+        vehicle_select_description: string;
+        vehicle_nothing_found: string;
+        vehicle_price_description: string;
+      };
+    };
+    stock: {
+      vehicle_make: string;
+      vehicle_name: string;
+      vehicle_price: string;
+      vehicle_wholesale: string;
+      vehicle_plate: string;
+      vehicle_in_gallery: string;
+      edit: string;
+      sell: string;
+      vehicle_sell: string;
+      vehicle_sell_text: string;
     };
   };
 }
@@ -81,6 +137,8 @@ const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const isFirst = useIsFirstRender();
   const [locale, setLocale] = useState<Locale>({
     ui: {
+      confirm: '',
+      cancel: '',
       vehicle_category: '',
       no_vehicle_category: '',
       vehicles: '',
@@ -103,8 +161,34 @@ const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
       purchase_modal: {
         purchase_vehicle: '',
         purchase_confirm: '',
-        confirm: '',
-        cancel: '',
+      },
+      management: {
+        stock: '',
+        gallery: '',
+        exit: '',
+        vehicle_price: '',
+      },
+      management_gallery: {
+        add_vehicle: '',
+        remove_vehicle: '',
+        modal: {
+          vehicle_select: '',
+          vehicle_select_description: '',
+          vehicle_nothing_found: '',
+          vehicle_price_description: '',
+        },
+      },
+      stock: {
+        vehicle_make: '',
+        vehicle_name: '',
+        vehicle_price: '',
+        vehicle_wholesale: '',
+        vehicle_plate: '',
+        vehicle_in_gallery: '',
+        edit: '',
+        sell: '',
+        vehicle_sell: '',
+        vehicle_sell_text: '',
       },
     },
   });

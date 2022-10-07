@@ -7,6 +7,7 @@ import { fetchNui } from '../../../../../utils/fetchNui';
 import { useAppDispatch } from '../../../../../state';
 import { VehicleStock } from '../../../../../state/models/vehicleStock';
 import { formatNumber } from '../../../../../utils/formatNumber';
+import { useLocales } from '../../../../../providers/LocaleProvider';
 
 interface Props {
   vehicle: VehicleStock | null;
@@ -16,6 +17,7 @@ interface Props {
 
 const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
   const dispatch = useAppDispatch();
+  const { locale } = useLocales();
 
   return (
     <Paper
@@ -26,7 +28,7 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
       onClick={() => {
         if (vehicle) return;
         openModal({
-          title: 'Add gallery vehicle',
+          title: locale.ui.management_gallery.add_vehicle,
           children: <GalleryModal index={index} setGallerySlots={setGallerySlots} />,
         });
       }}
@@ -62,7 +64,7 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
               dispatch.vehicleStock.setVehicleInGallery({ plate: vehicle.plate, gallery: false });
             }}
           >
-            Remove vehicle
+            {locale.ui.management_gallery.remove_vehicle}
           </Button>
         </Stack>
       )}
