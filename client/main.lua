@@ -104,7 +104,7 @@ exports.ox_property:registerZoneMenu('import/export',
             }
         else
             return {
-                event = 'ox_vehicledealer:buyWholesale',
+                event = 'ox_vehicledealer:openWholesaleUI',
                 args = {
                     property = currentZone.property,
                     zoneId = currentZone.zoneId
@@ -237,7 +237,7 @@ end)
 
 local displayVehicle = {}
 
-RegisterNetEvent('ox_vehicledealer:buyWholesale', function(data)
+RegisterNetEvent('ox_vehicledealer:openWholesaleUI', function(data)
     if not exports.ox_property:checkCurrentZone(data) then return end
 
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
