@@ -86,13 +86,18 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
     if not exports.ox_property:isPermitted(player, zone) then return end
 
     local modelData =  Ox.GetVehicleData(data.model)
-    if not zone.restrictions.type[modelData.type] or not zone.restrictions.class[modelData.class] or (zone.restrictions.weapons ~= nil and zone.restrictions.weapons ~= modelData.weapons) then
+    if not modelData or zone.restrictions.type[modelData.type] or not zone.restrictions.class[modelData.class] or (zone.restrictions.weapons ~= nil and zone.restrictions.weapons ~= modelData.weapons) then
         TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle not available', type = 'error'})
         return
     end
 
-    -- TODO financial integration
-    if true then
+    if exports.pefcl:getTotalBankBalanceByIdentifier(player.source, player.charid).data >= modelData.price then
+        exports.pefcl:removeBankBalanceByIdentifier(player.source, {
+            identifier = zone.permitted.owner,
+            amount = modelData.price,
+            message = ('%s Wholesale'):format(modelData.name)
+        })
+
         local vehicle = Ox.CreateVehicle({
             model = data.model,
             owner = player.charid,
@@ -126,20 +131,28 @@ RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
 
     if not exports.ox_property:isPermitted(player, zone) then return end
 
-    -- TODO financial integration
     local vehicle = displayedVehicles[data.plate]
+    local veh
     if vehicle then
-        local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
-        local value = Ox.GetVehicleData(veh.model).price
+        veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
+    else
+        veh = MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
+    end
 
+    local modelData = Ox.GetVehicleData(veh.model)
+
+    exports.pefcl:removeBankBalanceByIdentifier(player.source, {
+        identifier = player.charid,
+        amount = modelData.price,
+        message = ('%s Wholesale'):format(modelData.name)
+    })
+
+    if vehicle then
         veh.delete()
 
         displayedVehicles[vehicle.plate] = nil
         GlobalState['DisplayedVehicles'] = displayedVehicles
     else
-        local veh = MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
-        local value = Ox.GetVehicleData(veh.model).price
-
         MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {data.plate})
     end
 
@@ -301,8 +314,30 @@ end)
 RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
     local player = Ox.GetPlayer(source)
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(GetPlayerPed(player.source), false))
-    -- TODO financial integration
-    if true then
+
+    local price = displayedVehicles[vehicle.plate].price
+    if not price then
+        TriggerClientEvent('ox_lib:notify', player.source, {title = 'Vehicle not displayed', type = 'error'})
+        return
+    end
+
+    local modelData = Ox.GetVehicleData(vehicle.model)
+
+    if exports.pefcl:getTotalBankBalanceByIdentifier(player.source, player.charid).data >= price then
+        local message = ('%s Purchase'):format(modelData.name)
+
+        exports.pefcl:removeBankBalanceByIdentifier(player.source, {
+            identifier = player.charid,
+            amount = price,
+            message = message
+        })
+
+        exports.pefcl:addBankBalanceByIdentifier(player.source, {
+            identifier = vehicle.owner,
+            amount = price,
+            message = message
+        })
+
         vehicle.set('display')
         vehicle.setStored()
         vehicle.setOwner(player.charid)
