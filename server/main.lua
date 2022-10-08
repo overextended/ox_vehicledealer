@@ -93,7 +93,7 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
 
     if exports.pefcl:getTotalBankBalanceByIdentifier(player.source, player.charid).data >= modelData.price then
         exports.pefcl:removeBankBalanceByIdentifier(player.source, {
-            identifier = zone.permitted.owner,
+            identifier = zone.owner,
             amount = modelData.price,
             message = ('%s Wholesale'):format(modelData.name)
         })
