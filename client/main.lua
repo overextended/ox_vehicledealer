@@ -21,6 +21,8 @@ exports.ox_property:registerZoneMenu('showroom',
             propertyOnly = true
         })
 
+        local permitted = exports.ox_property:isPermitted(false)
+
         if cache.seat == -1 then
             if displayedVehicles[GetVehicleNumberPlateText(cache.vehicle)] then
                 options[#options + 1] = {
@@ -30,7 +32,7 @@ exports.ox_property:registerZoneMenu('showroom',
                         TriggerServerEvent('ox_vehicledealer:buyVehicle')
                     end,
                 }
-            else
+            elseif permitted ~= 'public' then
                 options[#options + 1] = {
                     title = 'Store Vehicle',
                     onSelect = function()
@@ -48,50 +50,52 @@ exports.ox_property:registerZoneMenu('showroom',
             end
         end
 
-        options[#options + 1] = {
-            title = 'Manage Showroom',
-            onSelect = function()
-                local dealerVehicles = lib.callback.await('ox_vehicledealer:getDealerVehicles', 100, {
-                    property = currentZone.property,
-                    zoneId = currentZone.zoneId
-                })
-
-                SendNUIMessage({
-                    action = 'setManagementVisible',
-                    data = dealerVehicles
-                })
-                SetNuiFocus(true, true)
-            end
-        }
-
-        if zoneVehicles and next(zoneVehicles) then
+        if permitted ~= 'public' then
             options[#options + 1] = {
-                title = 'Retrieve From Showroom',
-                menu = 'stored_vehicles',
-                metadata = {['Vehicles'] = #zoneVehicles}
+                title = 'Manage Showroom',
+                onSelect = function()
+                    local dealerVehicles = lib.callback.await('ox_vehicledealer:getDealerVehicles', 100, {
+                        property = currentZone.property,
+                        zoneId = currentZone.zoneId
+                    })
+
+                    SendNUIMessage({
+                        action = 'setManagementVisible',
+                        data = dealerVehicles
+                    })
+                    SetNuiFocus(true, true)
+                end
             }
 
-            local subOptions = {}
-            for i = 1, #zoneVehicles do
-                local vehicle = zoneVehicles[i]
-                    subOptions[i] = {
-                    title = ('%s - %s'):format(vehicleData[vehicle.model].name, vehicle.plate),
-                    serverEvent = 'ox_property:retrieveVehicle',
-                    args = {
-                        property = currentZone.property,
-                        zoneId = currentZone.zoneId,
-                        plate = vehicle.plate,
-                        entities = exports.ox_property:getZoneEntities()
+            if zoneVehicles and next(zoneVehicles) then
+                options[#options + 1] = {
+                    title = 'Retrieve From Showroom',
+                    menu = 'stored_vehicles',
+                    metadata = {['Vehicles'] = #zoneVehicles}
+                }
+
+                local subOptions = {}
+                for i = 1, #zoneVehicles do
+                    local vehicle = zoneVehicles[i]
+                        subOptions[i] = {
+                        title = ('%s - %s'):format(vehicleData[vehicle.model].name, vehicle.plate),
+                        serverEvent = 'ox_property:retrieveVehicle',
+                        args = {
+                            property = currentZone.property,
+                            zoneId = currentZone.zoneId,
+                            plate = vehicle.plate,
+                            entities = exports.ox_property:getZoneEntities()
+                        }
                     }
+                end
+
+                subMenus[1] = {
+                    id = 'stored_vehicles',
+                    title = 'Retrieve vehicle',
+                    menu = 'zone_menu',
+                    options = subOptions
                 }
             end
-
-            subMenus[1] = {
-                id = 'stored_vehicles',
-                title = 'Retrieve vehicle',
-                menu = 'zone_menu',
-                options = subOptions
-            }
         end
 
         return {options = options, subMenus = subMenus}, 'context'
@@ -129,8 +133,10 @@ exports.ox_property:registerZoneMenu('vehicleYard',
         })
 
         if cache.seat == -1 then
+            local permitted = exports.ox_property:isPermitted(false)
             local plate = GetVehicleNumberPlateText(cache.vehicle)
-            if usedVehicles[plate] then
+
+            if usedVehicles[plate] and permitted ~= 'public' then
                 options['Move Vehicle'] = {
                     serverEvent = 'ox_vehicledealer:moveUsedVehicle',
                     args = {
@@ -165,7 +171,7 @@ exports.ox_property:registerZoneMenu('vehicleYard',
                         TriggerServerEvent('ox_vehicledealer:buyUsedVehicle')
                     end
                 }
-            else
+            elseif permitted ~= 'public' then
                 options['Display Vehicle'] = {
                     onSelect = function()
                         local price = lib.inputDialog(('Set price for %s'):format(currentVehicleData.name), {

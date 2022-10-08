@@ -42,7 +42,7 @@ lib.callback.register('ox_vehicledealer:getDealerVehicles', function(source, dat
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
 
     local dealerVehicles = MySQL.query.await('SELECT plate, model FROM vehicles WHERE stored = ? AND owner = ?', {('%s:%s'):format(data.property, data.zoneId), player.charid})
 
@@ -60,7 +60,7 @@ lib.callback.register('ox_vehicledealer:getUsedVehicles', function(source, data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, false) then return end
 
     local vehicles = MySQL.query.await('SELECT plate FROM vehicles WHERE stored = "displayed" AND owner = ?', {player.charid})
 
@@ -75,7 +75,6 @@ lib.callback.register('ox_vehicledealer:getUsedVehicles', function(source, data)
 
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
 
-
     return usedVehicles, vehicle and Ox.GetVehicleData(vehicle.model)
 end)
 
@@ -83,7 +82,7 @@ RegisterServerEvent('ox_vehicledealer:buyWholesale', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
 
     local modelData =  Ox.GetVehicleData(data.model)
     if not modelData or not zone.restrictions.type[modelData.type] or not zone.restrictions.class[modelData.class] or (zone.restrictions.weapons ~= nil and zone.restrictions.weapons ~= modelData.weapons) then
@@ -129,7 +128,7 @@ RegisterServerEvent('ox_vehicledealer:sellWholesale', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
 
     local vehicle = displayedVehicles[data.plate]
     local veh
@@ -163,7 +162,7 @@ RegisterServerEvent('ox_vehicledealer:displayVehicle', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
 
     local vehicle = MySQL.single.await('SELECT id, model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
 
@@ -202,6 +201,8 @@ end)
 RegisterServerEvent('ox_vehicledealer:displayUsedVehicle', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+    if not exports.ox_property:isPermitted(player, zone, false) then return end
 
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
 
@@ -245,6 +246,10 @@ end)
 
 RegisterServerEvent('ox_vehicledealer:retrieveUsedVehicle', function(data)
     local player = Ox.GetPlayer(source)
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
+
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(GetPlayerPed(player.source), false))
 
     if vehicle.owner ~= player.charid then
@@ -298,7 +303,7 @@ RegisterServerEvent('ox_vehicledealer:hideVehicle', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
 
     local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(displayedVehicles[data.plate].netid))
 
@@ -313,6 +318,10 @@ end)
 
 RegisterServerEvent('ox_vehicledealer:buyVehicle', function(data)
     local player = Ox.GetPlayer(source)
+    local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
+
+    if not exports.ox_property:isPermitted(player, zone, false) then return end
+
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(GetPlayerPed(player.source), false))
 
     local price = displayedVehicles[vehicle.plate].price
@@ -357,7 +366,7 @@ RegisterServerEvent('ox_vehicledealer:updatePrice', function(data)
     local player = Ox.GetPlayer(source)
     local zone = GlobalState['Properties'][data.property].zones[data.zoneId]
 
-    if not exports.ox_property:isPermitted(player, zone) then return end
+    if not exports.ox_property:isPermitted(player, zone, true) then return end
 
     local vehicle = displayedVehicles[data.plate]
     local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
