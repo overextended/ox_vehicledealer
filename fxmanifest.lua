@@ -38,5 +38,12 @@ ui_page 'web/build/index.html'
 files {
     'web/build/index.html',
     'web/build/**/*',
-    'locales/*.json'
+    'locales/*.json',
+    '/data/**',
 }
+
+ox_property_data '/data/devin_weston_aircraft.lua'
+ox_property_data '/data/mosley_auto_service.lua'
+ox_property_data '/data/premium_deluxe_motorsport.lua'
+ox_property_data '/data/puerto_del_sol_pegasus.lua'
+ox_property_data '/data/terminal.lua'
