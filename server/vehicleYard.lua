@@ -61,7 +61,7 @@ local function moveVehicle(component, data, vehicle)
         vehicle.set('display', {
             property = display.property,
             component = display.component,
-            id = display.id,
+            slot = display.id,
             rotate = not display.rotate,
             price = display.price
         })
@@ -79,7 +79,7 @@ local function moveVehicle(component, data, vehicle)
         vehicle.set('display', {
             property = display.property,
             component = display.component,
-            id = spawn.id,
+            slot = spawn.id,
             rotate = spawn.rotate,
             price = display.price
         })
