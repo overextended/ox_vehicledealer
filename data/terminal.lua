@@ -4,8 +4,8 @@ return {
     blip = vec(855.0, -3217.0),
     components = {
         {
-            name = 'Import Export',
-            type = 'import/export',
+            name = 'Import',
+            type = 'import',
             restrictions = {
                 type = {
                     automobile = true,

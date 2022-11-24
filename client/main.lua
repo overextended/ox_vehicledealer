@@ -12,7 +12,7 @@ end
 
 local displayVehicle = {}
 
-exports.ox_property:registerComponentAction('import/export', function(component)
+exports.ox_property:registerComponentAction('import', function(component)
     if cache.vehicle then
         return lib.notify({title = 'You cannot shop while in a vehicle', type = 'error'})
     end
@@ -368,7 +368,7 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
     local primary, secondary = GetVehicleColours(displayVehicle.entity)
     local roofLivery = GetVehicleRoofLivery(displayVehicle.entity)
 
-    local response, msg = lib.callback.await('ox_vehicledealer:import/export', 100, 'buy_wholesale', {
+    local response, msg = lib.callback.await('ox_vehicledealer:import', 100, 'import', {
         property = component.property,
         componentId = component.componentId,
         model = data.model,
@@ -486,7 +486,7 @@ RegisterNUICallback('sellVehicle', function(plate, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
-    local dealerVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'hide_vehicle', {
+    local dealerVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'export', {
         property = component.property,
         componentId = component.componentId,
         plate = plate

@@ -39,7 +39,7 @@ AddEventHandler('onServerResourceStart', function(resource)
     GlobalState['DisplayedVehicles'] = displayedVehicles
 end)
 
-local function buyWholesale(player, property, restrictions, data)
+local function import(player, property, restrictions, data)
     local modelData =  Ox.GetVehicleData(data.model)
     if not modelData then
         return false, 'model_not_found'
@@ -48,7 +48,7 @@ local function buyWholesale(player, property, restrictions, data)
     end
 
     if property.owner ~= player.charid then
-        local response, msg = exports.ox_property:transaction(player.source, ('%s Wholesale'):format(modelData.name), {
+        local response, msg = exports.ox_property:transaction(player.source, ('%s Import'):format(modelData.name), {
             amount = modelData.price,
             from = {name = player.name, identifier = player.charid},
             to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
@@ -87,8 +87,8 @@ local function buyWholesale(player, property, restrictions, data)
     return true, 'vehicle_purchased'
 end
 
-lib.callback.register('ox_vehicledealer:import/export', function(source, action, data)
-    local permitted, msg = exports.ox_property:isPermitted(source, data.property, data.componentId, 'import/export')
+lib.callback.register('ox_vehicledealer:import', function(source, action, data)
+    local permitted, msg = exports.ox_property:isPermitted(source, data.property, data.componentId, 'import')
 
     if not permitted or permitted > 1 then
         return false, msg or 'not_permitted'
@@ -97,14 +97,14 @@ lib.callback.register('ox_vehicledealer:import/export', function(source, action,
     local player = Ox.GetPlayer(source)
     local property = exports.ox_property:getPropertyData(data.property)
     local component = property.components[data.componentId]
-    if action == 'buy_wholesale' then
-        return buyWholesale(player, property, component.restrictions, data)
+    if action == 'import' then
+        return import(player, property, component.restrictions, data)
     end
 
     return false, 'invalid_action'
 end)
 
-local function sellWholesale(player, property, component, plate)
+local function export(player, property, component, plate)
     local vehicle = displayedVehicles[plate]
     local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {plate, player.charid})
 
@@ -118,7 +118,7 @@ local function sellWholesale(player, property, component, plate)
         return false, 'model_not_found'
     end
 
-    local response, msg = exports.ox_property:transaction(player.source, ('%s Wholesale'):format(modelData.name), {
+    local response, msg = exports.ox_property:transaction(player.source, ('%s Export'):format(modelData.name), {
         amount = modelData.price,
         to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
     })
@@ -268,8 +268,8 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
         return updatePrice(data)
     elseif action == 'hide_vehicle' then
         return hideVehicle(data.plate)
-    elseif action == 'sell_wholesale' then
-        return sellWholesale(player, property, data.plate)
+    elseif action == 'export' then
+        return export(player, property, data.plate)
     end
 
     local component = property.components[data.componentId]
