@@ -81,7 +81,7 @@ end)
 RegisterNUICallback('loadLocale', function(_, cb)
     cb(1)
     local resource = GetCurrentResourceName()
-    local locale = GetExternalKvpString('ox_lib', 'locale') or 'en'
+    local locale = GetConvar('ox:locale', 'en')
     local JSON = LoadResourceFile(resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(resource, ('locales/en.json'):format(locale))
     SendNUIMessage({
         action = 'setLocale',
