@@ -6,16 +6,14 @@ local function import(player, property, restrictions, data)
         return false, 'vehicle_not_available'
     end
 
-    if property.owner ~= player.charid then
-        local response, msg = exports.ox_property:transaction(player.source, ('%s Import'):format(vehicleData.name), {
-            amount = vehicleData.price,
-            from = {name = player.name, identifier = player.charid},
-            to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
-        })
+    local response, msg = exports.ox_property:transaction(player.source, ('%s Import'):format(vehicleData.name), {
+        amount = vehicleData.price,
+        from = {name = player.name, identifier = player.charid},
+        to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
+    })
 
-        if not response then
-            return false, msg
-        end
+    if not response then
+        return false, msg
     end
 
     local vehicle = Ox.CreateVehicle({
