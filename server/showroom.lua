@@ -6,14 +6,14 @@ local function export(player, property, component, plate)
         return false, 'vehicle_not_found'
     end
 
-    local modelData = Ox.GetVehicleData(veh.model)
+    local vehicleData = VehicleData[veh.model]
 
-    if not modelData then
+    if not vehicleData then
         return false, 'model_not_found'
     end
 
-    local response, msg = exports.ox_property:transaction(player.source, ('%s Export'):format(modelData.name), {
-        amount = modelData.price,
+    local response, msg = exports.ox_property:transaction(player.source, ('%s Export'):format(vehicleData.name), {
+        amount = vehicleData.price,
         to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
     })
 
@@ -43,9 +43,11 @@ local function displayVehicle(player, component, data)
         return false, 'spawn_not_found'
     end
 
-    vehicle.data = Ox.GetVehicleData(vehicle.model)
+    local vehicleType = VehicleData[vehicle.model]?.type
 
-    if not component.vehicles[vehicle.data.type] then
+    if not vehicleType then
+        return false, 'model_not_found'
+    elseif not component.vehicles[vehicleType] then
         return false, 'vehicle_requirements_not_met'
     end
 

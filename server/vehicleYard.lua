@@ -1,13 +1,13 @@
 local function displayUsedVehicle(component, data, vehicle)
     local spawn = exports.ox_property:findClearSpawn(component.spawns, data.entities)
-    vehicle.data = Ox.GetVehicleData(vehicle.model)
+    local vehicleData = VehicleData[vehicle.model]
     if not spawn then
         return false, 'spawn_not_found'
-    elseif not component.vehicles[vehicle.data.type] then
+    elseif not component.vehicles[vehicleData.type] then
         return false, 'vehicle_requirements_not_met'
     end
 
-    exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, seats = vehicle.data.seats})
+    exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, seats = vehicleData.seats})
 
 
     SetEntityCoords(vehicle.entity, spawn.coords.x, spawn.coords.y, spawn.coords.z)

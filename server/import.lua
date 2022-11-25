@@ -1,14 +1,14 @@
 local function import(player, property, restrictions, data)
-    local modelData =  Ox.GetVehicleData(data.model)
-    if not modelData then
+    local vehicleData =  VehicleData[data.model]
+    if not vehicleData then
         return false, 'model_not_found'
-    elseif not restrictions.type[modelData.type] or not restrictions.class[modelData.class] or (restrictions.weapons ~= nil and restrictions.weapons ~= modelData.weapons) then
+    elseif not restrictions.type[vehicleData.type] or not restrictions.class[vehicleData.class] or (restrictions.weapons ~= nil and restrictions.weapons ~= vehicleData.weapons) then
         return false, 'vehicle_not_available'
     end
 
     if property.owner ~= player.charid then
-        local response, msg = exports.ox_property:transaction(player.source, ('%s Import'):format(modelData.name), {
-            amount = modelData.price,
+        local response, msg = exports.ox_property:transaction(player.source, ('%s Import'):format(vehicleData.name), {
+            amount = vehicleData.price,
             from = {name = player.name, identifier = player.charid},
             to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
         })

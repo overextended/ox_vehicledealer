@@ -1,6 +1,21 @@
 DisplayedVehicles = GlobalState['DisplayedVehicles']
 DisplayVehicle = {}
-VehicleData = Ox.GetVehicleData()
+
+VehicleData = setmetatable({}, {
+	__index = function(self, index)
+		local data = Ox.GetVehicleData(index)
+
+		if data then
+			data = {
+				name = data.name,
+				price = data.price,
+			}
+
+			self[index] = data
+			return data
+		end
+	end
+})
 
 lib.locale()
 
