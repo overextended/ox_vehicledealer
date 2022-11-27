@@ -44,7 +44,7 @@ CreateThread(function()
 
         if closeVehicle then
             BeginTextCommandDisplayHelp('FloatingNotification')
-            AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(closeVehicle.name, closeVehicle.price))
+            AddTextEntry('FloatingNotification', ('%s - ~g~$%s'):format(VehicleData[closeVehicle.model]?.name, closeVehicle.price))
             EndTextCommandDisplayHelp(2, false, false, -1)
             SetFloatingHelpTextWorldPosition(1, closeVehicle.vehPos.x, closeVehicle.vehPos.y, closeVehicle.vehPos.z + 1)
             SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)

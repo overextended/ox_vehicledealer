@@ -47,7 +47,6 @@ AddEventHandler('onServerResourceStart', function(resource)
                     plate = veh.plate,
                     model = veh.model,
                     netid = veh.netid,
-                    name = Ox.GetVehicleData(veh.model).name,
                     price = display.price
                 }
 

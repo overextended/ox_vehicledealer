@@ -74,7 +74,6 @@ local function displayVehicle(player, component, data)
         plate = veh.plate,
         model = veh.model,
         netid = veh.netid,
-        name = vehicle.data.name,
         price = data.price
     }
     GlobalState['DisplayedVehicles'] = DisplayedVehicles

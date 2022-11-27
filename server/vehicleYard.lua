@@ -30,7 +30,6 @@ local function displayUsedVehicle(component, data, vehicle)
         plate = vehicle.plate,
         model = vehicle.model,
         netid = vehicle.netid,
-        name = vehicle.data.name,
         price = data.price
     }
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
