@@ -89,8 +89,7 @@ exports.ox_property:registerComponentAction('showroom', function(component)
                         local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'retrieve_vehicle', {
                             property = component.property,
                             componentId = component.componentId,
-                            plate = vehicle.plate,
-                            entities = exports.ox_property:getZoneEntities()
+                            plate = vehicle.plate
                         })
 
                         if msg then

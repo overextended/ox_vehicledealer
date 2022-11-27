@@ -12,8 +12,7 @@ exports.ox_property:registerComponentAction('vehicleYard', function(component)
             onSelect = function()
                 local response, msg = lib.callback.await('ox_vehicledealer:vehicleYard', 100, 'move_vehicle', {
                     property = component.property,
-                    componentId = component.componentId,
-                    entities = exports.ox_property:getZoneEntities()
+                    componentId = component.componentId
                 })
 
                 if msg then
@@ -75,8 +74,7 @@ exports.ox_property:registerComponentAction('vehicleYard', function(component)
                     local response, msg = lib.callback.await('ox_vehicledealer:vehicleYard', 100, 'display_vehicle', {
                         property = component.property,
                         componentId = component.componentId,
-                        price = price[1],
-                        entities = exports.ox_property:getZoneEntities()
+                        price = price[1]
                     })
 
                     if msg then

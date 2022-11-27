@@ -1,14 +1,15 @@
-local function displayUsedVehicle(component, data, vehicle)
-    local spawn = exports.ox_property:findClearSpawn(component.spawns, data.entities)
-    local vehicleData = VehicleData[vehicle.model]
+local function displayUsedVehicle(source, component, data, vehicle)
+    local spawn = lib.callback.await('ox_property:findClearSpawn', source)
     if not spawn then
         return false, 'spawn_not_found'
-    elseif not component.vehicles[vehicleData.type] then
+    end
+
+    local vehicleData = VehicleData[vehicle.model]
+    if not component.vehicles[vehicleData.type] then
         return false, 'vehicle_requirements_not_met'
     end
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, seats = vehicleData.seats})
-
 
     SetEntityCoords(vehicle.entity, spawn.coords.x, spawn.coords.y, spawn.coords.z)
     SetEntityHeading(vehicle.entity, spawn.heading)
@@ -51,10 +52,10 @@ local function retrieveVehicle(vehicle)
     return true, 'vehicle_retrieved'
 end
 
-local function moveVehicle(component, data, vehicle)
+local function moveVehicle(source, rotate, vehicle)
     local display = vehicle.get('display')
 
-    if data.rotate then
+    if rotate then
         SetEntityHeading(vehicle.entity, GetEntityHeading(vehicle.entity) + 180)
 
         vehicle.set('display', {
@@ -67,7 +68,7 @@ local function moveVehicle(component, data, vehicle)
 
         return true, 'vehicle_rotated'
     else
-        local spawn = exports.ox_property:findClearSpawn(component.spawns, data.entities)
+        local spawn = lib.callback.await('ox_property:findClearSpawn', source)
         if not spawn then
             return false, 'spawn_not_found'
         end
@@ -102,27 +103,30 @@ lib.callback.register('ox_vehicledealer:vehicleYard', function(source, action, d
     local player = Ox.GetPlayer(source)
     local property = exports.ox_property:getPropertyData(data.property)
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
+
+    if not vehicle then
+        return false, 'vehicle_not_found'
+    end
+
     if action == 'buy_vehicle' then
         return BuyVehicle(player, property, vehicle)
     end
 
     if permitted > 1 then
         return false, 'not_permitted'
-    elseif not vehicle then
-        return false, 'vehicle_not_found'
     elseif vehicle.owner ~= player.charid then
         return false, 'not_vehicle_owner'
     end
 
     if action == 'retrieve_vehicle' then
         return retrieveVehicle(vehicle)
+    elseif action == 'move_vehicle' then
+        return moveVehicle(player.source, data.rotate, vehicle)
     end
 
     local component = property.components[data.componentId]
-    if action == 'move_vehicle' then
-        return moveVehicle(component, data, vehicle)
-    elseif action == 'display_vehicle' then
-        return displayUsedVehicle(component, data, vehicle)
+    if action == 'display_vehicle' then
+        return displayUsedVehicle(player.source, component, data, vehicle)
     end
 
     return false, 'invalid_action'
