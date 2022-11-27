@@ -1,6 +1,6 @@
-local function export(player, property, component, plate)
-    local vehicle = DisplayedVehicles[plate]
-    local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {plate, player.charid})
+local function export(player, property, data)
+    local vehicle = DisplayedVehicles[data.plate]
+    local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
 
     if not veh then
         return false, 'vehicle_not_found'
@@ -27,10 +27,10 @@ local function export(player, property, component, plate)
         DisplayedVehicles[vehicle.plate] = nil
         GlobalState['DisplayedVehicles'] = DisplayedVehicles
     else
-        MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {plate})
+        MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {data.plate})
     end
 
-    return MySQL.query.await('SELECT plate, model FROM vehicles WHERE stored = ?', {('%s:%s'):format(component.property, component.componentId)}), 'vehicle_sold'
+    return MySQL.query.await('SELECT plate, model FROM vehicles WHERE stored = ?', {('%s:%s'):format(data.property, data.componentId)}), 'vehicle_sold'
 end
 
 local function displayVehicle(player, component, data)
@@ -83,8 +83,8 @@ local function displayVehicle(player, component, data)
     return true, 'vehicle_displayed'
 end
 
-local function hideVehicle(plate)
-    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(DisplayedVehicles[plate].netid))
+local function hideVehicle(data)
+    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(DisplayedVehicles[data.plate].netid))
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, model = vehicle.model})
 
@@ -130,16 +130,16 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
     elseif action == 'update_price' then
         return updatePrice(data)
     elseif action == 'hide_vehicle' then
-        return hideVehicle(data.plate)
+        return hideVehicle(data)
     elseif action == 'export' then
-        return export(player, property, data.plate)
+        return export(player, property, data)
     end
 
     local component = property.components[data.componentId]
     if action == 'store_vehicle' then
-        return exports.ox_property:storeVehicle(player.source, component, data)
+        return exports.ox_property:storeVehicle(player.source, component, data.properties)
     elseif action == 'retrieve_vehicle' then
-        return exports.ox_property:retrieveVehicle(player.charid, component, data)
+        return exports.ox_property:retrieveVehicle(player.charid, component, data.plate)
     elseif action == 'display_vehicle' then
         return displayVehicle(player, component, data)
     end
