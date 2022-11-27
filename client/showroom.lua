@@ -56,7 +56,12 @@ exports.ox_property:registerComponentAction('showroom', function(component)
             onSelect = function()
                 for k, v in pairs(DisplayedVehicles) do
                     if v.property == component.property and v.component == component.componentId then
-                        componentVehicles[#componentVehicles + 1] = {plate = v.plate, model = v.model, gallery = true}
+                        componentVehicles[#componentVehicles + 1] = {
+                            plate = v.plate,
+                            model = v.model,
+                            price = v.price,
+                            gallery = true
+                        }
                     end
                 end
 
@@ -177,19 +182,30 @@ RegisterNUICallback('sellVehicle', function(plate, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
-    local dealerVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'export', {
+    local componentVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'export', {
         property = component.property,
         componentId = component.componentId,
         plate = plate
     })
 
     if msg then
-        lib.notify({title = msg, type = dealerVehicles and 'success' or 'error'})
+        lib.notify({title = msg, type = componentVehicles and 'success' or 'error'})
     end
-    if not dealerVehicles then return end
+    if not componentVehicles then return end
+
+    for k, v in pairs(DisplayedVehicles) do
+        if v.property == component.property and v.component == component.componentId then
+            componentVehicles[#componentVehicles + 1] = {
+                plate = v.plate,
+                model = v.model,
+                price = v.price,
+                gallery = true
+            }
+        end
+    end
 
     SendNUIMessage({
         action = 'setManagementVisible',
-        data = dealerVehicles
+        data = componentVehicles
     })
 end)
