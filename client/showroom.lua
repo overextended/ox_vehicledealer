@@ -29,22 +29,21 @@ exports.ox_property:registerComponentAction('showroom', function(component)
                     end
                 end
             }
-        elseif permitted < 2 then
+        end
+
+        if permitted < 2 then
             options[#options + 1] = {
                 title = 'Store Vehicle',
                 onSelect = function()
-                    if cache.seat == -1 then
-                        local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'store_vehicle', {
-                            property = component.property,
-                            componentId = component.componentId,
-                            properties = lib.getVehicleProperties(cache.vehicle)
-                        })
+                    SetStatsUi(false)
+                    local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'store_vehicle', {
+                        property = component.property,
+                        componentId = component.componentId,
+                        properties = lib.getVehicleProperties(cache.vehicle)
+                    })
 
-                        if msg then
-                            lib.notify({title = msg, type = response and 'success' or 'error'})
-                        end
-                    else
-                        lib.notify({title = "You are not in the driver's seat", type = 'error'})
+                    if msg then
+                        lib.notify({title = msg, type = response and 'success' or 'error'})
                     end
                 end
             }
