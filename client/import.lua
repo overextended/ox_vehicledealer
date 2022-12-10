@@ -18,7 +18,8 @@ exports.ox_property:registerComponentAction('import', function(component)
             visible = true,
             categories = allowedClasses,
             types = restrictions.type,
-            weapons = restrictions.weapons
+            weapons = restrictions.weapons,
+            blacklist = ImportBlacklist
         }
     })
 

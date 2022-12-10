@@ -1,8 +1,8 @@
 local function import(player, property, restrictions, data)
-    local vehicleData =  VehicleData[data.model]
+    local vehicleData = VehicleData[data.model]
     if not vehicleData then
         return false, 'model_not_found'
-    elseif not restrictions.type[vehicleData.type] or not restrictions.class[vehicleData.class] or (restrictions.weapons ~= nil and restrictions.weapons ~= vehicleData.weapons) then
+    elseif not restrictions.type[vehicleData.type] or not restrictions.class[vehicleData.class] or (restrictions.weapons ~= nil and restrictions.weapons ~= vehicleData.weapons) or ImportBlacklist[data.model] then
         return false, 'vehicle_not_available'
     end
 

@@ -6,7 +6,7 @@ game         'gta5'
 
 --[[ Resource Information ]]--
 name         'ox_vehicledealer'
-version      '0.6.0'
+version      '0.6.1'
 description  'Vehicle Dealer'
 license      'GPL-3.0-or-later'
 author       'overextended'
@@ -20,6 +20,7 @@ dependencies {
 
 shared_scripts {
     '@ox_lib/init.lua',
+    'shared.lua',
 }
 
 client_scripts {
@@ -45,7 +46,7 @@ files {
     'web/build/index.html',
     'web/build/**/*',
     'locales/*.json',
-    '/data/**',
+    'data/**',
 }
 
 ox_property_data '/data/devin_weston_aircraft.lua'
