@@ -77,6 +77,10 @@ RegisterNetEvent('ox_lib:setLocale', function(locale)
     })
 end)
 
+RegisterNUICallback('getBlacklistedVehicles', function(_, cb)
+    cb(ImportBlacklist)
+end)
+
 -- Loads the locales into UI on startup
 RegisterNUICallback('loadLocale', function(_, cb)
     cb(1)
