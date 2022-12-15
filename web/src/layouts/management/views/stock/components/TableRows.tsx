@@ -19,7 +19,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
     <tr style={{ textAlign: 'center' }}>
       <td>{vehicle.make}</td>
       <td>{vehicle.name}</td>
-      <td>{formatNumber(vehicle.price)}</td>
+      <td>{vehicle.price ? formatNumber(vehicle.price) : '-'}</td>
       <td>{formatNumber(vehicle.wholesale)}</td>
       <td>{vehicle.plate}</td>
       <td>
