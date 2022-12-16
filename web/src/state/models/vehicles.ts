@@ -64,7 +64,6 @@ const gameVehicles: Vehicles = await (async () => {
     const blacklistedVehicles = Object.keys(await fetchNui<Record<string, true>>('getBlacklistedVehicles'));
     if (blacklistedVehicles.length <= 0) return vehicles;
     blacklistedVehicles.forEach((vehicle) => {
-      console.log(JSON.stringify(vehicles[vehicle], null, 2));
       delete vehicles[vehicle];
     });
 
