@@ -67,16 +67,6 @@ lib.onCache('vehicle', function(vehicle)
     end
 end)
 
--- Changes the locales in UI on locale change
-RegisterNetEvent('ox_lib:setLocale', function(locale)
-    local resource = GetCurrentResourceName()
-    local JSON = LoadResourceFile(resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(resource, ('locales/en.json'):format(locale))
-    SendNUIMessage({
-        action = 'setLocale',
-        data = json.decode(JSON)
-    })
-end)
-
 RegisterNUICallback('getBlacklistedVehicles', function(_, cb)
     cb(ImportBlacklist)
 end)
@@ -86,7 +76,7 @@ RegisterNUICallback('loadLocale', function(_, cb)
     cb(1)
     local resource = GetCurrentResourceName()
     local locale = GetConvar('ox:locale', 'en')
-    local JSON = LoadResourceFile(resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(resource, ('locales/en.json'):format(locale))
+    local JSON = LoadResourceFile(resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(resource, 'locales/en.json')
     SendNUIMessage({
         action = 'setLocale',
         data = json.decode(JSON)
