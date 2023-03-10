@@ -1,0 +1,57 @@
+{
+  "ui": {
+    "confirm": "Megerősítés",
+    "cancel": "Mégsem",
+    "vehicle_category": "Jármű kategória",
+    "no_vehicle_category": "Nincs ilyen járműkategória",
+    "vehicles": "Járművek",
+    "no_vehicles_found": "Nincsenek járművek",
+    "filters": {
+      "advanced_filters": "Haladó szűrők",
+      "max_price": "Max ár",
+      "seats": "Ülések",
+      "doors": "Ajtók"
+    },
+    "vehicle_info": {
+      "color_primary": "Elsődleges szín",
+      "color_secondary": "Másodlagos szín",
+      "speed": "Sebesség",
+      "acceleration": "Gyorsulás",
+      "braking": "Fékezés",
+      "handling": "Kezelés",
+      "purchase": "Megvásárlás"
+    },
+    "purchase_modal": {
+      "purchase_vehicle": "Jármű megvásárlása",
+      "purchase_confirm": "Tényleg meg akarod venni %s %d-ért?"
+    },
+    "management": {
+      "stock": "Készlet",
+      "gallery": "Galéria",
+      "exit": "Kilépés",
+      "vehicle_price": "Jármű ára"
+    },
+    "management_gallery": {
+      "add_vehicle": "Galériajármű hozzáadása",
+      "remove_vehicle": "Jármű eltávolítása",
+      "modal": {
+        "vehicle_select": "Jármű",
+        "vehicle_select_description": "Válassz ki egy járművet a készletből a megjelenítéshez",
+        "vehicle_nothing_found": "Nincs egy jármű sem raktáron",
+        "vehicle_price_description": "Ha nem, az alapértelmezett érték a nagykereskedelmi ár"
+      }
+    },
+    "stock": {
+      "vehicle_make": "Létrehozás",
+      "vehicle_name": "Név",
+      "vehicle_price": "Ár",
+      "vehicle_wholesale": "Nagyker",
+      "vehicle_plate": "Rendszám",
+      "vehicle_in_gallery": "A jármű a galériában látható",
+      "edit": "Szerkesztés",
+      "sell": "Eladás",
+      "vehicle_sell": "Jármű eladása",
+      "vehicle_sell_text": "Biztos, hogy el akarod adni %s (%s) %d ennyiért?"
+    }
+  }
+}
