@@ -62,7 +62,7 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
           dispatch.vehicleStock.setVehicleInGallery({
             plate: selectedVehicle,
             gallery: true,
-            price: parseInt(price as string),
+            price: +price,
           });
           // @ts-ignore
           setGallerySlots((prevState) => {

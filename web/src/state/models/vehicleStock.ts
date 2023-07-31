@@ -10,6 +10,7 @@ export interface VehicleStock {
   model: string;
   wholesale: number;
   plate: string;
+  id: number;
   gallery: boolean;
 }
 
@@ -36,7 +37,7 @@ export const vehicleStock = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     // Converts data sent from Lua to match data types in UI
-    convertToStock(payload: { model: string; plate: string; price: number; gallery: boolean }[]) {
+    convertToStock(payload: { model: string; plate: string; price: number; gallery: boolean; id: number }[]) {
       const vehicleStock: VehicleStock[] = [];
       for (const vehicle of payload) {
         const vehicleData = store.getState().vehicles[vehicle.model];
@@ -45,6 +46,7 @@ export const vehicleStock = createModel<RootModel>()({
           make: vehicleData.make,
           name: vehicleData.name,
           price: vehicle.price,
+          id: vehicle.id,
           plate: vehicle.plate,
           model: vehicle.model,
           gallery: vehicle.gallery,

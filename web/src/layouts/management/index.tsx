@@ -11,11 +11,14 @@ const Management: React.FC = () => {
   const dispatch = useAppDispatch();
   const visible = useAppSelector((state) => state.visibility.management);
 
-  useNuiEvent('setManagementVisible', (data: { model: string; plate: string; price: number; gallery: boolean }[]) => {
-    const convertedData = dispatch.vehicleStock.convertToStock(data);
-    dispatch.vehicleStock.setVehicleStock(convertedData);
-    dispatch.visibility.setManagementVisible(true);
-  });
+  useNuiEvent(
+    'setManagementVisible',
+    (data: { model: string; plate: string; price: number; gallery: boolean; id: number }[]) => {
+      const convertedData = dispatch.vehicleStock.convertToStock(data);
+      dispatch.vehicleStock.setVehicleStock(convertedData);
+      dispatch.visibility.setManagementVisible(true);
+    }
+  );
 
   useExitListener(dispatch.visibility.setManagementVisible);
 

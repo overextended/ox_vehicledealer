@@ -44,12 +44,14 @@ const Dev: React.FC = () => {
                   action: 'setManagementVisible',
                   data: [
                     {
+                      id: 1,
                       price: 13000,
                       model: 'blista',
                       plate: 'XYZD3112',
                       gallery: true,
                     },
                     {
+                      id: 2,
                       price: 29000,
                       model: 'dominator',
                       plate: 'YXZE1221',

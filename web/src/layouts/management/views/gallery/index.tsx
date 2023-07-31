@@ -16,10 +16,10 @@ const Gallery: React.FC = () => {
     if (isEnvBrowser()) return setGallerySlots([null, vehicleStock[0], null, vehicleStock[1], null]);
 
     const fetchGallery = async () => {
-      const fetchedGallery = (await fetchNui('fetchGallery')) as Array<string | null>;
+      const fetchedGallery = (await fetchNui('fetchGallery')) as Array<number | null>;
       const galleryArray: Array<null | VehicleStock> = [];
-      for (const plate of fetchedGallery) {
-        galleryArray.push(plate ? vehicleStock.find((veh) => veh.plate === plate)! : null);
+      for (const id of fetchedGallery) {
+        galleryArray.push(id ? vehicleStock.find((veh) => veh.id === id)! : null);
       }
       setGallerySlots(galleryArray);
     };

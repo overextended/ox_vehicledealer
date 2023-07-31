@@ -60,7 +60,7 @@ const GalleryCard: React.FC<Props> = ({ vehicle, index, setGallerySlots }) => {
                   else return item;
                 });
               });
-              fetchNui('galleryRemoveVehicle', { vehicle: vehicle.plate, slot: index + 1 });
+              fetchNui('galleryRemoveVehicle', { vehicle: vehicle.id, slot: index + 1 });
               dispatch.vehicleStock.setVehicleInGallery({ plate: vehicle.plate, gallery: false });
             }}
           >
