@@ -85,7 +85,7 @@ local function displayVehicle(player, component, data)
 end
 
 local function hideVehicle(data)
-    local vehicle = Ox.GetVehicle(data.id)
+    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(DisplayedVehicles[data.id].netid))
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, model = vehicle.model})
 
