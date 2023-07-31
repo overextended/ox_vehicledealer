@@ -1,6 +1,6 @@
 local function export(player, property, data)
-    local vehicle = DisplayedVehicles[data.plate]
-    local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
+    local vehicle = DisplayedVehicles[data.id]
+    local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
 
     if not veh then
         return false, 'vehicle_not_found'
@@ -24,17 +24,17 @@ local function export(player, property, data)
     if vehicle then
         veh.delete()
 
-        DisplayedVehicles[vehicle.plate] = nil
+        DisplayedVehicles[vehicle.id] = nil
         GlobalState['DisplayedVehicles'] = DisplayedVehicles
     else
-        MySQL.update.await('DELETE FROM vehicles WHERE plate = ?', {data.plate})
+        MySQL.update.await('DELETE FROM vehicles WHERE id = ?', {data.id})
     end
 
-    return MySQL.query.await('SELECT plate, model FROM vehicles WHERE stored = ?', {('%s:%s'):format(data.property, data.componentId)}), 'vehicle_sold'
+    return MySQL.query.await('SELECT id, model FROM vehicles WHERE stored = ?', {('%s:%s'):format(data.property, data.componentId)}), 'vehicle_sold'
 end
 
 local function displayVehicle(player, component, data)
-    local vehicle = MySQL.single.await('SELECT id, model FROM vehicles WHERE plate = ? AND owner = ?', {data.plate, player.charid})
+    local vehicle = MySQL.single.await('SELECT id, model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
     local spawn = component.spawns[data.slot]
 
     if not vehicle then
@@ -66,9 +66,10 @@ local function displayVehicle(player, component, data)
     })
     veh.setStored('displayed')
 
-    DisplayedVehicles[veh.plate] = {
+    DisplayedVehicles[veh.id] = {
         property = data.property,
         component = data.componentId,
+        id = veh.id,
         owner = player.charid,
         slot = data.slot,
         plate = veh.plate,
@@ -84,19 +85,19 @@ local function displayVehicle(player, component, data)
 end
 
 local function hideVehicle(data)
-    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(DisplayedVehicles[data.plate].netid))
+    local vehicle = Ox.GetVehicle(data.id)
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, model = vehicle.model})
 
     vehicle.set('display')
     vehicle.setStored(('%s:%s'):format(data.property, data.componentId), true)
 
-    DisplayedVehicles[vehicle.plate] = nil
+    DisplayedVehicles[vehicle.id] = nil
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 end
 
 local function updatePrice(data)
-    local vehicle = DisplayedVehicles[data.plate]
+    local vehicle = DisplayedVehicles[data.id]
     local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
 
     local display = veh.get('display')
@@ -104,7 +105,7 @@ local function updatePrice(data)
     veh.set('display', display)
 
     vehicle.price = data.price
-    DisplayedVehicles[vehicle.plate] = vehicle
+    DisplayedVehicles[vehicle.id] = vehicle
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 end
 
@@ -126,7 +127,7 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
     end
 
     if action == 'get_vehicles' then
-        return MySQL.query.await('SELECT plate, model FROM vehicles WHERE stored = ?', {('%s:%s'):format(data.property, data.componentId)})
+        return MySQL.query.await('SELECT id, plate, model FROM vehicles WHERE stored = ?', {('%s:%s'):format(data.property, data.componentId)})
     elseif action == 'update_price' then
         return updatePrice(data)
     elseif action == 'hide_vehicle' then
@@ -139,7 +140,7 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
     if action == 'store_vehicle' then
         return exports.ox_property:storeVehicle(player.source, component, data.properties)
     elseif action == 'retrieve_vehicle' then
-        return exports.ox_property:retrieveVehicle(player.charid, component, data.plate)
+        return exports.ox_property:retrieveVehicle(player.charid, component, data.id)
     elseif action == 'display_vehicle' then
         return displayVehicle(player, component, data)
     end

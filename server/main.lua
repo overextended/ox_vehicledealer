@@ -39,9 +39,10 @@ AddEventHandler('onServerResourceStart', function(resource)
             if veh then
                 veh.setStored('displayed')
 
-                DisplayedVehicles[veh.plate] = {
+                DisplayedVehicles[veh.id] = {
                     property = display.property,
                     component = display.component,
+                    id = veh.id,
                     owner = veh.owner,
                     slot = display.slot,
                     plate = veh.plate,
@@ -60,7 +61,7 @@ end)
 
 function BuyVehicle(player, property, vehicle)
     vehicle = vehicle or Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
-    local displayData = DisplayedVehicles[vehicle.plate]
+    local displayData = DisplayedVehicles[vehicle.id]
 
     if not displayData then
         return false, 'vehicle_not_displayed'
@@ -82,7 +83,7 @@ function BuyVehicle(player, property, vehicle)
     vehicle.setStored()
     vehicle.setOwner(player.charid)
 
-    DisplayedVehicles[vehicle.plate] = nil
+    DisplayedVehicles[vehicle.id] = nil
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
     FreezeEntityPosition(vehicle.entity, false)

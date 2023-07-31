@@ -23,9 +23,10 @@ local function displayUsedVehicle(source, component, data, vehicle)
     })
     vehicle.setStored('displayed')
 
-    DisplayedVehicles[vehicle.plate] = {
+    DisplayedVehicles[vehicle.id] = {
         property = component.property,
         component = component.componentId,
+        id = vehicle.id,
         owner = vehicle.owner,
         slot = data.slot,
         plate = vehicle.plate,
@@ -44,7 +45,7 @@ local function retrieveVehicle(vehicle)
     vehicle.set('display')
     vehicle.setStored()
 
-    DisplayedVehicles[vehicle.plate] = nil
+    DisplayedVehicles[vehicle.id] = nil
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
     FreezeEntityPosition(vehicle.entity, false)
@@ -84,9 +85,9 @@ local function moveVehicle(source, rotate, vehicle)
             price = display.price
         })
 
-        local veh = DisplayedVehicles[vehicle.plate]
+        local veh = DisplayedVehicles[vehicle.id]
         veh.slot = spawn.id
-        DisplayedVehicles[vehicle.plate] = veh
+        DisplayedVehicles[vehicle.id] = veh
         GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
         return true, 'vehicle_moved'

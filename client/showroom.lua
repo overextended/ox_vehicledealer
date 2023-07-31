@@ -14,7 +14,17 @@ exports.ox_property:registerComponentAction('showroom', function(component)
     local permitted = exports.ox_property:isPermitted()
 
     if cache.seat == -1 then
-        if DisplayedVehicles[GetVehicleNumberPlateText(cache.vehicle)] then
+        local displayedVehicle
+        local plate = GetVehicleNumberPlateText(cache.vehicle)
+
+        for _, vehicle in pairs(DisplayedVehicles) do
+            if vehicle.plate == plate then
+                displayedVehicle = true
+                break
+            end
+        end
+
+        if displayedVehicle then
             options[#options + 1] = {
                 title = 'Buy Vehicle',
                 onSelect = function()
@@ -57,6 +67,7 @@ exports.ox_property:registerComponentAction('showroom', function(component)
                 for k, v in pairs(DisplayedVehicles) do
                     if v.property == component.property and v.component == component.componentId then
                         componentVehicles[#componentVehicles + 1] = {
+                            id = v.id,
                             plate = v.plate,
                             model = v.model,
                             price = v.price,
@@ -89,7 +100,7 @@ exports.ox_property:registerComponentAction('showroom', function(component)
                         local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'retrieve_vehicle', {
                             property = component.property,
                             componentId = component.componentId,
-                            plate = vehicle.plate
+                            id = vehicle.id
                         })
 
                         if msg then
@@ -152,7 +163,7 @@ RegisterNUICallback('galleryAddVehicle', function(data, cb)
     local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'display_vehicle', {
         property = component.property,
         componentId = component.componentId,
-        plate = data.vehicle,
+        id = data.vehicle,
         price = data.price,
         slot = data.slot
     })
@@ -169,7 +180,7 @@ RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
     local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'hide_vehicle', {
         property = component.property,
         componentId = component.componentId,
-        plate = data.vehicle
+        id = data.vehicle
     })
 
     if msg then
@@ -177,14 +188,14 @@ RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
     end
 end)
 
-RegisterNUICallback('sellVehicle', function(plate, cb)
+RegisterNUICallback('sellVehicle', function(id, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
     local componentVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'export', {
         property = component.property,
         componentId = component.componentId,
-        plate = plate
+        id = id
     })
 
     if msg then
@@ -195,6 +206,7 @@ RegisterNUICallback('sellVehicle', function(plate, cb)
     for k, v in pairs(DisplayedVehicles) do
         if v.property == component.property and v.component == component.componentId then
             componentVehicles[#componentVehicles + 1] = {
+                id = v.id,
                 plate = v.plate,
                 model = v.model,
                 price = v.price,

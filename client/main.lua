@@ -58,9 +58,18 @@ end)
 
 lib.onCache('vehicle', function(vehicle)
     if vehicle then
-        local veh = DisplayedVehicles[GetVehicleNumberPlateText(vehicle)]
-        if veh then
-            SetStatsUi({veh.model, veh.price})
+        local displayedVehicle
+        local plate = GetVehicleNumberPlateText(vehicle)
+
+        for _, veh in pairs(DisplayedVehicles) do
+            if veh.plate == plate then
+                displayedVehicle = veh
+                break
+            end
+        end
+
+        if displayedVehicle then
+            SetStatsUi({displayedVehicle.model, displayedVehicle.price})
         end
     else
         SetStatsUi(false)

@@ -5,7 +5,16 @@ exports.ox_property:registerComponentAction('vehicleYard', function(component)
 
     local options = {}
     local permitted = exports.ox_property:isPermitted()
-    local displayedVehicle = DisplayedVehicles[GetVehicleNumberPlateText(cache.vehicle)]
+
+    local displayedVehicle
+    local plate = GetVehicleNumberPlateText(cache.vehicle)
+
+    for _, vehicle in pairs(DisplayedVehicles) do
+        if vehicle.plate == plate then
+            displayedVehicle = vehicle
+            break
+        end
+    end
 
     if displayedVehicle and displayedVehicle.owner == player.charid and permitted < 2 then
         options['Move Vehicle'] = {
