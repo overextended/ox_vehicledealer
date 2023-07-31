@@ -18,14 +18,14 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
   const ref = useRef<HTMLInputElement | null>(null);
   const [vehicles, setVehicles] = useState<{ label: string; value: string }[]>([]);
   const vehicleStock = useAppSelector((state) => state.vehicleStock);
-  const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<number | null>(null);
 
   useMemo(() => {
     setVehicles(
       vehicleStock
         .filter((vehicle) => !vehicle.gallery)
         .map((vehicle) => {
-          return { label: `${vehicle.make} ${vehicle.name} - ${vehicle.plate}`, value: vehicle.plate };
+          return { label: `${vehicle.make} ${vehicle.name} - ${vehicle.plate}`, value: vehicle.id.toString() };
         })
     );
   }, [vehicleStock]);
@@ -40,8 +40,8 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
         label={locale.ui.management_gallery.modal.vehicle_select}
         description={locale.ui.management_gallery.modal.vehicle_select_description}
         nothingFound={locale.ui.management_gallery.modal.vehicle_nothing_found}
-        value={selectedVehicle}
-        onChange={(value) => setSelectedVehicle(value)}
+        value={selectedVehicle?.toString()}
+        onChange={(value) => setSelectedVehicle(value ? +value : null)}
       />
       <NumberInput
         label={locale.ui.management.vehicle_price}
@@ -56,18 +56,18 @@ const GalleryModal: React.FC<Props> = ({ setGallerySlots, index }) => {
         variant="light"
         onClick={() => {
           if (!selectedVehicle) return;
-          const vehicle = vehicleStock.find((veh) => veh.plate === selectedVehicle)!;
+          const vehicle = vehicleStock.find((veh) => veh.id === selectedVehicle)!;
           const price = ref.current?.value || vehicle.wholesale;
           closeAllModals();
           dispatch.vehicleStock.setVehicleInGallery({
-            plate: selectedVehicle,
+            plate: vehicle.plate,
             gallery: true,
             price: +price,
           });
           // @ts-ignore
           setGallerySlots((prevState) => {
             return prevState.map((item, indx) => {
-              if (indx === index) return { ...vehicleStock.find((veh) => veh.plate === selectedVehicle)!, price };
+              if (indx === index) return { ...vehicleStock.find((veh) => veh.id === selectedVehicle)!, price };
               else return item;
             });
           });
