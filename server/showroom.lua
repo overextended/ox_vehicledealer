@@ -131,7 +131,7 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
     elseif action == 'update_price' then
         return updatePrice(data)
     elseif action == 'hide_vehicle' then
-        return hideVehicle(data)
+        return hideVehicle(data), 'vehicle_stored'
     elseif action == 'export' then
         return export(player, property, data)
     end
