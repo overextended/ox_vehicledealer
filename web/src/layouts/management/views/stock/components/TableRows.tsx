@@ -38,7 +38,7 @@ const TableRows: React.FC<Props> = ({ vehicle, model }) => {
             onClick={() =>
               openModal({
                 title: locale.ui.stock.edit,
-                children: <EditModal currentPrice={vehicle.price} plate={vehicle.plate} />,
+                children: <EditModal currentPrice={vehicle.price} id={vehicle.id} />,
               })
             }
           >
