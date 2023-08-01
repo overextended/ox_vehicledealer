@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../../../../state';
 import { fetchNui } from '../../../../../utils/fetchNui';
 import { useLocales } from '../../../../../providers/LocaleProvider';
 
-const EditModal: React.FC<{ currentPrice: number; plate: string }> = ({ currentPrice, plate }) => {
+const EditModal: React.FC<{ currentPrice: number; id: number }> = ({ currentPrice, id }) => {
   const dispatch = useAppDispatch();
   const [price, setPrice] = useState<number | undefined>();
   const { locale } = useLocales();
@@ -28,8 +28,8 @@ const EditModal: React.FC<{ currentPrice: number; plate: string }> = ({ currentP
         onClick={() => {
           closeAllModals();
           if (price === undefined) return;
-          fetchNui('changeVehicleStockPrice', { plate, price });
-          dispatch.vehicleStock.setVehiclePrice({ plate, price });
+          fetchNui('changeVehicleStockPrice', { id, price });
+          dispatch.vehicleStock.setVehiclePrice({ id, price });
         }}
       >
         {locale.ui.confirm}
