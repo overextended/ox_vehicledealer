@@ -129,6 +129,7 @@ RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
     local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'update_price', {
         property = component.property,
         componentId = component.componentId,
+        id = data.id,
         price = data.price
     })
 
