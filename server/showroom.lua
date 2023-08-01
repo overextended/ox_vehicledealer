@@ -1,6 +1,6 @@
 local function export(player, property, data)
     local vehicle = DisplayedVehicles[data.id]
-    local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
+    local veh = vehicle and Ox.GetVehicleFromNetId(vehicle.netid) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
 
     if not veh then
         return false, 'vehicle_not_found'
@@ -85,7 +85,7 @@ local function displayVehicle(player, component, data)
 end
 
 local function hideVehicle(data)
-    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(DisplayedVehicles[data.id].netid))
+    local vehicle = Ox.GetVehicleFromNetId(DisplayedVehicles[data.id].netid)
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, model = vehicle.model})
 
@@ -98,7 +98,7 @@ end
 
 local function updatePrice(data)
     local vehicle = DisplayedVehicles[data.id]
-    local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
+    local veh = Ox.GetVehicleFromNetId(vehicle.netid)
 
     local display = veh.get('display')
     display.price = data.price
