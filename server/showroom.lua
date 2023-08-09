@@ -79,7 +79,7 @@ local function displayVehicle(player, component, data)
     }
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
-    FreezeEntityPosition(veh.entity, true)
+    Entity(veh.entity).state.frozen = true
 
     return true, 'vehicle_displayed'
 end

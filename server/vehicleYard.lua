@@ -37,7 +37,7 @@ local function displayUsedVehicle(source, component, data, vehicle)
     }
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
-    FreezeEntityPosition(vehicle.entity, true)
+    Entity(vehicle.entity).state.frozen = true
 
     return true, 'vehicle_displayed'
 end
@@ -49,7 +49,7 @@ local function retrieveVehicle(vehicle)
     DisplayedVehicles[vehicle.id] = nil
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
-    FreezeEntityPosition(vehicle.entity, false)
+    Entity(vehicle.entity).state.frozen = false
 
     return true, 'vehicle_retrieved'
 end
