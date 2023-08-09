@@ -95,4 +95,4 @@ exports.ox_property:registerComponentAction('vehicleYard', function(component)
     end
 
     return {options = options}, 'contextMenu'
-end)
+end, {'All access', 'Customer'})

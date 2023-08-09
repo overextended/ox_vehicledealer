@@ -120,7 +120,7 @@ exports.ox_property:registerComponentAction('showroom', function(component)
     end
 
     return {options = options, subMenus = subMenus}, 'contextMenu'
-end)
+end, {'All access', 'Customer'})
 
 RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
     cb(1)

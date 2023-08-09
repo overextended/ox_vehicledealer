@@ -42,7 +42,7 @@ exports.ox_property:registerComponentAction('import', function(component)
 
         Wait(0)
     end
-end, 'function')
+end, {'All access'})
 
 ---@param str string
 ---@return vector3
