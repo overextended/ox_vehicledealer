@@ -109,6 +109,21 @@ local function updatePrice(data)
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 end
 
+local function storeVehicle(player, component, properties)
+    local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
+
+    if not vehicle then return end
+
+    local response, msg = exports.ox_property:storeVehicle(player.source, component, properties)
+
+    if response then
+        DisplayedVehicles[vehicle.id] = nil
+        GlobalState['DisplayedVehicles'] = DisplayedVehicles
+    end
+
+    return response, msg
+end
+
 lib.callback.register('ox_vehicledealer:showroom', function(source, action, data)
     local permitted, msg = exports.ox_property:isPermitted(source, data.property, data.componentId, 'showroom')
 
@@ -138,7 +153,7 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
 
     local component = property.components[data.componentId]
     if action == 'store_vehicle' then
-        return exports.ox_property:storeVehicle(player.source, component, data.properties)
+        return storeVehicle(player, component, data.properties)
     elseif action == 'retrieve_vehicle' then
         return exports.ox_property:retrieveVehicle(player.charid, component, data.id)
     elseif action == 'display_vehicle' then
