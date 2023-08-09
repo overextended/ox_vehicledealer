@@ -87,6 +87,8 @@ end
 local function hideVehicle(data)
     local vehicle = Ox.GetVehicleFromNetId(DisplayedVehicles[data.id].netid)
 
+    if not vehicle then return end
+
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, model = vehicle.model})
 
     vehicle.set('display')
@@ -99,6 +101,8 @@ end
 local function updatePrice(data)
     local vehicle = DisplayedVehicles[data.id]
     local veh = Ox.GetVehicleFromNetId(vehicle.netid)
+
+    if not veh then return end
 
     local display = veh.get('display')
     display.price = data.price
@@ -131,8 +135,8 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
         return false, msg or 'not_permitted'
     end
 
-    local player = Ox.GetPlayer(source)
-    local property = exports.ox_property:getPropertyData(data.property)
+    local player = Ox.GetPlayer(source) --[[@as OxPlayer]]
+    local property = exports.ox_property:getPropertyData(data.property) --[[@as OxPropertyObject]]
     if action == 'buy_vehicle' then
         return BuyVehicle(player, property)
     end

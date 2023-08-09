@@ -28,10 +28,10 @@ AddEventHandler('onServerResourceStart', function(resource)
 
     for i = 1, #vehicles do
         local vehicle = vehicles[i]
-        local display = vehicle.display and json.decode(vehicle.display--[[@as string]] )
+        local display = vehicle.display and json.decode(vehicle.display --[[@as string]])
 
         if display then
-            local component = exports.ox_property:getPropertyData(display.property, display.component)
+            local component = exports.ox_property:getPropertyData(display.property, display.component) --[[@as OxPropertyComponent]]
             local heading = component.spawns[display.slot].w + (display.rotate and 180 or 0)
 
             local veh = Ox.CreateVehicle(vehicle.id, component.spawns[display.slot].xyz, heading)

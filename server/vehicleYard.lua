@@ -11,6 +11,7 @@ local function displayUsedVehicle(source, component, data, vehicle)
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, seats = vehicleData.seats})
 
+    ---@diagnostic disable-next-line: missing-parameter
     SetEntityCoords(vehicle.entity, spawn.coords.x, spawn.coords.y, spawn.coords.z)
     SetEntityHeading(vehicle.entity, spawn.heading)
 
@@ -74,6 +75,7 @@ local function moveVehicle(source, rotate, vehicle)
             return false, 'spawn_not_found'
         end
 
+        ---@diagnostic disable-next-line: missing-parameter
         SetEntityCoords(vehicle.entity, spawn.coords.x, spawn.coords.y, spawn.coords.z)
         SetEntityHeading(vehicle.entity, spawn.heading)
 
@@ -101,8 +103,8 @@ lib.callback.register('ox_vehicledealer:vehicleYard', function(source, action, d
         return false, msg or 'not_permitted'
     end
 
-    local player = Ox.GetPlayer(source)
-    local property = exports.ox_property:getPropertyData(data.property)
+    local player = Ox.GetPlayer(source) --[[@as OxPlayer]]
+    local property = exports.ox_property:getPropertyData(data.property) --[[@as OxPropertyObject]]
     local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
 
     if not vehicle then

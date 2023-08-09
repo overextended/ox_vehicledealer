@@ -52,7 +52,7 @@ lib.callback.register('ox_vehicledealer:import', function(source, action, data)
     end
 
     local player = Ox.GetPlayer(source)
-    local property = exports.ox_property:getPropertyData(data.property)
+    local property = exports.ox_property:getPropertyData(data.property) --[[@as OxPropertyObject]]
     local component = property.components[data.componentId]
     if action == 'import' then
         return import(player, property, component.restrictions, data)

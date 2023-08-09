@@ -126,12 +126,18 @@ RegisterNUICallback('changeVehicleStockPrice', function(data, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
-    local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'update_price', {
-        property = component.property,
-        componentId = component.componentId,
-        id = data.id,
-        price = data.price
-    })
+    local response, msg
+
+    if component then
+        response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'update_price', {
+            property = component.property,
+            componentId = component.componentId,
+            id = data.id,
+            price = data.price
+        })
+    else
+        msg = 'component_mismatch'
+    end
 
     if msg then
         lib.notify({title = msg, type = response and 'success' or 'error'})
@@ -142,15 +148,17 @@ RegisterNUICallback('fetchGallery', function(_, cb)
     local component = exports.ox_property:getPropertyData()
     local vehicles = {}
 
-    for k, v in pairs(DisplayedVehicles) do
-        if component.property == v.property and component.componentId == v.component then
-            vehicles[v.slot] = k
+    if component then
+        for k, v in pairs(DisplayedVehicles) do
+            if component.property == v.property and component.componentId == v.component then
+                vehicles[v.slot] = k
+            end
         end
-    end
 
-    for i = 1, #component.spawns do
-        if not vehicles[i] then
-            vehicles[i] = 0
+        for i = 1, #component.spawns do
+            if not vehicles[i] then
+                vehicles[i] = 0
+            end
         end
     end
 
@@ -161,13 +169,19 @@ RegisterNUICallback('galleryAddVehicle', function(data, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
-    local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'display_vehicle', {
-        property = component.property,
-        componentId = component.componentId,
-        id = data.vehicle,
-        price = data.price,
-        slot = data.slot
-    })
+    local response, msg
+
+    if component then
+        response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'display_vehicle', {
+            property = component.property,
+            componentId = component.componentId,
+            id = data.vehicle,
+            price = data.price,
+            slot = data.slot
+        })
+    else
+        msg = 'component_mismatch'
+    end
 
     if msg then
         lib.notify({title = msg, type = response and 'success' or 'error'})
@@ -178,11 +192,17 @@ RegisterNUICallback('galleryRemoveVehicle', function(data, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
-    local response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'hide_vehicle', {
-        property = component.property,
-        componentId = component.componentId,
-        id = data.vehicle
-    })
+    local response, msg
+
+    if component then
+        response, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'hide_vehicle', {
+            property = component.property,
+            componentId = component.componentId,
+            id = data.vehicle
+        })
+    else
+        msg = 'component_mismatch'
+    end
 
     if msg then
         lib.notify({title = msg, type = response and 'success' or 'error'})
@@ -193,16 +213,22 @@ RegisterNUICallback('sellVehicle', function(id, cb)
     cb(1)
 
     local component = exports.ox_property:getCurrentComponent()
-    local componentVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'export', {
-        property = component.property,
-        componentId = component.componentId,
-        id = id
-    })
+    local componentVehicles, msg
+
+    if component then
+        componentVehicles, msg = lib.callback.await('ox_vehicledealer:showroom', 100, 'export', {
+            property = component.property,
+            componentId = component.componentId,
+            id = id
+        })
+    else
+        msg = 'component_mismatch'
+    end
 
     if msg then
         lib.notify({title = msg, type = componentVehicles and 'success' or 'error'})
     end
-    if not componentVehicles then return end
+    if not (component and componentVehicles) then return end
 
     for k, v in pairs(DisplayedVehicles) do
         if v.property == component.property and v.component == component.componentId then
