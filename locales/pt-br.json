@@ -1,0 +1,57 @@
+{
+  "ui": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "vehicle_category": "Categoria de veículo",
+    "no_vehicle_category": "Não existe tal categoria de veículo",
+    "vehicles": "Veículos",
+    "no_vehicles_found": "Nenhum veículo encontrado",
+    "filters": {
+      "advanced_filters": "Filtros avançados",
+      "max_price": "Preço máximo",
+      "seats": "Assentos",
+      "doors": "Portas"
+    },
+    "vehicle_info": {
+      "color_primary": "Cor primária",
+      "color_secondary": "Cor secundária",
+      "speed": "Velocidade",
+      "acceleration": "Aceleração",
+      "braking": "Freagem",
+      "handling": "Manuseio",
+      "purchase": "Comprar"
+    },
+    "purchase_modal": {
+      "purchase_vehicle": "Comprar veículo",
+      "purchase_confirm": "Confirmar compra de %s por %d?"
+    },
+    "management": {
+      "stock": "Estoque",
+      "gallery": "Galeria",
+      "exit": "Sair",
+      "vehicle_price": "Preço do veículo"
+    },
+    "management_gallery": {
+      "add_vehicle": "Adicionar galeria ao veículo",
+      "remove_vehicle": "Remover veículo",
+      "modal": {
+        "vehicle_select": "Veículo",
+        "vehicle_select_description": "Selecione um veículo do estoque para exibir",
+        "vehicle_nothing_found": "Nenhum veículo desse tipo em estoque",
+        "vehicle_price_description": "Caso não definido, padrão para preço de atacado"
+      }
+    },
+    "stock": {
+      "vehicle_make": "Marca",
+      "vehicle_name": "Nome",
+      "vehicle_price": "Preço",
+      "vehicle_wholesale": "Atacado",
+      "vehicle_plate": "Placa",
+      "vehicle_in_gallery": "O veículo está sendo exibido na galeria",
+      "edit": "Editar",
+      "sell": "Vender",
+      "vehicle_sell": "Vender veículo",
+      "vehicle_sell_text": "Tem certeza de que deseja vender %s (%s) por %d?"
+    }
+  }
+}
