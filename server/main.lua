@@ -67,10 +67,10 @@ function BuyVehicle(player, property, vehicle)
         return false, 'vehicle_not_displayed'
     end
 
-    if property.owner ~= player.charid and vehicle.owner ~= player.charid then
+    if property.owner ~= player.charId and vehicle.owner ~= player.charId then
         local response, msg = exports.ox_property:transaction(player.source, ('%s Purchase'):format(displayData.name), {
             amount = displayData.price,
-            from = {name = player.name, identifier = player.charid},
+            from = {name = player.name, identifier = player.charId},
             to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
         })
 
@@ -81,7 +81,7 @@ function BuyVehicle(player, property, vehicle)
 
     vehicle.set('display')
     vehicle.setStored()
-    vehicle.setOwner(player.charid)
+    vehicle.setOwner(player.charId)
 
     DisplayedVehicles[vehicle.id] = nil
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
