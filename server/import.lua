@@ -18,7 +18,7 @@ local function import(player, property, restrictions, data)
 
     local vehicle = Ox.CreateVehicle({
         model = data.model,
-        owner = player.charid,
+        owner = player.charId,
         properties = {
             color1 = data.color1,
             color2 = data.color2,
