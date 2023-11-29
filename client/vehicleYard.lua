@@ -16,7 +16,7 @@ exports.ox_property:registerComponentAction('vehicleYard', function(component)
         end
     end
 
-    if displayedVehicle and displayedVehicle.owner == player.charid and permitted < 2 then
+    if displayedVehicle and displayedVehicle.owner == player.charId and permitted < 2 then
         options['Move Vehicle'] = {
             onSelect = function()
                 local response, msg = lib.callback.await('ox_vehicledealer:vehicleYard', 100, 'move_vehicle', {

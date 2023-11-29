@@ -1,0 +1,57 @@
+{
+        "ui": {
+            "confirm": "Conferma",
+            "cancel": "Annulla",
+            "vehicle_category": "Categoria veicolo",
+            "no_vehicle_category": "Nessuna categoria di veicolo",
+            "vehicles": "Veicoli",
+            "no_vehicles_found": "Nessun veicolo trovato",
+            "filters": {
+                "advanced_filters": "Filtri avanzati",
+                "max_price": "Prezzo massimo",
+                "seats": "Posti",
+                "doors": "Porte"
+            },
+            "vehicle_info": {
+                "color_primary": "Colore primario",
+                "color_secondary": "Colore secondario",
+                "speed": "Velocità",
+                "acceleration": "Accelerazione",
+                "braking": "Frenata",
+                "handling": "Maneggevolezza",
+                "purchase": "Acquista"
+            },
+            "purchase_modal": {
+                "purchase_vehicle": "Acquista veicolo",
+                "purchase_confirm": "Confermi l'acquisto di %s per %d?"
+            },
+            "management": {
+                "stock": "Magazzino",
+                "gallery": "Galleria",
+                "exit": "Esci",
+                "vehicle_price": "Prezzo veicolo"
+            },
+            "management_gallery": {
+                "add_vehicle": "Aggiungi veicolo alla galleria",
+                "remove_vehicle": "Rimuovi veicolo",
+                "modal": {
+                    "vehicle_select": "Veicolo",
+                    "vehicle_select_description": "Seleziona un veicolo dal magazzino da visualizzare",
+                    "vehicle_nothing_found": "Nessun veicolo trovato nel magazzino",
+                    "vehicle_price_description": "Se non impostato, il prezzo di vendita sarà il prezzo all'ingrosso"
+                }
+            },
+            "stock": {
+                "vehicle_make": "Marca",
+                "vehicle_name": "Nome",
+                "vehicle_price": "Prezzo",
+                "vehicle_wholesale": "All'ingrosso",
+                "vehicle_plate": "Targa",
+                "vehicle_in_gallery": "Il veicolo è visualizzato nella galleria",
+                "edit": "Modifica",
+                "sell": "Vendi",
+                "vehicle_sell": "Vendi veicolo",
+                "vehicle_sell_text": "Sei sicuro di voler vendere %s (%s) per %d"
+            }
+        }
+    }

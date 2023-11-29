@@ -1,6 +1,6 @@
 local function export(player, property, data)
     local vehicle = DisplayedVehicles[data.id]
-    local veh = vehicle and Ox.GetVehicleFromNetId(vehicle.netid) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
+    local veh = vehicle and Ox.GetVehicleFromNetId(vehicle.netid) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charId})
 
     if not veh then
         return false, 'vehicle_not_found'
@@ -34,7 +34,7 @@ local function export(player, property, data)
 end
 
 local function displayVehicle(player, component, data)
-    local vehicle = MySQL.single.await('SELECT id, model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
+    local vehicle = MySQL.single.await('SELECT id, model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charId})
     local spawn = component.spawns[data.slot]
 
     if not vehicle then
@@ -70,7 +70,7 @@ local function displayVehicle(player, component, data)
         property = data.property,
         component = data.componentId,
         id = veh.id,
-        owner = player.charid,
+        owner = player.charId,
         slot = data.slot,
         plate = veh.plate,
         model = veh.model,
@@ -159,7 +159,7 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
     if action == 'store_vehicle' then
         return storeVehicle(player, component, data.properties)
     elseif action == 'retrieve_vehicle' then
-        return exports.ox_property:retrieveVehicle(player.charid, component, data.id)
+        return exports.ox_property:retrieveVehicle(player.charId, component, data.id)
     elseif action == 'display_vehicle' then
         return displayVehicle(player, component, data)
     end

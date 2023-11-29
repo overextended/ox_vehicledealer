@@ -8,7 +8,7 @@ local function import(player, property, restrictions, data)
 
     local response, msg = exports.ox_property:transaction(player.source, ('%s Import'):format(vehicleData.name), {
         amount = vehicleData.price,
-        from = {name = player.name, identifier = player.charid},
+        from = {name = player.name, identifier = player.charId},
         to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}
     })
 
@@ -18,7 +18,7 @@ local function import(player, property, restrictions, data)
 
     local vehicle = Ox.CreateVehicle({
         model = data.model,
-        owner = player.charid,
+        owner = player.charId,
         properties = {
             color1 = data.color1,
             color2 = data.color2,

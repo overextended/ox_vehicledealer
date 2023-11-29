@@ -117,7 +117,7 @@ lib.callback.register('ox_vehicledealer:vehicleYard', function(source, action, d
 
     if permitted > 1 then
         return false, 'not_permitted'
-    elseif vehicle.owner ~= player.charid then
+    elseif vehicle.owner ~= player.charId then
         return false, 'not_vehicle_owner'
     end
 
