@@ -1,0 +1,57 @@
+{
+  "ui": {
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "vehicle_category": "Fahrzeugkategorie",
+    "no_vehicle_category": "Diese Fahrzeugkategorie existiert nicht",
+    "vehicles": "Fahrzeuge",
+    "no_vehicles_found": "Keine Fahrzeuge gefunden",
+    "filters": {
+      "advanced_filters": "Erweiterte Filter",
+      "max_price": "Maximaler Preis",
+      "seats": "Sitze",
+      "doors": "Türen"
+    },
+    "vehicle_info": {
+      "color_primary": "Primärfarbe",
+      "color_secondary": "Sekundärfarbe",
+      "speed": "Geschwindigkeit",
+      "acceleration": "Beschleunigung",
+      "braking": "Bremsen",
+      "handling": "Fahrverhalten",
+      "purchase": "Kaufen"
+    },
+    "purchase_modal": {
+      "purchase_vehicle": "Fahrzeug kaufen",
+      "purchase_confirm": "Kauf von %s für %d bestätigen?"
+    },
+    "management": {
+      "stock": "Lager",
+      "gallery": "Galerie",
+      "exit": "Verlassen",
+      "vehicle_price": "Fahrzeugpreis"
+    },
+    "management_gallery": {
+      "add_vehicle": "Galerie-Fahrzeug hinzufügen",
+      "remove_vehicle": "Fahrzeug entfernen",
+      "modal": {
+        "vehicle_select": "Fahrzeug",
+        "vehicle_select_description": "Wähle ein Fahrzeug aus dem Lager, das du ausstellen willst",
+        "vehicle_nothing_found": "Kein solches Fahrzeug im Lager",
+        "vehicle_price_description": "Wenn nicht festgesetzt, wird der Einkaufspreis eingestellt"
+      }
+    },
+    "stock": {
+      "vehicle_make": "Hersteller",
+      "vehicle_name": "Name",
+      "vehicle_price": "Preis",
+      "vehicle_wholesale": "Einkaufspreis",
+      "vehicle_plate": "Kennzeichen",
+      "vehicle_in_gallery": "Fahrzeug ist in der Galerie ausgestellt",
+      "edit": "Bearbeiten",
+      "sell": "Verkaufen",
+      "vehicle_sell": "Fahrzeug verkaufen",
+      "vehicle_sell_text": "Bist du sicher, dass du %s (%s) für %d verkaufen willst?"
+    }
+  }
+}
