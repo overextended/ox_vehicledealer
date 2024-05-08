@@ -56,6 +56,16 @@ AddStateBagChangeHandler('DisplayedVehicles', 'global', function(bagName, key, v
     DisplayedVehicles = value
 end)
 
+AddStateBagChangeHandler('frozen', '', function(bagName, key, value, reserved, replicated)
+    local entity = GetEntityFromStateBagName(bagName)
+
+    SetVehicleHandbrake(entity, value)
+
+    if value then
+        SetVehicleOnGroundProperly(entity)
+    end
+end)
+
 lib.onCache('vehicle', function(vehicle)
     if vehicle then
         local displayedVehicle

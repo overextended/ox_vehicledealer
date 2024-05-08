@@ -1,6 +1,6 @@
 local function export(player, property, data)
     local vehicle = DisplayedVehicles[data.id]
-    local veh = vehicle and Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid)) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
+    local veh = vehicle and Ox.GetVehicleFromNetId(vehicle.netid) or MySQL.single.await('SELECT model FROM vehicles WHERE id = ? AND owner = ?', {data.id, player.charid})
 
     if not veh then
         return false, 'vehicle_not_found'
@@ -79,13 +79,15 @@ local function displayVehicle(player, component, data)
     }
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 
-    FreezeEntityPosition(veh.entity, true)
+    Entity(veh.entity).state.frozen = true
 
     return true, 'vehicle_displayed'
 end
 
 local function hideVehicle(data)
-    local vehicle = Ox.GetVehicle(NetworkGetEntityFromNetworkId(DisplayedVehicles[data.id].netid))
+    local vehicle = Ox.GetVehicleFromNetId(DisplayedVehicles[data.id].netid)
+
+    if not vehicle then return end
 
     exports.ox_property:clearVehicleOfPassengers({entity = vehicle.entity, model = vehicle.model})
 
@@ -98,7 +100,9 @@ end
 
 local function updatePrice(data)
     local vehicle = DisplayedVehicles[data.id]
-    local veh = Ox.GetVehicle(NetworkGetEntityFromNetworkId(vehicle.netid))
+    local veh = Ox.GetVehicleFromNetId(vehicle.netid)
+
+    if not veh then return end
 
     local display = veh.get('display')
     display.price = data.price
@@ -109,6 +113,21 @@ local function updatePrice(data)
     GlobalState['DisplayedVehicles'] = DisplayedVehicles
 end
 
+local function storeVehicle(player, component, properties)
+    local vehicle = Ox.GetVehicle(GetVehiclePedIsIn(player.ped, false))
+
+    if not vehicle then return end
+
+    local response, msg = exports.ox_property:storeVehicle(player.source, component, properties)
+
+    if response then
+        DisplayedVehicles[vehicle.id] = nil
+        GlobalState['DisplayedVehicles'] = DisplayedVehicles
+    end
+
+    return response, msg
+end
+
 lib.callback.register('ox_vehicledealer:showroom', function(source, action, data)
     local permitted, msg = exports.ox_property:isPermitted(source, data.property, data.componentId, 'showroom')
 
@@ -116,8 +135,8 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
         return false, msg or 'not_permitted'
     end
 
-    local player = Ox.GetPlayer(source)
-    local property = exports.ox_property:getPropertyData(data.property)
+    local player = Ox.GetPlayer(source) --[[@as OxPlayer]]
+    local property = exports.ox_property:getPropertyData(data.property) --[[@as OxPropertyObject]]
     if action == 'buy_vehicle' then
         return BuyVehicle(player, property)
     end
@@ -138,7 +157,7 @@ lib.callback.register('ox_vehicledealer:showroom', function(source, action, data
 
     local component = property.components[data.componentId]
     if action == 'store_vehicle' then
-        return exports.ox_property:storeVehicle(player.source, component, data.properties)
+        return storeVehicle(player, component, data.properties)
     elseif action == 'retrieve_vehicle' then
         return exports.ox_property:retrieveVehicle(player.charid, component, data.id)
     elseif action == 'display_vehicle' then

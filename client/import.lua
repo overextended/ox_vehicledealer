@@ -42,7 +42,7 @@ exports.ox_property:registerComponentAction('import', function(component)
 
         Wait(0)
     end
-end, 'function')
+end, {'All access'})
 
 ---@param str string
 ---@return vector3
@@ -70,16 +70,21 @@ RegisterNUICallback('purchaseVehicle', function(data, cb)
     local component = exports.ox_property:getCurrentComponent()
     local primary, secondary = GetVehicleColours(DisplayVehicle.entity)
     local roofLivery = GetVehicleRoofLivery(DisplayVehicle.entity)
+    local response, msg
 
-    local response, msg = lib.callback.await('ox_vehicledealer:import', 100, 'import', {
-        property = component.property,
-        componentId = component.componentId,
-        model = data.model,
-        color1 = DisplayVehicle.primary and { DisplayVehicle.primary.x, DisplayVehicle.primary.y, DisplayVehicle.primary.z } or primary,
-        color2 = DisplayVehicle.secondary and { DisplayVehicle.secondary.x, DisplayVehicle.secondary.y, DisplayVehicle.secondary.z } or secondary,
-        livery = DisplayVehicle.livery or -1,
-        roofLivery = roofLivery ~= -1 and roofLivery or nil
-    })
+    if component then
+        response, msg = lib.callback.await('ox_vehicledealer:import', 100, 'import', {
+            property = component.property,
+            componentId = component.componentId,
+            model = data.model,
+            color1 = DisplayVehicle.primary and { DisplayVehicle.primary.x, DisplayVehicle.primary.y, DisplayVehicle.primary.z } or primary,
+            color2 = DisplayVehicle.secondary and { DisplayVehicle.secondary.x, DisplayVehicle.secondary.y, DisplayVehicle.secondary.z } or secondary,
+            livery = DisplayVehicle.livery or -1,
+            roofLivery = roofLivery ~= -1 and roofLivery or nil
+        })
+    else
+        msg = 'component_mismatch'
+    end
 
     if msg then
         lib.notify({title = msg, type = response and 'success' or 'error'})

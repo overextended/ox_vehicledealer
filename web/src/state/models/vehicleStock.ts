@@ -20,9 +20,9 @@ export const vehicleStock = createModel<RootModel>()({
     setVehicleStock(state, payload: VehicleStock[]) {
       return (state = payload);
     },
-    setVehiclePrice(state, payload: { plate: string; price: number }) {
+    setVehiclePrice(state, payload: { id: number; price: number }) {
       return state.map((vehicle) => {
-        if (vehicle.plate === payload.plate) return { ...vehicle, price: payload.price };
+        if (vehicle.id === payload.id) return { ...vehicle, price: payload.price };
         else return vehicle;
       });
     },
